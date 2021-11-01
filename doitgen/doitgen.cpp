@@ -7,11 +7,10 @@
 #include <math.h>
 
 /* Include polybench common header. */
-#include <polybench.h>
+#include "polybench.h"
 
 /* Include benchmark-specific header. */
 /* Default data type is double, default size is 4000. */
-#include "doitgen.h"
 
 /* Array initialization. */
 static void init_array(int nr, int nq, int np,
