@@ -3,43 +3,42 @@
 
 
 START_TEST(test_money_create)
- {
-    ck_assert(1);
-    std::cout << "test run!" << std::endl;
- }
- END_TEST
-
-
-Suite * money_suite(void)
 {
-    Suite *s;
-    TCase *tc_core;
+	ck_assert(1);
+	std::cout << "test run!" << std::endl;
+}
+END_TEST
 
-    s = suite_create("Money");
+Suite* money_suite(void)
+{
+	Suite* s;
+	TCase* tc_core;
 
-    /* Core test case */
-    tc_core = tcase_create("Core");
+	s = suite_create("Money");
 
-    tcase_add_test(tc_core, test_money_create);
-    suite_add_tcase(s, tc_core);
+	/* Core test case */
+	tc_core = tcase_create("Core");
 
-    return s;
+	tcase_add_test(tc_core, test_money_create);
+	suite_add_tcase(s, tc_core);
+
+	return s;
 }
 
- int main(void)
- {
-    
-    std::cout << "### Test Jacobi ###" << std::endl;
+int main(void)
+{
 
-    int number_failed;
-    Suite *s;
-    SRunner *sr;
+	std::cout << "### Test Jacobi ###" << std::endl;
 
-    s = money_suite();
-    sr = srunner_create(s);
+	int number_failed;
+	Suite* s;
+	SRunner* sr;
 
-    srunner_run_all(sr, CK_NORMAL);
-    number_failed = srunner_ntests_failed(sr);
-    srunner_free(sr);
-    return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
- }
+	s = money_suite();
+	sr = srunner_create(s);
+
+	srunner_run_all(sr, CK_NORMAL);
+	number_failed = srunner_ntests_failed(sr);
+	srunner_free(sr);
+	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+}
