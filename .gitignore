@@ -1,2 +1,3 @@
 build/
-.vs/CMakePresets.json
+.vs/
+CMakePresets.json
