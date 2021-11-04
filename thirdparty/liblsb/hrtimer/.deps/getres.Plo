@@ -1,0 +1,3 @@
+hrtimer/getres.lo: hrtimer/getres.c /usr/include/stdc-predef.h
+
+/usr/include/stdc-predef.h:

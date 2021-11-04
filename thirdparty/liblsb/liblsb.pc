@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: liblsb
+Description: LibSciBench: enables benchmarking and profiling parallel code.
+Requires: 
+Version: 0.2.2
+Libs: -L${libdir} -llsb 
+Cflags: -I${includedir}/ 
