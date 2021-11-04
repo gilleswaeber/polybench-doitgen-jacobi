@@ -21,10 +21,13 @@ target_include_directories(dphpc_lib
     PUBLIC "polybench/utilities"
 )
 
-find_package(OpenMP)
+find_package(OpenMP REQUIRED)
 if(OpenMP_CXX_FOUND)
     target_link_libraries(dphpc_lib PUBLIC OpenMP::OpenMP_CXX)
 endif()
+
+find_package(MPI REQUIRED)
+target_link_libraries(dphpc_lib PUBLIC MPI::MPI_CXX)
 
 add_subdirectory(doitgen/test)
 add_subdirectory(jacobi_1D/test)

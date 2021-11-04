@@ -15,17 +15,6 @@ target_include_directories(dphpc_lib
 
 add_executable(dphpc-jacobi-benchmarks ${ALL_SRC})
 
-# credits to https://stackoverflow.com/questions/23163075/how-to-compile-an-mpi-included-c-program-using-cmake
-# OpenMP
-find_package(OpenMP REQUIRED)
-if(OpenMP_CXX_FOUND)
-    target_link_libraries(dphpc-jacobi-benchmarks PUBLIC OpenMP::OpenMP_CXX)
-endif()
-
-# MPI
-find_package(MPI REQUIRED)
-target_link_libraries(dphpc-jacobi-benchmarks PUBLIC MPI::MPI_CXX)
-
 target_link_libraries(dphpc-jacobi-benchmarks PUBLIC 
     dphpc_lib 
     check 
@@ -34,5 +23,4 @@ target_link_libraries(dphpc-jacobi-benchmarks PUBLIC
     pthread 
     subunit
     ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a
-    
 )
