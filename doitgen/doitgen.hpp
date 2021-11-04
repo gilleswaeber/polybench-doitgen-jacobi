@@ -56,5 +56,7 @@
 #  define DATA_PRINTF_MODIFIER "%0.2lf "
 # endif
 
+void test_openMP();
+
 
 #endif /* !DOITGEN */

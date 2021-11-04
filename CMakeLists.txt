@@ -21,6 +21,11 @@ target_include_directories(dphpc_lib
     PUBLIC "polybench/utilities"
 )
 
+find_package(OpenMP)
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(dphpc_lib PUBLIC OpenMP::OpenMP_CXX)
+endif()
+
 add_subdirectory(doitgen/test)
 add_subdirectory(jacobi_1D/test)
 

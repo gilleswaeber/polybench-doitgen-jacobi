@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <math.h>
+#include <omp.h>
 
 /* Include polybench common header. */
 #include "polybench.h"
@@ -69,4 +70,11 @@ static void kernel_doitgen(int nr, int nq, int np,
 				A[r][q][p] = sum[r][q][p];
 		}
 #pragma endscop
+}
+
+void test_openMP() {
+	#pragma omp parallel for
+	for (int n = 0; n < 8; n++) {
+		printf("Element %d | thread id : %d \n", n, omp_get_thread_num());
+	}
 }
