@@ -2,6 +2,9 @@ build/
 .vs/
 CMakePresets.json
 
+
+!thirdparty/liblsb/.libs/liblsb.a
+
 #credits to https://github.com/github/gitignore/blob/master/C.gitignore
 # for the following:
 
