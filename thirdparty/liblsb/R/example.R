@@ -1,10 +1,11 @@
+install.packages("reshape2")
 library(ggplot2)
 
-#install.packages("ggplot2")
 #install.packages("data.table")
+#install.packages("ggplot2")
 
 
-setwd("/home/salvo/ETH/benchmarking/R/")
+setwd("/home/quentin/Desktop/dphpc-project/thirdparty/liblsb/R/")
 
 source("utils.R")
 source("stats.R")
