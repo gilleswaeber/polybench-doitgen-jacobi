@@ -1,3 +1,7 @@
 ### Dependency
 
-To install liblsb do follow instruction on their github [page](https://github.com/spcl/liblsb)
+No need to install liblsb.
+
+Otherwise:
+
+sudo apt-get install -y mpi
