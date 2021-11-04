@@ -1,0 +1,4 @@
+hrtimer/sanity-check.lo: hrtimer/sanity-check.c \
+ /usr/include/stdc-predef.h
+
+/usr/include/stdc-predef.h:

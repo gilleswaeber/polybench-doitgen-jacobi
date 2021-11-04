@@ -28,6 +28,7 @@ endif()
 
 add_subdirectory(doitgen/test)
 add_subdirectory(jacobi_1D/test)
+add_subdirectory(jacobi_1D/benchmark)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
