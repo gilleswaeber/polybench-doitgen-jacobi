@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(dphpc-project VERSION 0.1.0)
 
+
+set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
+
 include(CTest)
 enable_testing()
 
@@ -10,7 +16,7 @@ set(
     SRC 
     "jacobi_1D/jacobi_1D.cpp"
     "doitgen/doitgen.cpp"
-    "polybench/utilities/polybench.c"
+    "polybench.cpp"
 )
 
 add_library(dphpc_lib STATIC ${SRC})

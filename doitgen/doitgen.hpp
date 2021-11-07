@@ -5,6 +5,8 @@
  * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+#include <polybench.h>
+
 #ifndef DOITGEN_H
 # define DOITGEN_H
 
@@ -56,7 +58,19 @@
 #  define DATA_PRINTF_MODIFIER "%0.2lf "
 # endif
 
-void test_openMP();
+void init_array(int nr, int nq, int np,
+	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
+	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np));
+
+void kernel_doitgen(int nr, int nq, int np,
+	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
+	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np),
+	DATA_TYPE POLYBENCH_3D(sum, NR, NQ, NP, nr, nq, np));
+
+void parallel_doitgen(int nr, int nq, int np,
+	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
+	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np),
+	DATA_TYPE POLYBENCH_3D(sum, NR, NQ, NP, nr, nq, np));
 
 
 #endif /* !DOITGEN */
