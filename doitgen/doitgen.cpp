@@ -61,7 +61,7 @@ void parallel_doitgen(int nr, int nq, int np,
 	for (r = 0; r < _PB_NR; r++) {
 		for (q = 0; q < _PB_NQ; q++) {
 
-			
+			//Weird this only works in release mode
 			#pragma omp parallel for
 			for (p = 0; p < _PB_NP; p++) {
 				double cur_sum = 0.0;
