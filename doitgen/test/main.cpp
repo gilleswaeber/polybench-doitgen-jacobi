@@ -4,6 +4,9 @@
 #include <omp.h>
 #include <chrono>
 #include "../../polybench.hpp"
+
+#define LARGE_DATASET
+
 #include "doitgen.hpp"
 
 /*
@@ -11,17 +14,21 @@
 * polybench related and only keeping the implementation.
 */
 
-void compare_results(int nr, int nq, int np,
+void compare_results(uint64_t nr, uint64_t nq, uint64_t np,
 	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
 	DATA_TYPE POLYBENCH_3D(A_par, NR, NQ, NP, nr, nq, np)) {
-	for (int r = 0; r < NR; ++r) {
-		for (int q = 0; q < NQ; ++q) {
-			for (int p = 0; p < NP; ++p) {
+	bool result = true;
+	for (uint64_t r = 0; r < _PB_NR; ++r) {
+		for (uint64_t q = 0; q < _PB_NQ; ++q) {
+			for (uint64_t p = 0; p < _PB_NP; ++p) {
 				bool test = std::abs(A[r][q][p] - A_par[r][q][p]) < std::numeric_limits<double>::epsilon();
-				ck_assert(test);
+				if (!test) {
+					result = false;
+				}
 			}
 		}
 	}
+	ck_assert(result);
 }
 
 START_TEST(test_doitgen)
@@ -95,7 +102,7 @@ Suite* doitgen_suite(void)
 int main(void)
 {
 
-	omp_set_num_threads(8);
+	omp_set_num_threads(16);
 
 	std::cout << "### Test Doitgen ###" << std::endl;
 	int number_failed;

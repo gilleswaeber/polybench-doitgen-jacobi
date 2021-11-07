@@ -6,6 +6,7 @@
  * Web address: http://polybench.sourceforge.net
  */
 #include <polybench.h>
+#include <stdint.h>
 
 #ifndef DOITGEN_H
 # define DOITGEN_H
@@ -58,16 +59,16 @@
 #  define DATA_PRINTF_MODIFIER "%0.2lf "
 # endif
 
-void init_array(int nr, int nq, int np,
+void init_array(uint64_t nr, uint64_t nq, uint64_t np,
 	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
 	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np));
 
-void kernel_doitgen(int nr, int nq, int np,
+void kernel_doitgen(uint64_t nr, uint64_t nq, uint64_t np,
 	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
 	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np),
 	DATA_TYPE POLYBENCH_3D(sum, NR, NQ, NP, nr, nq, np));
 
-void parallel_doitgen(int nr, int nq, int np,
+void parallel_doitgen(uint64_t nr, uint64_t nq, uint64_t np,
 	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
 	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np),
 	DATA_TYPE POLYBENCH_3D(sum, NR, NQ, NP, nr, nq, np));

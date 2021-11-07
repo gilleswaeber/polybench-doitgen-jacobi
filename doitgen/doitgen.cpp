@@ -1,4 +1,5 @@
 
+#define LARGE_DATASET
 #include "doitgen.hpp"
 
 #include <stdio.h>
@@ -12,11 +13,11 @@
 /* Default data type is double, default size is 4000. */
 
 /* Array initialization. */
-void init_array(int nr, int nq, int np,
+void init_array(uint64_t nr, uint64_t nq, uint64_t np,
 	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
 	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np))
 {
-	int i, j, k;
+	uint64_t i, j, k;
 
 	for (i = 0; i < nr; i++)
 		for (j = 0; j < nq; j++)
@@ -29,12 +30,12 @@ void init_array(int nr, int nq, int np,
 
 /* Main computational kernel. The whole function will be timed,
    including the call and return. */
-void kernel_doitgen(int nr, int nq, int np,
+void kernel_doitgen(uint64_t nr, uint64_t nq, uint64_t np,
 	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
 	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np),
 	DATA_TYPE POLYBENCH_3D(sum, NR, NQ, NP, nr, nq, np))
 {
-	int r, q, p, s;
+	uint64_t r, q, p, s;
 
 #pragma scop
 	for (r = 0; r < _PB_NR; r++)
@@ -46,32 +47,40 @@ void kernel_doitgen(int nr, int nq, int np,
 				for (s = 0; s < _PB_NP; s++)
 					sum[r][q][p] = sum[r][q][p] + A[r][q][s] * C4[s][p];
 			}
+			/*
+			* Are we sure this is correct ? I think the boundary condition for the
+			* loop variable p should be _PB_NP since the last dimension of sum and
+			* A has size np. Maybe this is just how the program should work.
+			*/
 			for (p = 0; p < _PB_NR; p++)
 				A[r][q][p] = sum[r][q][p];
 		}
 #pragma endscop
 }
 
-void parallel_doitgen(int nr, int nq, int np,
+void parallel_doitgen(uint64_t nr, uint64_t nq, uint64_t np,
 	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
 	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np),
 	DATA_TYPE POLYBENCH_3D(sum, NR, NQ, NP, nr, nq, np)) {
 
-	for (int r = 0; r < _PB_NR; r++) {
-		for (int q = 0; q < _PB_NQ; q++) {
-
-			#pragma omp parallel for
-			for (int p = 0; p < _PB_NP; p++) {
+	#pragma omp parallel for collapse(2)
+	for (uint64_t r = 0; r < _PB_NR; r++) {
+		for (uint64_t q = 0; q < _PB_NQ; q++) {
+			for (uint64_t p = 0; p < _PB_NP; p++) {
 				double cur_sum = 0.0;
-				for (int s = 0; s < _PB_NP; s++) {
+				for (uint64_t s = 0; s < _PB_NP; s++) {
 					cur_sum = cur_sum + A[r][q][s] * C4[s][p];
-				} 
+				}
 				sum[r][q][p] = cur_sum;
 			}
 
-			for (int p = 0; p < _PB_NR; p++) {
+
+			//#pragma omp parallel for
+			for (uint64_t p = 0; p < _PB_NR; p++) {
 				A[r][q][p] = sum[r][q][p];
 			}
+
+
 		}
 	}
 }
