@@ -56,22 +56,20 @@ void parallel_doitgen(int nr, int nq, int np,
 	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
 	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np),
 	DATA_TYPE POLYBENCH_3D(sum, NR, NQ, NP, nr, nq, np)) {
-	int r, q, p, s;
 
-	for (r = 0; r < _PB_NR; r++) {
-		for (q = 0; q < _PB_NQ; q++) {
+	for (int r = 0; r < _PB_NR; r++) {
+		for (int q = 0; q < _PB_NQ; q++) {
 
-			//Weird this only works in release mode
 			#pragma omp parallel for
-			for (p = 0; p < _PB_NP; p++) {
+			for (int p = 0; p < _PB_NP; p++) {
 				double cur_sum = 0.0;
-				for (s = 0; s < _PB_NP; s++) {
+				for (int s = 0; s < _PB_NP; s++) {
 					cur_sum = cur_sum + A[r][q][s] * C4[s][p];
-				}
+				} 
 				sum[r][q][p] = cur_sum;
 			}
 
-			for (p = 0; p < _PB_NR; p++) {
+			for (int p = 0; p < _PB_NR; p++) {
 				A[r][q][p] = sum[r][q][p];
 			}
 		}

@@ -17,8 +17,8 @@ void compare_results(int nr, int nq, int np,
 	for (int r = 0; r < NR; ++r) {
 		for (int q = 0; q < NQ; ++q) {
 			for (int p = 0; p < NP; ++p) {
-				ck_assert(std::abs(A[r][q][p] - A_par[r][q][p]) < std::numeric_limits<double>::epsilon());
-				
+				bool test = std::abs(A[r][q][p] - A_par[r][q][p]) < std::numeric_limits<double>::epsilon();
+				ck_assert(test);
 			}
 		}
 	}
@@ -80,7 +80,6 @@ Suite* doitgen_suite(void)
 {
 	Suite* s;
 	TCase* tc_core;
-
 	s = suite_create("Doitgen");
 
 	/* Core test case */
@@ -105,6 +104,9 @@ int main(void)
 
 	s = doitgen_suite();
 	sr = srunner_create(s);
+
+	//This is to ease debugging
+	srunner_set_fork_status(sr, CK_NOFORK);
 
 	srunner_run_all(sr, CK_NORMAL);
 	number_failed = srunner_ntests_failed(sr);
