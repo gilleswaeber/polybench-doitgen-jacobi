@@ -1,4 +1,5 @@
 
+#define POLYBENCH_PADDING_FACTOR 8
 #define LARGE_DATASET
 #include "doitgen.hpp"
 
@@ -8,6 +9,8 @@
 #include <math.h>
 #include <omp.h>
 #include <iostream>
+
+#define BLOCKING_WINDOW 1
 
 /* Include benchmark-specific header. */
 /* Default data type is double, default size is 4000. */
@@ -63,24 +66,55 @@ void parallel_doitgen(uint64_t nr, uint64_t nq, uint64_t np,
 	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np),
 	DATA_TYPE POLYBENCH_3D(sum, NR, NQ, NP, nr, nq, np)) {
 
-	#pragma omp parallel for collapse(2)
-	for (uint64_t r = 0; r < _PB_NR; r++) {
-		for (uint64_t q = 0; q < _PB_NQ; q++) {
+	/*#pragma omp parallel for collapse(2)
+	for (uint64_t r = 0; r < _PB_NR; r += BLOCKING_WINDOW) {
+		for (uint64_t q = 0; q < _PB_NQ; q += BLOCKING_WINDOW) {
+
+			for (uint64_t rr = r; rr < std::min(r + BLOCKING_WINDOW, _PB_NR); ++rr) {
+				for (uint64_t qq = q; qq < std::min(q + BLOCKING_WINDOW, _PB_NQ); ++qq) {
+
+
+					for (uint64_t p = 0; p < _PB_NP; p++) {
+						double cur_sum = 0.0;
+						#pragma omp parallel for reduction(+:cur_sum)
+						for (uint64_t s = 0; s < _PB_NP; s++) {
+							cur_sum = cur_sum + A[rr][qq][s] * C4[s][p];
+						}
+						sum[rr][qq][p] = cur_sum;
+					}
+
+
+					//#pragma omp parallel for
+					for (uint64_t p = 0; p < _PB_NR; p++) {
+						A[rr][qq][p] = sum[rr][qq][p];
+					}
+				}
+			}
+		}
+	}*/
+	//We reduce false sharing by having a sum array for each thread.
+	volatile double* new_sum = new double[16 * _PB_NP];
+	
+	
+
+	#pragma omp parallel for collapse(2) shared(new_sum)
+	for (uint64_t r = 0; r < _PB_NR; r += 1) {
+		for (uint64_t q = 0; q < _PB_NQ; q += 1) {
+
 			for (uint64_t p = 0; p < _PB_NP; p++) {
 				double cur_sum = 0.0;
 				for (uint64_t s = 0; s < _PB_NP; s++) {
 					cur_sum = cur_sum + A[r][q][s] * C4[s][p];
 				}
-				sum[r][q][p] = cur_sum;
+				new_sum[omp_get_thread_num() * _PB_NP + p] = cur_sum;
 			}
 
-
-			//#pragma omp parallel for
 			for (uint64_t p = 0; p < _PB_NR; p++) {
-				A[r][q][p] = sum[r][q][p];
+				A[r][q][p] = new_sum[omp_get_thread_num() * _PB_NP + p];
 			}
-
-
 		}
 	}
+
+
+	delete[]new_sum;
 }

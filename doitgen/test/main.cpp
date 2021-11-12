@@ -3,9 +3,20 @@
 #include <limits>
 #include <omp.h>
 #include <chrono>
-#include "../../polybench.hpp"
 
+/*
+* The padding factor of 8 reduces the false sharing and cache coherence communication.
+* I chose 8 because we are dealing with 8 bytes doubles. We need 8 doubles to fill a cache line since 
+* we are on the x86 architectures (64B cahce lines). We should adapt this for the cluster.
+* 
+* 
+* I am not sure this is the correct way to use this. Maybe I am wrong. I need to
+* compare the results with a passing of 1 and with a padding of 8 to see if they are the same.
+*/
+#define POLYBENCH_PADDING_FACTOR 8
 #define LARGE_DATASET
+
+#include "../../polybench.hpp"
 
 #include "doitgen.hpp"
 
@@ -54,7 +65,8 @@ START_TEST(test_doitgen)
 		POLYBENCH_ARRAY(C4),
 		POLYBENCH_ARRAY(sum));
 	auto t2 = std::chrono::high_resolution_clock::now();
-
+	POLYBENCH_FREE_ARRAY(C4);
+	POLYBENCH_FREE_ARRAY(sum);
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
 	std::cout << "Sequential time : " << ms_int.count() << std::endl;
@@ -79,6 +91,12 @@ START_TEST(test_doitgen)
 	std::cout << "Parallel time : " << ms_int.count() << std::endl;
 
 	compare_results(nr, nq, np, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_par));
+
+	POLYBENCH_FREE_ARRAY(A);
+	
+	POLYBENCH_FREE_ARRAY(A_par);
+	POLYBENCH_FREE_ARRAY(C4_par);
+	POLYBENCH_FREE_ARRAY(sum_par);
 }
 END_TEST
 
