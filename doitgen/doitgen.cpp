@@ -1,6 +1,3 @@
-
-#define POLYBENCH_PADDING_FACTOR 8
-#define LARGE_DATASET
 #include "doitgen.hpp"
 
 #include <stdio.h>
@@ -10,6 +7,14 @@
 #include <omp.h>
 #include <iostream>
 
+/*
+* For every pair of index r, q we access  3 * 256 doubles on the large data set.
+* This sums up to 6144 bytes per pair rq of indices. My level 1 cache is
+* 640 kB per processor I think. Therefore, 320/3 of such accesses can fit in
+* the L1 cache (640kB/6144). We have that sqrt(320/3) is approcimately 10.32. To be 
+* safe we can try a blocking window of size 8.
+*/
+//For now, this doesn't seem to have an effect. This probably because of the coherence traffic.
 #define BLOCKING_WINDOW 1
 
 /* Include benchmark-specific header. */
@@ -93,25 +98,29 @@ void parallel_doitgen(uint64_t nr, uint64_t nq, uint64_t np,
 		}
 	}*/
 	//We reduce false sharing by having a sum array for each thread.
-	volatile double* new_sum = new double[16 * _PB_NP];
-	
-	
+	double* new_sum = new double[omp_get_max_threads() * _PB_NP];
 
 	#pragma omp parallel for collapse(2) shared(new_sum)
-	for (uint64_t r = 0; r < _PB_NR; r += 1) {
-		for (uint64_t q = 0; q < _PB_NQ; q += 1) {
+	for (uint64_t r = 0; r < _PB_NR; r += BLOCKING_WINDOW) {
+		for (uint64_t q = 0; q < _PB_NQ; q += BLOCKING_WINDOW) {
+			//for (uint64_t rr = r; rr < std::min(r + BLOCKING_WINDOW, _PB_NR); ++rr) {
+				//for (uint64_t qq = q; qq < std::min(q + BLOCKING_WINDOW, _PB_NQ); ++qq) {
+					for (uint64_t p = 0; p < _PB_NP; p++) {
+						double cur_sum = 0.0;
+						for (uint64_t s = 0; s < _PB_NP; s++) {
+							cur_sum = cur_sum + A[r][q][s] * C4[s][p];
+						}
+						new_sum[omp_get_thread_num() * _PB_NP + p] = cur_sum;
+						//sum[r][q][p] = cur_sum;
+					}
 
-			for (uint64_t p = 0; p < _PB_NP; p++) {
-				double cur_sum = 0.0;
-				for (uint64_t s = 0; s < _PB_NP; s++) {
-					cur_sum = cur_sum + A[r][q][s] * C4[s][p];
-				}
-				new_sum[omp_get_thread_num() * _PB_NP + p] = cur_sum;
-			}
-
-			for (uint64_t p = 0; p < _PB_NR; p++) {
-				A[r][q][p] = new_sum[omp_get_thread_num() * _PB_NP + p];
-			}
+					for (uint64_t p = 0; p < _PB_NR; p++) {
+						A[r][q][p] = new_sum[omp_get_thread_num() * _PB_NP + p];
+						//A[r][q][p] = sum[r][q][p];
+					}
+				//}
+			//}
+			
 		}
 	}
 
