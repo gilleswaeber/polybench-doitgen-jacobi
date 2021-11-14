@@ -5,7 +5,10 @@
  * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
-#include <polybench.h>
+
+#define CUSTOM_DATASET
+
+#include <../../polybench.hpp>
 #include <stdint.h>
 
 #ifndef DOITGEN_H
@@ -47,6 +50,12 @@
 #   define NQ 1000
 #   define NR 1000
 #   define NP 1000
+#  endif
+
+#  ifdef CUSTOM_DATASET
+#   define NQ 512
+#   define NR 512
+#   define NP 512
 #  endif
 # endif /* !N */
 

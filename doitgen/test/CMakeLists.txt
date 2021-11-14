@@ -11,11 +11,8 @@ set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-point
 
 set(
     DOITGEN_TEST_SRC
+    "serializer.cpp"
     "main.cpp"
-)
-
-target_include_directories(dphpc_lib
-    PUBLIC "../../"
 )
 
 add_executable(dphpc-doitgen-test ${DOITGEN_TEST_SRC})
