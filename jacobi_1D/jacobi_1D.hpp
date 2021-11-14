@@ -5,6 +5,8 @@
  * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
+#include <polybench.h>
+
 #ifndef JACOBI_1D_IMPER_H
 # define JACOBI_1D_IMPER_H
 
@@ -50,5 +52,16 @@
 #  define DATA_PRINTF_MODIFIER "%0.2lf "
 # endif
 
+void init_array(int n,
+    DATA_TYPE POLYBENCH_1D(A, N, n),
+    DATA_TYPE POLYBENCH_1D(B, N, n));
+
+void kernel_jacobi_1d_imper(int tsteps, int n,
+    DATA_TYPE POLYBENCH_1D(A, N, n),
+    DATA_TYPE POLYBENCH_1D(B, N, n));
+
+void parallel_jacobi_1d_imper(int tsteps, int n,
+    DATA_TYPE POLYBENCH_1D(A, N, n),
+    DATA_TYPE POLYBENCH_1D(B, N, n));
 
 #endif /* !JACOBI_1D_IMPER */
