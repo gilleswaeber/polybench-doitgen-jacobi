@@ -37,11 +37,13 @@ START_TEST(test_doitgen)
 	uint64_t np = NP;
 
 	POLYBENCH_3D_ARRAY_DECL(A_test, DATA_TYPE, NR, NQ, NP, nr, nq, np);
-	loadFile(nr, nq, np, POLYBENCH_ARRAY(A_test));
+	loadFile("doitgen_custom.dat", nr, nq, np, POLYBENCH_ARRAY(A_test));
 
 	POLYBENCH_3D_ARRAY_DECL(A, DATA_TYPE, NR, NQ, NP, nr, nq, np);
 	POLYBENCH_3D_ARRAY_DECL(sum, DATA_TYPE, NR, NQ, NP, nr, nq, np);
 	POLYBENCH_2D_ARRAY_DECL(C4, DATA_TYPE, NP, NP, np, np);
+
+	init_array(nr, nq, np, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(C4));
 
 	polybench_flush_cache();
 
@@ -58,7 +60,7 @@ START_TEST(test_doitgen)
 
 
 	bool result = compare_results(nr, nq, np, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_test));
-	ck_assert(true);
+	ck_assert(result);
 
 	POLYBENCH_FREE_ARRAY(A_test);
 
@@ -116,6 +118,8 @@ int main(void)
 	uint64_t nq = NQ;
 	uint64_t np = NP;
 
+	
+
 	POLYBENCH_3D_ARRAY_DECL(A_test, DATA_TYPE, NR, NQ, NP, nr, nq, np);
 	//loadFile(nr, nq, np, POLYBENCH_ARRAY(A_test));
 
@@ -123,6 +127,7 @@ int main(void)
 	POLYBENCH_3D_ARRAY_DECL(sum, DATA_TYPE, NR, NQ, NP, nr, nq, np);
 	POLYBENCH_2D_ARRAY_DECL(C4, DATA_TYPE, NP, NP, np, np);
 
+	init_array(nr, nq, np, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(C4));
 	
 
 	kernel_doitgen(nr, nq, np,
@@ -130,9 +135,9 @@ int main(void)
 		POLYBENCH_ARRAY(C4),
 		POLYBENCH_ARRAY(sum));
 
-	writeFile(nr, nq, np, POLYBENCH_ARRAY(A));
+	//writeFile("doitgen_custom.dat", nr, nq, np, POLYBENCH_ARRAY(A));
 
-	loadFile(nr, nq, np, POLYBENCH_ARRAY(A_test));
+	loadFile("doitgen_custom.dat", nr, nq, np, POLYBENCH_ARRAY(A_test));
 	bool result = compare_results(nr, nq, np, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_test));
 
 	if (result) {
