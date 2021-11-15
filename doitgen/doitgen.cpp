@@ -21,56 +21,66 @@
 /* Default data type is double, default size is 4000. */
 
 /* Array initialization. */
-void init_array(uint64_t nr, uint64_t nq, uint64_t np,
-	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
-	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np))
+void init_array(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4)
 {
 	uint64_t i, j, k;
 
-	for (i = 0; i < nr; i++)
-		for (j = 0; j < nq; j++)
-			for (k = 0; k < np; k++)
-				A[i][j][k] = ((DATA_TYPE)i * j + k) / np;
-	for (i = 0; i < np; i++)
-		for (j = 0; j < np; j++)
-			C4[i][j] = ((DATA_TYPE)i * j) / np;
+	for (i = 0; i < nr; i++) {
+		for (j = 0; j < nq; j++) {
+			for (k = 0; k < np; k++) {
+				A(i, j, k) = ((double)i * j + k) / np;
+			}
+		}
+	}
+
+	for (i = 0; i < np; i++) {
+		for (j = 0; j < np; j++) {
+			C4(i, j) = ((double)i * j) / np;
+		}
+	}
 }
 
 /* Main computational kernel. The whole function will be timed,
    including the call and return. */
-void kernel_doitgen(uint64_t nr, uint64_t nq, uint64_t np,
-	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
-	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np),
-	DATA_TYPE POLYBENCH_3D(sum, NR, NQ, NP, nr, nq, np))
-{
+void kernel_doitgen_seq(uint64_t nr, uint64_t nq, uint64_t np, 
+	double* a,
+	double* c4,
+	double* sum
+){
 	uint64_t r, q, p, s;
 
 #pragma scop
-	for (r = 0; r < _PB_NR; r++)
-		for (q = 0; q < _PB_NQ; q++)
+	for (r = 0; r < nr; r++)
+		for (q = 0; q < nq; q++)
 		{
-			for (p = 0; p < _PB_NP; p++)
+			for (p = 0; p < np; p++)
 			{
-				sum[r][q][p] = 0;
-				for (s = 0; s < _PB_NP; s++)
-					sum[r][q][p] = sum[r][q][p] + A[r][q][s] * C4[s][p];
+				//sum[r][q][p] = 0;
+				SUM(r, q, p) = 0;
+				for (s = 0; s < np; s++) {
+					//sum[r][q][p] = sum[r][q][p] + A[r][q][s] * C4[s][p];
+					SUM(r, q, p) = SUM(r, q, p) + A(r, q, s) * C4(s, p);
+				}
 			}
 			/*
 			* Are we sure this is correct ? I think the boundary condition for the
 			* loop variable p should be _PB_NP since the last dimension of sum and
 			* A has size np. Maybe this is just how the program should work.
 			*/
-			for (p = 0; p < _PB_NR; p++)
-				A[r][q][p] = sum[r][q][p];
+			for (p = 0; p < nr; p++) {
+				A(r, q, p) = SUM(r, q, p);
+				//A[r][q][p] = sum[r][q][p];
+			}
 		}
 #pragma endscop
 }
 
-void parallel_doitgen(uint64_t nr, uint64_t nq, uint64_t np,
-	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
-	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np),
-	DATA_TYPE POLYBENCH_3D(sum, NR, NQ, NP, nr, nq, np)) {
-
+void kernel_doitgen_openmp(uint64_t nr, uint64_t nq, uint64_t np, 
+	double* a,
+	double* c4,
+	double* sum
+) {
+	
 	/*#pragma omp parallel for collapse(2)
 	for (uint64_t r = 0; r < _PB_NR; r += BLOCKING_WINDOW) {
 		for (uint64_t q = 0; q < _PB_NQ; q += BLOCKING_WINDOW) {
@@ -105,21 +115,24 @@ void parallel_doitgen(uint64_t nr, uint64_t nq, uint64_t np,
 	* I will try this.
 	* Blocking on the 114-121 lines of code.
 	*/
-	double* new_sum = new double[_PB_NP * omp_get_max_threads()];
+	double* new_sum = new double[np * omp_get_max_threads()];
+
 	#pragma omp parallel for collapse(2) shared(new_sum)
-	for (uint64_t r = 0; r < _PB_NR; r++) {
-		for (uint64_t q = 0; q < _PB_NQ; q++) {
-			for (uint64_t p = 0; p < _PB_NP; p++) {
+	for (uint64_t r = 0; r < nr; r++) {
+		for (uint64_t q = 0; q < nq; q++) {
+			for (uint64_t p = 0; p < np; p++) {
 				double cur_sum = 0.0;
-				for (uint64_t s = 0; s < _PB_NP; s++) {
+				for (uint64_t s = 0; s < np; s++) {
 					//This needs the old values of A
-					cur_sum = cur_sum + A[r][q][s] * C4[s][p];
+					//cur_sum = cur_sum + A[r][q][s] * C4[s][p];
+					cur_sum = cur_sum + A(r, q, s) * C4(s, p);
 				}
-				new_sum[omp_get_thread_num() * _PB_NP + p] = cur_sum;
+				new_sum[omp_get_thread_num() * np + p] = cur_sum;
 			}
 
-			for (uint64_t p = 0; p < _PB_NR; p++) {
-				A[r][q][p] = new_sum[omp_get_thread_num() * _PB_NP + p];
+			for (uint64_t p = 0; p < nr; p++) {
+				//A[r][q][p] = new_sum[omp_get_thread_num() * np + p];
+				A(r, q, p) = new_sum[omp_get_thread_num() * np + p];
 			}
 
 		}

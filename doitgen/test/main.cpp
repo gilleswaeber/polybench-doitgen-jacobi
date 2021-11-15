@@ -4,6 +4,8 @@
 #include <omp.h>
 #include <chrono>
 
+#include "doitgen.hpp"
+#include "utils.hpp"
 #include "serializer.hpp"
 
 #define THREAD_NUM 16
@@ -13,14 +15,13 @@
 * polybench related and only keeping the implementation.
 */
 
-bool compare_results(uint64_t nr, uint64_t nq, uint64_t np,
-	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
-	DATA_TYPE POLYBENCH_3D(A_par, NR, NQ, NP, nr, nq, np)) {
+bool compare_results(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* a_par) {
 	bool result = true;
-	for (uint64_t r = 0; r < _PB_NR; ++r) {
-		for (uint64_t q = 0; q < _PB_NQ; ++q) {
-			for (uint64_t p = 0; p < _PB_NP; ++p) {
-				bool test = std::abs(A[r][q][p] - A_par[r][q][p]) < std::numeric_limits<double>::epsilon();
+	for (uint64_t r = 0; r < nr; ++r) {
+		for (uint64_t q = 0; q < nq; ++q) {
+			for (uint64_t p = 0; p < np; ++p) {
+				//bool test = std::abs(A[r][q][p] - A_par[r][q][p]) < std::numeric_limits<double>::epsilon();
+				bool test = std::abs(A(r, q, p) - ARR_3D(a_par, nr, nq, np, r, p, q)) < std::numeric_limits<double>::epsilon();
 				if (!test) {
 					result = false;
 				}
@@ -32,41 +33,41 @@ bool compare_results(uint64_t nr, uint64_t nq, uint64_t np,
 
 START_TEST(test_doitgen)
 {
-	uint64_t nr = NR;
-	uint64_t nq = NQ;
-	uint64_t np = NP;
+	uint64_t nr = 32;
+	uint64_t nq = 32;
+	uint64_t np = 32;
 
-	POLYBENCH_3D_ARRAY_DECL(A_test, DATA_TYPE, NR, NQ, NP, nr, nq, np);
-	loadFile("doitgen_custom.dat", nr, nq, np, POLYBENCH_ARRAY(A_test));
+	//POLYBENCH_3D_ARRAY_DECL(A_test, DATA_TYPE, NR, NQ, NP, nr, nq, np);
+	double* a_test = (double*) allocate_data(nr * nq * np, sizeof(double));
 
-	POLYBENCH_3D_ARRAY_DECL(A, DATA_TYPE, NR, NQ, NP, nr, nq, np);
-	POLYBENCH_3D_ARRAY_DECL(sum, DATA_TYPE, NR, NQ, NP, nr, nq, np);
-	POLYBENCH_2D_ARRAY_DECL(C4, DATA_TYPE, NP, NP, np, np);
+	loadFile("doitgen_dataset_32_32_32", nr * nq * np, a_test);
 
-	init_array(nr, nq, np, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(C4));
+	//POLYBENCH_3D_ARRAY_DECL(A, DATA_TYPE, NR, NQ, NP, nr, nq, np);
+	//POLYBENCH_3D_ARRAY_DECL(sum, DATA_TYPE, NR, NQ, NP, nr, nq, np);
+	//POLYBENCH_2D_ARRAY_DECL(C4, DATA_TYPE, NP, NP, np, np);
 
-	polybench_flush_cache();
+	double* a 	= (double*) allocate_data(nr * nq * np, sizeof(double));
+	double* sum = (double*) allocate_data(nr * nq * np, sizeof(double));
+	double* c4 	= (double*) allocate_data(np * np, sizeof(double));
+
+	init_array(nr, nq, np, a, c4);
+
+	//flush_cache();
 
 	auto t1 = std::chrono::high_resolution_clock::now();
-	parallel_doitgen(nr, nq, np,
-		POLYBENCH_ARRAY(A),
-		POLYBENCH_ARRAY(C4),
-		POLYBENCH_ARRAY(sum));
+	kernel_doitgen_seq(nr, nq, np, a, c4, sum);
 	auto t2 = std::chrono::high_resolution_clock::now();
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
 	std::cout << "Parallel time : " << ms_int.count() << std::endl;
 
+	bool result = compare_results(nr, nq, np, a, a_test);
+	ck_assert_msg(result, "results must match!");
 
-
-	bool result = compare_results(nr, nq, np, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_test));
-	ck_assert(result);
-
-	POLYBENCH_FREE_ARRAY(A_test);
-
-	POLYBENCH_FREE_ARRAY(A);
-	POLYBENCH_FREE_ARRAY(C4);
-	POLYBENCH_FREE_ARRAY(sum);
+	cleanup(a_test);
+	cleanup(a);
+	cleanup(c4);
+	cleanup(sum);
 
 }
 END_TEST

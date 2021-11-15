@@ -2,11 +2,11 @@
 #include <cassert>
 #include "serializer.hpp"
 
-void writeFile(const char* name, uint64_t nr, uint64_t nq, uint64_t np, DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np)) {
-	FILE* data_file = fopen(name, "wb");
+void writeFile(const std::string& name, unsigned long long int size, double* a) {
+	FILE* data_file = fopen(name.c_str(), "wb");
 	assert(data_file);
 
-	fwrite(&A[0][0][0], sizeof(double), nr * nq * np, data_file);
+	fwrite(a, sizeof(double), size, data_file);
 	fclose(data_file);
 
 	/*std::ofstream wf("doitgen.dat", std::ios::out | std::ios::binary);
@@ -14,11 +14,11 @@ void writeFile(const char* name, uint64_t nr, uint64_t nq, uint64_t np, DATA_TYP
 	wf.close();*/
 }
 
-void loadFile(const char* name, uint64_t nr, uint64_t nq, uint64_t np, DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np)) {
+void loadFile(const std::string& name, unsigned long long int size, double* a) {
 
-	FILE* data_file = fopen(name, "rb");
+	FILE* data_file = fopen(name.c_str(), "rb");
 	assert(data_file);
-	fread(&A[0][0][0], sizeof(double), nr * np * nq, data_file);
+	fread(a, sizeof(double), size, data_file);
 	fclose(data_file);
 	/*std::ifstream lf("doitgen.dat", std::ios::in | std::ios::binary);
 	lf.read(reinterpret_cast<char*>(&(A[0][0][0])), std::streamsize(nr * nq * np * sizeof(double)));

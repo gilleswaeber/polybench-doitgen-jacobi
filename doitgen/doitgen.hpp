@@ -1,3 +1,7 @@
+#pragma once
+
+#include <stdint.h>
+
 /**
  * doitgen.h: This file is part of the PolyBench/C 3.2 test suite.
  *
@@ -5,7 +9,7 @@
  * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
-
+/*
 #define CUSTOM_DATASET
 
 #include <../../polybench.hpp>
@@ -14,14 +18,14 @@
 #ifndef DOITGEN_H
 # define DOITGEN_H
 
- /* Default to STANDARD_DATASET. */
+
 # if !defined(MINI_DATASET) && !defined(SMALL_DATASET) && !defined(LARGE_DATASET) && !defined(EXTRALARGE_DATASET)
 #  define STANDARD_DATASET
 # endif
 
-/* Do not define anything if the user manually defines the size. */
+
 # if !defined(NQ) && !defined(NR) && !defined(NP)
-/* Define the possible dataset sizes. */
+
 #  ifdef MINI_DATASET
 #   define NQ 10
 #   define NR 10
@@ -34,7 +38,7 @@
 #   define NP 32
 #  endif
 
-#  ifdef STANDARD_DATASET /* Default if unspecified. */
+#  ifdef STANDARD_DATASET
 #   define NQ 128
 #   define NR 128
 #   define NP 128
@@ -57,7 +61,7 @@
 #   define NR 512
 #   define NP 512
 #  endif
-# endif /* !N */
+# endif
 
 # define _PB_NQ POLYBENCH_LOOP_BOUND(NQ,nq)
 # define _PB_NR POLYBENCH_LOOP_BOUND(NR,nr)
@@ -68,19 +72,47 @@
 #  define DATA_PRINTF_MODIFIER "%0.2lf "
 # endif
 
-void init_array(uint64_t nr, uint64_t nq, uint64_t np,
-	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
-	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np));
+*/
 
-void kernel_doitgen(uint64_t nr, uint64_t nq, uint64_t np,
-	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
-	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np),
-	DATA_TYPE POLYBENCH_3D(sum, NR, NQ, NP, nr, nq, np));
+#include <string>
 
-void parallel_doitgen(uint64_t nr, uint64_t nq, uint64_t np,
-	DATA_TYPE POLYBENCH_3D(A, NR, NQ, NP, nr, nq, np),
-	DATA_TYPE POLYBENCH_2D(C4, NP, NP, np, np),
-	DATA_TYPE POLYBENCH_3D(sum, NR, NQ, NP, nr, nq, np));
+struct problem_size_t {
+	uint64_t nr;
+	uint64_t nq;
+	uint64_t np; 
+};
+
+struct problem_instance_t {
+	void (*kernel_id)(uint64_t, uint64_t, uint64_t, double*, double*, double*);
+	std::string desc;
+};
+
+const static uint64_t PROBLEM_SIZE_N = 3;
+
+const static problem_size_t problem_sizes[] = {
+	{10, 10, 10},
+	{32, 32, 32},
+	{64, 64, 64}
+};
 
 
-#endif /* !DOITGEN */
+#define ARR_2D(ARRAY, Y_DIM, X, Y) (ARRAY[ (X) * (Y_DIM) + (Y) ])
+
+#define C4(X, Y) ARR_2D(c4, np, X, Y)
+
+#define ARR_3D(ARRAY, X_DIM, Y_DIM, Z_DIM, X, Y, Z) \
+	(ARRAY[ ((X_DIM) * (Y_DIM) * (Z)) + ((Y_DIM) * (X)) + (Y) ])
+
+#define A(X, Y, Z) ARR_3D(a, nr, nq, np, X, Y, Z)
+#define SUM(X, Y, Z) ARR_3D(sum, nr, nq, np, X, Y, Z)
+
+void init_array(uint64_t nr, uint64_t nq, uint64_t np, double* A, double* C4);
+void kernel_doitgen_seq(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4, double* sum);
+void kernel_doitgen_openmp(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4, double* sum);
+
+const static problem_instance_t kernels_to_benchmark[] = {
+	{kernel_doitgen_seq, "reference kernel"},
+	{kernel_doitgen_openmp, "openMp implementation"}
+};
+
+//#endif /* !DOITGEN */
