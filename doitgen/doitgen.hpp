@@ -87,12 +87,13 @@ struct problem_instance_t {
 	std::string desc;
 };
 
-const static uint64_t PROBLEM_SIZE_N = 3;
+const static uint64_t PROBLEM_SIZE_N = 4;
 
 const static problem_size_t problem_sizes[] = {
 	{10, 10, 10},
 	{32, 32, 32},
-	{64, 64, 64}
+	{64, 64, 64},
+	{512, 512, 512}
 };
 
 
@@ -101,7 +102,7 @@ const static problem_size_t problem_sizes[] = {
 #define C4(X, Y) ARR_2D(c4, np, X, Y)
 
 #define ARR_3D(ARRAY, X_DIM, Y_DIM, Z_DIM, X, Y, Z) \
-	(ARRAY[ ((X_DIM) * (Y_DIM) * (Z)) + ((Y_DIM) * (X)) + (Y) ])
+	(ARRAY[ ((Z_DIM) * (Y_DIM) * (X)) + ((Z_DIM) * (Y)) + (Z) ])
 
 #define A(X, Y, Z) ARR_3D(a, nr, nq, np, X, Y, Z)
 #define SUM(X, Y, Z) ARR_3D(sum, nr, nq, np, X, Y, Z)

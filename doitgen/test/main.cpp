@@ -21,7 +21,7 @@ bool compare_results(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* a
 		for (uint64_t q = 0; q < nq; ++q) {
 			for (uint64_t p = 0; p < np; ++p) {
 				//bool test = std::abs(A[r][q][p] - A_par[r][q][p]) < std::numeric_limits<double>::epsilon();
-				bool test = std::abs(A(r, q, p) - ARR_3D(a_par, nr, nq, np, r, p, q)) < std::numeric_limits<double>::epsilon();
+				bool test = std::abs(ARR_3D(a, nr, nq, np, r, q, p) - ARR_3D(a_par, nr, nq, np, r, q, p)) < std::numeric_limits<double>::epsilon();
 				if (!test) {
 					result = false;
 				}
@@ -33,14 +33,14 @@ bool compare_results(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* a
 
 START_TEST(test_doitgen)
 {
-	uint64_t nr = 32;
-	uint64_t nq = 32;
-	uint64_t np = 32;
+	uint64_t nr = 512;
+	uint64_t nq = 512;
+	uint64_t np = 512;
 
 	//POLYBENCH_3D_ARRAY_DECL(A_test, DATA_TYPE, NR, NQ, NP, nr, nq, np);
 	double* a_test = (double*) allocate_data(nr * nq * np, sizeof(double));
 
-	loadFile("doitgen_dataset_32_32_32", nr * nq * np, a_test);
+	loadFile("doitgen_dataset_512_512_512", nr * nq * np, a_test);
 
 	//POLYBENCH_3D_ARRAY_DECL(A, DATA_TYPE, NR, NQ, NP, nr, nq, np);
 	//POLYBENCH_3D_ARRAY_DECL(sum, DATA_TYPE, NR, NQ, NP, nr, nq, np);
@@ -55,7 +55,7 @@ START_TEST(test_doitgen)
 	//flush_cache();
 
 	auto t1 = std::chrono::high_resolution_clock::now();
-	kernel_doitgen_seq(nr, nq, np, a, c4, sum);
+	kernel_doitgen_openmp(nr, nq, np, a, c4, sum);
 	auto t2 = std::chrono::high_resolution_clock::now();
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
