@@ -4,6 +4,7 @@
 #include <omp.h>
 #include <chrono>
 #include <string.h>
+#include <openmpi/mpi.h>
 
 #include "doitgen.hpp"
 #include "utils.hpp"
@@ -102,6 +103,52 @@ START_TEST(test_doitgen)
 }
 END_TEST
 
+START_TEST(test_mpi)
+{
+	MPI::Init();
+	
+	uint64_t nr = 32;
+	uint64_t nq = 32;
+	uint64_t np = 32;
+
+	double* a_test = (double*) allocate_data(nr * nq * np, sizeof(double));
+
+	loadFile("doitgen_dataset_32_32_32", nr * nq * np, a_test);
+
+	double* a_in 	= (double*) allocate_data(nr * nq * np, sizeof(double));
+	double* sum = (double*) allocate_data(nr * nq * np, sizeof(double));
+	double* c4 	= (double*) allocate_data(np * np, sizeof(double));
+
+	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
+
+	init_array(nr, nq, np, a_in, c4);
+	copy_array(a_in, a_out, nr, nq, np);
+
+	memset(sum, 0.0, nr * nq * np);
+
+	flush_cache();
+	
+
+	auto t1 = std::chrono::high_resolution_clock::now();
+		kernel_doitgen_mpi(nr, nq, np, a_in, a_out, c4, sum);
+	auto t2 = std::chrono::high_resolution_clock::now();
+	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+
+	std::cout << "Parallel time : " << ms_int.count() << std::endl;
+
+	bool result = compare_results(nr, nq, np, a_out, a_test);
+	ck_assert_msg(result, "results must match!");
+
+	cleanup(a_test);
+	cleanup(a_in);
+	cleanup(a_out);
+	cleanup(c4);
+	cleanup(sum);
+
+	MPI::Finalize();
+
+}
+END_TEST
 
 Suite* doitgen_suite(void)
 {
@@ -113,6 +160,8 @@ Suite* doitgen_suite(void)
 	tc_core = tcase_create("Core");
 
 	tcase_add_test(tc_core, test_doitgen);
+	tcase_add_test(tc_core, test_mpi);
+
 	tcase_set_timeout(tc_core, 30);
 	suite_add_tcase(s, tc_core);
 
@@ -145,44 +194,4 @@ int main(void)
 
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 
-	/*uint64_t nr = NR;
-	uint64_t nq = NQ;
-	uint64_t np = NP;
-
-	
-
-	POLYBENCH_3D_ARRAY_DECL(A_test, DATA_TYPE, NR, NQ, NP, nr, nq, np);
-	//loadFile(nr, nq, np, POLYBENCH_ARRAY(A_test));
-
-	POLYBENCH_3D_ARRAY_DECL(A, DATA_TYPE, NR, NQ, NP, nr, nq, np);
-	POLYBENCH_3D_ARRAY_DECL(sum, DATA_TYPE, NR, NQ, NP, nr, nq, np);
-	POLYBENCH_2D_ARRAY_DECL(C4, DATA_TYPE, NP, NP, np, np);
-
-	init_array(nr, nq, np, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(C4));
-	
-
-	kernel_doitgen(nr, nq, np,
-		POLYBENCH_ARRAY(A),
-		POLYBENCH_ARRAY(C4),
-		POLYBENCH_ARRAY(sum));
-
-	//writeFile("doitgen_custom.dat", nr, nq, np, POLYBENCH_ARRAY(A));
-
-	loadFile("doitgen_custom.dat", nr, nq, np, POLYBENCH_ARRAY(A_test));
-	bool result = compare_results(nr, nq, np, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_test));
-
-	if (result) {
-		std::cout << "Success" << std::endl;
-	}
-	else {
-		std::cout << "Failure" << std::endl;
-	}
-
-	POLYBENCH_FREE_ARRAY(A);
-	POLYBENCH_FREE_ARRAY(C4);
-	POLYBENCH_FREE_ARRAY(sum);
-	POLYBENCH_FREE_ARRAY(A_test);
-
-
-	return 0;*/
 }
