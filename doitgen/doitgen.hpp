@@ -105,11 +105,27 @@ const static problem_size_t problem_sizes[] = {
 	(ARRAY[ ((Z_DIM) * (Y_DIM) * (X)) + ((Z_DIM) * (Y)) + (Z) ])
 
 #define A(X, Y, Z) ARR_3D(a, nr, nq, np, X, Y, Z)
+#define A_IN(X, Y, Z) ARR_3D(a_in, nr, nq, np, X, Y, Z)
+#define A_OUT(X, Y, Z) ARR_3D(a_out, nr, nq, np, X, Y, Z)
+
 #define SUM(X, Y, Z) ARR_3D(sum, nr, nq, np, X, Y, Z)
 
 void init_array(uint64_t nr, uint64_t nq, uint64_t np, double* A, double* C4);
 void kernel_doitgen_seq(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4, double* sum);
 void kernel_doitgen_openmp(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4, double* sum);
+void kernel_doitgen_experimental(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* a_out,
+	double* c4,
+	double* sum
+);
+void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* a_out,
+	double* c4,
+	double* sum
+);
+
 
 const static problem_instance_t kernels_to_benchmark[] = {
 	{kernel_doitgen_seq, "reference kernel"},

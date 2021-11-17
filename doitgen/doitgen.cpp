@@ -15,7 +15,7 @@
 * safe we can try a blocking window of size 8.
 */
 //For now, this doesn't seem to have an effect. This probably because of the coherence traffic.
-#define BLOCKING_WINDOW 8
+#define BLOCKING_WINDOW 16
 
 /* Include benchmark-specific header. */
 /* Default data type is double, default size is 4000. */
@@ -42,11 +42,11 @@ void init_array(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4)
 
 /* Main computational kernel. The whole function will be timed,
    including the call and return. */
-void kernel_doitgen_seq(uint64_t nr, uint64_t nq, uint64_t np, 
+void kernel_doitgen_seq(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a,
 	double* c4,
 	double* sum
-){
+) {
 	uint64_t r, q, p, s;
 
 #pragma scop
@@ -75,38 +75,11 @@ void kernel_doitgen_seq(uint64_t nr, uint64_t nq, uint64_t np,
 #pragma endscop
 }
 
-void kernel_doitgen_openmp(uint64_t nr, uint64_t nq, uint64_t np, 
+void kernel_doitgen_openmp(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a,
 	double* c4,
 	double* sum
 ) {
-	
-	/*#pragma omp parallel for collapse(2)
-	for (uint64_t r = 0; r < _PB_NR; r += BLOCKING_WINDOW) {
-		for (uint64_t q = 0; q < _PB_NQ; q += BLOCKING_WINDOW) {
-
-			for (uint64_t rr = r; rr < std::min(r + BLOCKING_WINDOW, _PB_NR); ++rr) {
-				for (uint64_t qq = q; qq < std::min(q + BLOCKING_WINDOW, _PB_NQ); ++qq) {
-
-
-					for (uint64_t p = 0; p < _PB_NP; p++) {
-						double cur_sum = 0.0;
-						#pragma omp parallel for reduction(+:cur_sum)
-						for (uint64_t s = 0; s < _PB_NP; s++) {
-							cur_sum = cur_sum + A[rr][qq][s] * C4[s][p];
-						}
-						sum[rr][qq][p] = cur_sum;
-					}
-
-
-					//#pragma omp parallel for
-					for (uint64_t p = 0; p < _PB_NR; p++) {
-						A[rr][qq][p] = sum[rr][qq][p];
-					}
-				}
-			}
-		}
-	}*/
 	//We reduce false sharing by having a sum array for each thread.
 	//double* new_sum = new double[omp_get_max_threads() * _PB_NP];
 
@@ -117,9 +90,15 @@ void kernel_doitgen_openmp(uint64_t nr, uint64_t nq, uint64_t np,
 	*/
 	double* new_sum = new double[np * omp_get_max_threads()];
 
-	#pragma omp parallel for collapse(2) shared(new_sum)
+	#pragma omp parallel for collapse(2)
 	for (uint64_t r = 0; r < nr; r++) {
 		for (uint64_t q = 0; q < nq; q++) {
+
+
+
+			/*
+			* This is the dot product bewtween the row A[r][q] and the column C4[p]
+			*/
 			for (uint64_t p = 0; p < np; p++) {
 				double cur_sum = 0.0;
 				for (uint64_t s = 0; s < np; s++) {
@@ -138,4 +117,78 @@ void kernel_doitgen_openmp(uint64_t nr, uint64_t nq, uint64_t np,
 		}
 	}
 	delete[]new_sum;
+}
+
+void kernel_doitgen_experimental(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* a_out,
+	double* c4,
+	double* sum
+) {
+	//We reduce false sharing by having a sum array for each thread.
+	//double* new_sum = new double[omp_get_max_threads() * _PB_NP];
+
+	/*
+	* Maybe we should do blocking on C4 because we access a lot of those values.
+	* I will try this.
+	* Blocking on the 114-121 lines of code.
+	*/
+	//double* new_sum = new double[np * omp_get_max_threads()];
+
+	#pragma omp parallel for num_threads(16)
+	for (uint64_t r = 0; r < nr; r++) {
+		for (uint64_t q = 0; q < nq; q += BLOCKING_WINDOW) {
+			for (uint64_t p = 0; p < np; p += BLOCKING_WINDOW) {
+				
+				for (uint64_t qq = q; qq < q + BLOCKING_WINDOW; ++qq) {
+					for (uint64_t pp = p; pp < p + BLOCKING_WINDOW; ++pp) {
+						double cur_sum = 0.0;
+						for (uint64_t s = 0; s < np; s++) {
+							cur_sum = cur_sum + A_IN(r, qq, s) * C4(s, pp);
+						}
+						if (p < nr) {
+							A_OUT(r, qq, pp) = cur_sum;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* a_out,
+	double* c4,
+	double* sum
+) {
+	//We reduce false sharing by having a sum array for each thread.
+	//double* new_sum = new double[omp_get_max_threads() * _PB_NP];
+
+	/*
+	* Maybe we should do blocking on C4 because we access a lot of those values.
+	* I will try this.
+	* Blocking on the 114-121 lines of code.
+	*/
+	//double* new_sum = new double[np * omp_get_max_threads()];
+
+	#pragma omp parallel for collapse(3)
+	for (uint64_t r = 0; r < nr; r++) {
+		for (uint64_t q = 0; q < nq; q += BLOCKING_WINDOW) {
+			for (uint64_t p = 0; p < np; p += BLOCKING_WINDOW) {
+
+				for (uint64_t qq = q; qq < q + BLOCKING_WINDOW; ++qq) {
+					for (uint64_t pp = p; pp < p + BLOCKING_WINDOW; ++pp) {
+						double cur_sum = 0.0;
+						for (uint64_t s = 0; s < np; s++) {
+							cur_sum = cur_sum + A_IN(r, qq, s) * C4(pp, s);
+						}
+						if (p < nr) {
+							A_OUT(r, qq, pp) = cur_sum;
+						}
+					}
+				}
+			}
+		}
+	}
 }

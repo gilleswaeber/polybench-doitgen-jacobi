@@ -31,6 +31,27 @@ bool compare_results(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* a
 	return result;
 }
 
+void copy_array(double* a_in, double* a_out, uint64_t nr, uint64_t nq, uint64_t np) {
+	for (uint64_t r = 0; r < nr; ++r) {
+		for (uint64_t q = 0; q < nq; ++q) {
+			for (uint64_t p = 0; p < np; ++p) {
+				A_OUT(r, q, p) = A_IN(r, q, p);
+			}
+		}
+	}
+}
+
+//https://stackoverflow.com/questions/16737298/what-is-the-fastest-way-to-transpose-a-matrix-in-c
+void transpose(double* src, double* dst, uint64_t N, const int M) {
+	#pragma omp parallel for
+	for (uint64_t n = 0; n < N * M; n++) {
+		uint64_t i = n / N;
+		uint64_t j = n % N;
+		dst[n] = src[M * j + i];
+	}
+}
+
+
 START_TEST(test_doitgen)
 {
 	uint64_t nr = 512;
@@ -46,26 +67,32 @@ START_TEST(test_doitgen)
 	//POLYBENCH_3D_ARRAY_DECL(sum, DATA_TYPE, NR, NQ, NP, nr, nq, np);
 	//POLYBENCH_2D_ARRAY_DECL(C4, DATA_TYPE, NP, NP, np, np);
 
-	double* a 	= (double*) allocate_data(nr * nq * np, sizeof(double));
+	double* a_in 	= (double*) allocate_data(nr * nq * np, sizeof(double));
 	double* sum = (double*) allocate_data(nr * nq * np, sizeof(double));
 	double* c4 	= (double*) allocate_data(np * np, sizeof(double));
+	double* c4_transposed = (double*)allocate_data(np * np, sizeof(double));
 
-	init_array(nr, nq, np, a, c4);
+	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
+
+	init_array(nr, nq, np, a_in, c4);
+	copy_array(a_in, a_out, nr, nq, np);
+	transpose(c4, c4_transposed, np, np);
 
 	//flush_cache();
 
 	auto t1 = std::chrono::high_resolution_clock::now();
-	kernel_doitgen_openmp(nr, nq, np, a, c4, sum);
+	kernel_doitgen_transpose(nr, nq, np, a_in, a_out, c4_transposed, sum);
 	auto t2 = std::chrono::high_resolution_clock::now();
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
 	std::cout << "Parallel time : " << ms_int.count() << std::endl;
 
-	bool result = compare_results(nr, nq, np, a, a_test);
+	bool result = compare_results(nr, nq, np, a_out, a_test);
 	ck_assert_msg(result, "results must match!");
 
 	cleanup(a_test);
-	cleanup(a);
+	cleanup(a_in);
+	cleanup(a_out);
 	cleanup(c4);
 	cleanup(sum);
 
