@@ -3,6 +3,7 @@
 #include <limits>
 #include <omp.h>
 #include <chrono>
+#include <string.h>
 
 #include "doitgen.hpp"
 #include "utils.hpp"
@@ -70,18 +71,20 @@ START_TEST(test_doitgen)
 	double* a_in 	= (double*) allocate_data(nr * nq * np, sizeof(double));
 	double* sum = (double*) allocate_data(nr * nq * np, sizeof(double));
 	double* c4 	= (double*) allocate_data(np * np, sizeof(double));
-	double* c4_transposed = (double*)allocate_data(np * np, sizeof(double));
+	//double* c4_transposed = (double*)allocate_data(np * np, sizeof(double));
 
 	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
 
 	init_array(nr, nq, np, a_in, c4);
 	copy_array(a_in, a_out, nr, nq, np);
-	transpose(c4, c4_transposed, np, np);
 
-	//flush_cache();
+	memset(sum, 0.0, nr * nq * np);
+	//transpose(c4, c4_transposed, np, np);
+
+	flush_cache();
 
 	auto t1 = std::chrono::high_resolution_clock::now();
-	kernel_doitgen_transpose(nr, nq, np, a_in, a_out, c4_transposed, sum);
+	kernel_doitgen_blocking(nr, nq, np, a_in, a_out, c4, sum);
 	auto t2 = std::chrono::high_resolution_clock::now();
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 

@@ -126,6 +126,13 @@ void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,
 	double* sum
 );
 
+void kernel_doitgen_blocking(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* a_out,
+	double* c4,
+	double* sum
+);
+
 
 const static problem_instance_t kernels_to_benchmark[] = {
 	{kernel_doitgen_seq, "reference kernel"},

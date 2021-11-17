@@ -6,6 +6,7 @@
 #include <math.h>
 #include <omp.h>
 #include <iostream>
+#include <cassert>
 
 /*
 * For every pair of index r, q we access  3 * 256 doubles on the large data set.
@@ -15,7 +16,7 @@
 * safe we can try a blocking window of size 8.
 */
 //For now, this doesn't seem to have an effect. This probably because of the coherence traffic.
-#define BLOCKING_WINDOW 16
+#define BLOCKING_WINDOW 64
 
 /* Include benchmark-specific header. */
 /* Default data type is double, default size is 4000. */
@@ -90,7 +91,7 @@ void kernel_doitgen_openmp(uint64_t nr, uint64_t nq, uint64_t np,
 	*/
 	double* new_sum = new double[np * omp_get_max_threads()];
 
-	#pragma omp parallel for collapse(2)
+#pragma omp parallel for collapse(2)
 	for (uint64_t r = 0; r < nr; r++) {
 		for (uint64_t q = 0; q < nq; q++) {
 
@@ -135,11 +136,11 @@ void kernel_doitgen_experimental(uint64_t nr, uint64_t nq, uint64_t np,
 	*/
 	//double* new_sum = new double[np * omp_get_max_threads()];
 
-	#pragma omp parallel for num_threads(16)
+#pragma omp parallel for num_threads(16)
 	for (uint64_t r = 0; r < nr; r++) {
 		for (uint64_t q = 0; q < nq; q += BLOCKING_WINDOW) {
 			for (uint64_t p = 0; p < np; p += BLOCKING_WINDOW) {
-				
+
 				for (uint64_t qq = q; qq < q + BLOCKING_WINDOW; ++qq) {
 					for (uint64_t pp = p; pp < p + BLOCKING_WINDOW; ++pp) {
 						double cur_sum = 0.0;
@@ -150,6 +151,81 @@ void kernel_doitgen_experimental(uint64_t nr, uint64_t nq, uint64_t np,
 							A_OUT(r, qq, pp) = cur_sum;
 						}
 					}
+				}
+			}
+		}
+	}
+}
+
+void kernel_doitgen_blocking(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* a_out,
+	double* c4,
+	double* sum
+) {
+	
+	#pragma omp parallel for num_threads(16)
+	for (uint64_t r = 0; r < nr; r++) {
+		/*for (uint64_t q = 0; q < nq; q += BLOCKING_WINDOW) {
+			for (uint64_t p = 0; p < np; p += BLOCKING_WINDOW) {
+				
+				for (uint64_t s = 0; s < np; s += BLOCKING_WINDOW) {
+					for (uint64_t qq = q; qq < q + BLOCKING_WINDOW; ++qq) {
+						for (uint64_t pp = p; pp < p + BLOCKING_WINDOW; ++pp) {
+							double cur_sum = SUM(r, qq, pp);
+							for (uint64_t ss = s; ss < s + BLOCKING_WINDOW; ++ss) {
+								cur_sum += A_IN(r, qq, ss) * C4(ss, pp);
+							}
+							SUM(r, qq, pp) = cur_sum;
+							if (pp < nr) {
+								A_OUT(r, q, pp) = SUM(r, qq, pp);
+								
+							}
+
+						}
+					}
+					
+				}
+				
+
+
+			}
+		}*/
+		for (uint64_t p = 0; p < np; p += BLOCKING_WINDOW) {
+			for (uint64_t s = 0; s < np; s += BLOCKING_WINDOW) {
+				for (uint64_t q = 0; q < nq; q++) {
+					for (uint64_t pp = p; pp < p + BLOCKING_WINDOW; pp++) {
+						double cur_sum = SUM(r, q, pp);
+						for (uint64_t ss = s; ss < s + BLOCKING_WINDOW; ss++) {
+							cur_sum += A_IN(r, q, ss) * C4(ss, pp);
+						}
+						SUM(r, q, pp) = cur_sum;
+						A_OUT(r, q, pp) = SUM(r, q, pp) * (pp < nr) + A_IN(r, q, pp) * (pp >= nr);
+					}
+				}
+			}
+		}
+
+	}
+}
+
+void kernel_doitgen_no_blocking(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* a_out,
+	double* c4,
+	double* sum
+) {
+
+#pragma omp parallel for num_threads(16)
+	for (uint64_t r = 0; r < nr; r++) {
+		for (uint64_t q = 0; q < nq; q++) {
+			for (uint64_t p = 0; p < np; p++) {
+				double cur_sum = 0.0;
+				for (uint64_t s = 0; s < np; s++) {
+					cur_sum = cur_sum + A_IN(r, q, s) * C4(s, p);
+				}
+				if (p < nr) {
+					A_OUT(r, q, p) = cur_sum;
 				}
 			}
 		}
@@ -172,7 +248,7 @@ void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,
 	*/
 	//double* new_sum = new double[np * omp_get_max_threads()];
 
-	#pragma omp parallel for collapse(3)
+#pragma omp parallel for collapse(2)
 	for (uint64_t r = 0; r < nr; r++) {
 		for (uint64_t q = 0; q < nq; q += BLOCKING_WINDOW) {
 			for (uint64_t p = 0; p < np; p += BLOCKING_WINDOW) {
