@@ -40,10 +40,21 @@ std::string print_array1D(double* arr, uint64_t np) {
 	return result;
 }
 
+std::string print2D(double* arr, uint64_t nq, uint64_t np) {
+	std::string result = "";
+	for (uint64_t i = 0; i < nq; i++) {
+		for (uint64_t j = 0; j < np; ++j) {
+			result += std::to_string(arr[i * np + j]) + " ";
+		}
+		result += "\n";
+	}
+	return result;
+}
+
 std::string print_array2D(double* arr, uint64_t nq, uint64_t np) {
 	std::string result = "";
 	for (uint64_t i = 0; i < nq; i++) {
-		result += print_array1D(arr, np);
+		result += print_array1D(arr + i * np, np);
 	}
 	return result;
 }
@@ -51,7 +62,7 @@ std::string print_array2D(double* arr, uint64_t nq, uint64_t np) {
 std::string print_array3D(double* arr, uint64_t nr, uint64_t nq, uint64_t np) {
 	std::string result = "";
 	for (uint64_t i = 0; i < nr; i++) {
-		result += print_array2D(arr, nq, np);
+		result += print_array2D(arr + i * nq * np, nq, np);
 	}
 	return result;
 }
@@ -97,9 +108,9 @@ int main()
 
 	MPI::Init();
 
-	uint64_t nr = 32;
-	uint64_t nq = 32;
-	uint64_t np = 32;
+	uint64_t nr = 512;
+	uint64_t nq = 512;
+	uint64_t np = 512;
 
 	double* a_test 	= 0;
 	double* a 		= 0;
@@ -194,10 +205,10 @@ int main()
 	MPI_Barrier(MPI_COMM_WORLD); // wait that all threads have seen initialization of a and C4
 
 	if (world_rank == 0 || world_rank == 1) {
-		PROCESS_MESSAGE(world_rank, print_array2D(c4, np, np));
+		//PROCESS_MESSAGE(world_rank, print2D(c4, np, np));
 		//PROCESS_MESSAGE(world_rank, print_array3D(a, nr, nq, np));
 		if (a_test) {
-			PROCESS_MESSAGE(world_rank, print_array3D(a_test, nr, nq, np));
+			//PROCESS_MESSAGE(world_rank, print_array3D(a_test, nr, nq, np));
 		}
 	}
 

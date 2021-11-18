@@ -91,7 +91,7 @@ void kernel_doitgen_openmp(uint64_t nr, uint64_t nq, uint64_t np,
 	*/
 	double* new_sum = new double[np * omp_get_max_threads()];
 
-#pragma omp parallel for collapse(2)
+#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 		for (uint64_t q = 0; q < nq; q++) {
 
