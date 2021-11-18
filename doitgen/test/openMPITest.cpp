@@ -23,14 +23,37 @@
  * Shared memory with MPI : https://pages.tacc.utexas.edu/~eijkhout/pcse/html/mpi-shared.html
  */
 
+std::string get_dataset_path(uint64_t nr, uint64_t nq, uint64_t np) {
+	std::string result = TEST_DIRECTORY_PATH"/doitgen_dataset_";
+	result += std::to_string(nr); result += "_";
+	result += std::to_string(nq); result += "_";
+	result += std::to_string(np);
+	return result;
+}
 
+std::string print_array1D(double* arr, uint64_t np) {
+	std::string result = "";
+	for (uint64_t i = 0; i < np; i++) {
+		result += std::to_string(arr[i]) + " "; 
+	}
+	result += "\n";
+	return result;
+}
 
-void print_state(int world_rank, int local_rank, double* a, double* c4, double* sum) {
-	std::cout << "world id : " << world_rank << std::endl;
-	std::cout << "local id : " << local_rank << std::endl;
-	std::cout << "--> a 	: " << (std::size_t) a << std::endl;
-	std::cout << "--> c4 	: " << (std::size_t) c4 << std::endl;
-	std::cout << "--> sum : " << (std::size_t) sum << std::endl;
+std::string print_array2D(double* arr, uint64_t nq, uint64_t np) {
+	std::string result = "";
+	for (uint64_t i = 0; i < nq; i++) {
+		result += print_array1D(arr, np);
+	}
+	return result;
+}
+
+std::string print_array3D(double* arr, uint64_t nr, uint64_t nq, uint64_t np) {
+	std::string result = "";
+	for (uint64_t i = 0; i < nr; i++) {
+		result += print_array2D(arr, nq, np);
+	}
+	return result;
 }
 
 void print_state(int world_rank, double* a, double* c4, double* sum) {
@@ -61,7 +84,7 @@ bool compare_results(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* a
  * @brief 
  * 
  * doc : https://pages.tacc.utexas.edu/~eijkhout/pcse/html/index.html
- * 
+ * shared : https://stackoverflow.com/questions/68369535/using-mpi-to-share-bulk-data-between-processes
  * Launch with hyperthreading
  * mpirun --use-hwthread-cpus ./dphpc-doitgen-mpi-test
  * Launch with CPU cores as processes
@@ -98,8 +121,9 @@ int main()
 
 	MPI_Aint a_size = nr * nq * np * sizeof(double);
 	MPI_Aint c4_size = np * np * sizeof(double);
+	int displacement_unit = sizeof(double); //placeholder
 
-	print_state(world_rank, -1, a, c4, sum);
+	print_state(world_rank, a, c4, sum);
 
 	if (world_rank == 0) {
       
@@ -124,7 +148,6 @@ int main()
 
 	} else {
 
-		int displacement_unit = 0; //placeholder
 		MPI_Win_allocate_shared(
 			0, 
 		   	sizeof(double), 
@@ -164,8 +187,18 @@ int main()
 
 	if (world_rank == 0) {
 		PROCESS_MESSAGE(world_rank, "initialize test a_test and c4");
-		loadFile(TEST_DIRECTORY_PATH"/doitgen_dataset_32_32_32", nr * nq * np, a_test);
+		loadFile(get_dataset_path(nr, nq, np), nr * nq * np, a_test);
 		init_array(nr, nq, np, a, c4);
+	}
+
+	MPI_Barrier(MPI_COMM_WORLD); // wait that all threads have seen initialization of a and C4
+
+	if (world_rank == 0 || world_rank == 1) {
+		PROCESS_MESSAGE(world_rank, print_array2D(c4, np, np));
+		//PROCESS_MESSAGE(world_rank, print_array3D(a, nr, nq, np));
+		if (a_test) {
+			PROCESS_MESSAGE(world_rank, print_array3D(a_test, nr, nq, np));
+		}
 	}
 
 	auto t1 = std::chrono::high_resolution_clock::now();
@@ -180,6 +213,7 @@ int main()
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
 	if (world_rank == 0) {
+		PROCESS_MESSAGE(world_rank, ms_int.count());
 		bool result = compare_results(nr, nq, np, a, a_test);
 		if (result) {
 			PROCESS_MESSAGE(world_rank, "SUCCESS");
