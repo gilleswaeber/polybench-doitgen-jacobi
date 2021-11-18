@@ -54,6 +54,8 @@ void transpose(double* src, double* dst, uint64_t N, const int M) {
 }
 
 
+
+
 START_TEST(test_doitgen)
 {
 	uint64_t nr = 512;
@@ -105,7 +107,6 @@ END_TEST
 
 START_TEST(test_mpi)
 {
-	MPI::Init();
 	
 	uint64_t nr = 32;
 	uint64_t nq = 32;
@@ -113,9 +114,9 @@ START_TEST(test_mpi)
 
 	double* a_test = (double*) allocate_data(nr * nq * np, sizeof(double));
 
-	loadFile("doitgen_dataset_32_32_32", nr * nq * np, a_test);
+	loadFile(TEST_DIRECTORY_PATH"/doitgen_dataset_32_32_32", nr * nq * np, a_test);
 
-	double* a_in 	= (double*) allocate_data(nr * nq * np, sizeof(double));
+	double* a_in = (double*) allocate_data(nr * nq * np, sizeof(double));
 	double* sum = (double*) allocate_data(nr * nq * np, sizeof(double));
 	double* c4 	= (double*) allocate_data(np * np, sizeof(double));
 
@@ -126,9 +127,8 @@ START_TEST(test_mpi)
 
 	memset(sum, 0.0, nr * nq * np);
 
-	flush_cache();
+	//flush_cache();
 	
-
 	auto t1 = std::chrono::high_resolution_clock::now();
 		kernel_doitgen_mpi(nr, nq, np, a_in, a_out, c4, sum);
 	auto t2 = std::chrono::high_resolution_clock::now();
@@ -145,8 +145,6 @@ START_TEST(test_mpi)
 	cleanup(c4);
 	cleanup(sum);
 
-	MPI::Finalize();
-
 }
 END_TEST
 
@@ -159,7 +157,7 @@ Suite* doitgen_suite(void)
 	/* Core test case */
 	tc_core = tcase_create("Core");
 
-	tcase_add_test(tc_core, test_doitgen);
+	//tcase_add_test(tc_core, test_doitgen);
 	tcase_add_test(tc_core, test_mpi);
 
 	tcase_set_timeout(tc_core, 30);

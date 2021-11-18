@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cassert>
+#include <iostream>
 #include "serializer.hpp"
 
 void writeFile(const std::string& name, unsigned long long int size, double* a) {
@@ -17,7 +18,11 @@ void writeFile(const std::string& name, unsigned long long int size, double* a) 
 void loadFile(const std::string& name, unsigned long long int size, double* a) {
 
 	FILE* data_file = fopen(name.c_str(), "rb");
-	assert(data_file);
+	if (!data_file) {
+		std::cout << "ERROR: failed to load the data file : " << name << std::endl;
+		assert(data_file);
+	}
+	
 	fread(a, sizeof(double), size, data_file);
 	fclose(data_file);
 	/*std::ifstream lf("doitgen.dat", std::ios::in | std::ios::binary);

@@ -88,6 +88,7 @@ struct problem_instance_t {
 	std::string desc;
 };
 
+const static uint64_t num_processor = 8;
 const static uint64_t PROBLEM_SIZE_N = 4;
 
 const static problem_size_t problem_sizes[] = {

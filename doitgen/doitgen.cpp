@@ -269,11 +269,63 @@ void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,
 	}
 }
 
+/**
+ * @brief 
+ * 
+ * @param nr 
+ * @param nq 
+ * @param np 
+ * @param a_in 
+ * @param a_out 
+ * @param c4 
+ * @param sum 
+ * 
+ * Processes are instances of the program that openMpi runs (communicator_size).
+ * Processes can be organized into logical groups. The communicators
+ * are objects that handle communications between processes. There also exists
+ * intra-communicator for communication inside a group of process and inter-communicator
+ * for communication of processes in two distinct group. We have a single group with the
+ * communicator MPI_COMM_WORLD. The rank of a process is relative to the group. If we split
+ * our processes in two groups, they will have a rank in the original MPI_COMM_WORLD and
+ * in the new one.
+ */
 void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_in,
 	double* a_out,
 	double* c4,
 	double* sum
 ) {
+
+	int communicator_size = 0;
+	int process_rank = 0;
+
+	//Get the total number of processes available for the work
+	MPI_Comm_size(MPI_COMM_WORLD, &communicator_size);
+	MPI_Comm_rank(MPI_COMM_WORLD, &process_rank);
 	
+	std::cout << std::endl;
+	std::cout << "Hello in doitgen!" << std::endl;
+	std::cout << "num_proc: " << communicator_size << std::endl;
+	std::cout << "rank: " << process_rank << std::endl;
+  	
+
+	uint64_t r = 0, q = 0, p = 0, s = 0;
+	
+	for (r = 0; r < nr; r++) {
+		for (q = 0; q < nq; q++)  {
+			
+			for (p = 0; p < np; p++)  {
+				sum[p] = 0;
+				for (s = 0; s < p; s++) {
+					sum[p] += A_IN(r, q, s) * C4(s, p);
+				}
+			}
+
+			for (p = 0; p < p; p++) {
+				A_OUT(r, q, p) = sum[p];
+			}
+
+		}
+	}
+
 }
