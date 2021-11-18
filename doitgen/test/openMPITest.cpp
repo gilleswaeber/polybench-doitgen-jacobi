@@ -41,6 +41,22 @@ void print_state(int world_rank, double* a, double* c4, double* sum) {
 	std::cout << "--> sum : " << (std::size_t) sum << std::endl;
 }
 
+bool compare_results(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* a_par) {
+	bool result = true;
+	for (uint64_t r = 0; r < nr; ++r) {
+		for (uint64_t q = 0; q < nq; ++q) {
+			for (uint64_t p = 0; p < np; ++p) {
+				//bool test = std::abs(A[r][q][p] - A_par[r][q][p]) < std::numeric_limits<double>::epsilon();
+				bool test = std::abs(ARR_3D(a, nr, nq, np, r, q, p) - ARR_3D(a_par, nr, nq, np, r, q, p)) < std::numeric_limits<double>::epsilon();
+				if (!test) {
+					result = false;
+				}
+			}
+		}
+	}
+	return result;
+}
+
 /**
  * @brief 
  * 
@@ -163,6 +179,14 @@ int main()
 	auto t2 = std::chrono::high_resolution_clock::now();
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
+	if (world_rank == 0) {
+		bool result = compare_results(nr, nq, np, a, a_test);
+		if (result) {
+			PROCESS_MESSAGE(world_rank, "SUCCESS");
+		} else {
+			PROCESS_MESSAGE(world_rank, "FAILED");
+		}
+	}
 
 	if (world_rank == 0) {
 		MPI_Free_mem(a_test);
