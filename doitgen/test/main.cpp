@@ -191,44 +191,4 @@ int main(void)
 	getchar();
 
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
-	/*uint64_t nr = NR;
-	uint64_t nq = NQ;
-	uint64_t np = NP;
-
-	
-
-	POLYBENCH_3D_ARRAY_DECL(A_test, DATA_TYPE, NR, NQ, NP, nr, nq, np);
-	//loadFile(nr, nq, np, POLYBENCH_ARRAY(A_test));
-
-	POLYBENCH_3D_ARRAY_DECL(A, DATA_TYPE, NR, NQ, NP, nr, nq, np);
-	POLYBENCH_3D_ARRAY_DECL(sum, DATA_TYPE, NR, NQ, NP, nr, nq, np);
-	POLYBENCH_2D_ARRAY_DECL(C4, DATA_TYPE, NP, NP, np, np);
-
-	init_array(nr, nq, np, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(C4));
-	
-
-	kernel_doitgen(nr, nq, np,
-		POLYBENCH_ARRAY(A),
-		POLYBENCH_ARRAY(C4),
-		POLYBENCH_ARRAY(sum));
-
-	//writeFile("doitgen_custom.dat", nr, nq, np, POLYBENCH_ARRAY(A));
-
-	loadFile("doitgen_custom.dat", nr, nq, np, POLYBENCH_ARRAY(A_test));
-	bool result = compare_results(nr, nq, np, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_test));
-
-	if (result) {
-		std::cout << "Success" << std::endl;
-	}
-	else {
-		std::cout << "Failure" << std::endl;
-	}
-
-	POLYBENCH_FREE_ARRAY(A);
-	POLYBENCH_FREE_ARRAY(C4);
-	POLYBENCH_FREE_ARRAY(sum);
-	POLYBENCH_FREE_ARRAY(A_test);
-
-
-	return 0;*/
 }
