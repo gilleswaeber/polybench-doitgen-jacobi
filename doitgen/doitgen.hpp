@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <openmpi/mpi.h>
 
 /**
  * doitgen.h: This file is part of the PolyBench/C 3.2 test suite.
@@ -87,6 +88,7 @@ struct problem_instance_t {
 	std::string desc;
 };
 
+const static uint64_t num_processor = 8;
 const static uint64_t PROBLEM_SIZE_N = 4;
 
 const static problem_size_t problem_sizes[] = {
@@ -147,6 +149,12 @@ void kernel_doitgen_no_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	double* sum
 );
 
+void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* a_out,
+	double* c4,
+	double* sum
+);
 
 const static problem_instance_t kernels_to_benchmark[] = {
 	{kernel_doitgen_seq, "reference kernel"},
