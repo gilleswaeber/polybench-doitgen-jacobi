@@ -290,42 +290,60 @@ void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,
  * in the new one.
  */
 void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
-	double* a_in,
-	double* a_out,
+	double* a,
 	double* c4,
 	double* sum
 ) {
 
-	int communicator_size = 0;
-	int process_rank = 0;
+	int num_proc = 0;
+	int rank = 0;
 
 	//Get the total number of processes available for the work
-	MPI_Comm_size(MPI_COMM_WORLD, &communicator_size);
-	MPI_Comm_rank(MPI_COMM_WORLD, &process_rank);
+	MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	
-	std::cout << std::endl;
-	std::cout << "Hello in doitgen!" << std::endl;
-	std::cout << "num_proc: " << communicator_size << std::endl;
-	std::cout << "rank: " << process_rank << std::endl;
-  	
+	uint64_t chunk_size = nr / num_proc;
+	uint64_t leftover = nr % num_proc; // we compute the imbalance in jobs
+	uint64_t normal = num_proc - leftover; // the amount of processes that will not have an additional job
+	uint64_t imbalanced_start = normal * chunk_size; //start index of the increased jobs
 
+	uint64_t l = 0;
+	uint64_t u = 0;
+
+	// TODO check 
+	if ((uint64_t) rank < normal) {
+		l = rank * chunk_size;
+		u = (rank + 1) * chunk_size;
+	} else { // imbalanced workload process
+		l = (rank - normal) * (chunk_size + 1) + imbalanced_start;
+		u = (rank - normal + 1) * (chunk_size + 1) + imbalanced_start;
+	}
+
+	//std::cout << std::endl;
+	//std::cout << "Hello in doitgen!" << std::endl;
+	//std::cout << "num_proc: " << num_proc << std::endl;
+	//std::cout << "rank: " << process_rank << std::endl;
+  	
 	uint64_t r = 0, q = 0, p = 0, s = 0;
 	
-	for (r = 0; r < nr; r++) {
+	// instead of r in [0, nr], each process do its part of the job
+	for (r = l; r < u; r++) {
+
 		for (q = 0; q < nq; q++)  {
-			
 			for (p = 0; p < np; p++)  {
 				sum[p] = 0;
-				for (s = 0; s < p; s++) {
-					sum[p] += A_IN(r, q, s) * C4(s, p);
+				for (s = 0; s < np; s++) {
+					sum[p] += A(r, q, s) * C4(s, p);
 				}
 			}
 
-			for (p = 0; p < p; p++) {
-				A_OUT(r, q, p) = sum[p];
+			for (p = 0; p < np; p++) {
+				A(r, q, p) = sum[p];
 			}
-
 		}
+
 	}
+
+
 
 }
