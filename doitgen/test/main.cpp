@@ -79,15 +79,15 @@ START_TEST(test_doitgen)
 	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
 
 	init_array(nr, nq, np, a_in, c4);
-	copy_array(a_in, a_out, nr, nq, np);
+	//copy_array(a_in, a_out, nr, nq, np);
 
-	memset(sum, 0.0, nr * nq * np);
+	memset(a_out, 0.0, nr * nq * np);
 	//transpose(c4, c4_transposed, np, np);
 
 	flush_cache();
 
 	auto t1 = std::chrono::high_resolution_clock::now();
-	kernel_doitgen_blocking(nr, nq, np, a_in, a_out, c4, sum);
+	kernel_doitgen_no_blocking(nr, nq, np, a_in, a_out, c4, sum);
 	auto t2 = std::chrono::high_resolution_clock::now();
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
@@ -148,5 +148,4 @@ int main(void)
 	getchar();
 
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
-
 }

@@ -16,7 +16,7 @@
 * safe we can try a blocking window of size 8.
 */
 //For now, this doesn't seem to have an effect. This probably because of the coherence traffic.
-#define BLOCKING_WINDOW 64
+#define BLOCKING_WINDOW 32
 
 /* Include benchmark-specific header. */
 /* Default data type is double, default size is 4000. */
@@ -163,12 +163,12 @@ void kernel_doitgen_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	double* c4,
 	double* sum
 ) {
-	
-	#pragma omp parallel for num_threads(16)
+
+#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 		/*for (uint64_t q = 0; q < nq; q += BLOCKING_WINDOW) {
 			for (uint64_t p = 0; p < np; p += BLOCKING_WINDOW) {
-				
+
 				for (uint64_t s = 0; s < np; s += BLOCKING_WINDOW) {
 					for (uint64_t qq = q; qq < q + BLOCKING_WINDOW; ++qq) {
 						for (uint64_t pp = p; pp < p + BLOCKING_WINDOW; ++pp) {
@@ -179,28 +179,32 @@ void kernel_doitgen_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 							SUM(r, qq, pp) = cur_sum;
 							if (pp < nr) {
 								A_OUT(r, q, pp) = SUM(r, qq, pp);
-								
+
 							}
 
 						}
 					}
-					
+
 				}
-				
+
 
 
 			}
 		}*/
+		/*
+		* Only works for now because the matrix size is a facor of the BLOCKING_WINDOW
+		*/
 		for (uint64_t p = 0; p < np; p += BLOCKING_WINDOW) {
 			for (uint64_t s = 0; s < np; s += BLOCKING_WINDOW) {
 				for (uint64_t q = 0; q < nq; q++) {
 					for (uint64_t pp = p; pp < p + BLOCKING_WINDOW; pp++) {
-						double cur_sum = SUM(r, q, pp);
+						//double cur_sum = SUM(r, q, pp);
 						for (uint64_t ss = s; ss < s + BLOCKING_WINDOW; ss++) {
-							cur_sum += A_IN(r, q, ss) * C4(ss, pp);
+							//cur_sum += A_IN(r, q, ss) * C4(ss, pp);
+							A_OUT(r, q, pp) += A_IN(r, q, ss) * C4(ss, pp);
 						}
-						SUM(r, q, pp) = cur_sum;
-						A_OUT(r, q, pp) = SUM(r, q, pp) * (pp < nr) + A_IN(r, q, pp) * (pp >= nr);
+						//SUM(r, q, pp) = cur_sum;
+						//A_OUT(r, q, pp) = SUM(r, q, pp) * (pp < nr) + A_IN(r, q, pp) * (pp >= nr);
 					}
 				}
 			}
@@ -216,20 +220,17 @@ void kernel_doitgen_no_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	double* sum
 ) {
 
-#pragma omp parallel for num_threads(16)
+	#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 		for (uint64_t q = 0; q < nq; q++) {
-			for (uint64_t p = 0; p < np; p++) {
-				double cur_sum = 0.0;
-				for (uint64_t s = 0; s < np; s++) {
-					cur_sum = cur_sum + A_IN(r, q, s) * C4(s, p);
-				}
-				if (p < nr) {
-					A_OUT(r, q, p) = cur_sum;
+			for (uint64_t s = 0; s < np; s++) {
+				for (uint64_t p = 0; p < np; p++) {
+					A_OUT(r, q, p) += A_IN(r, q, s) * C4(s, p);
 				}
 			}
 		}
 	}
+
 }
 
 void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,
@@ -238,30 +239,43 @@ void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,
 	double* c4,
 	double* sum
 ) {
-	//We reduce false sharing by having a sum array for each thread.
-	//double* new_sum = new double[omp_get_max_threads() * _PB_NP];
-
-	/*
-	* Maybe we should do blocking on C4 because we access a lot of those values.
-	* I will try this.
-	* Blocking on the 114-121 lines of code.
-	*/
-	//double* new_sum = new double[np * omp_get_max_threads()];
-
-#pragma omp parallel for collapse(2)
+#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
-		for (uint64_t q = 0; q < nq; q += BLOCKING_WINDOW) {
-			for (uint64_t p = 0; p < np; p += BLOCKING_WINDOW) {
+		for (uint64_t q = 0; q < nq; q ++) {
+			for (uint64_t p = 0; p < np; p ++) {
+				//double cur_sum = 0.0;
+				for (uint64_t s = 0; s < np; s++) {
+					A_OUT(r, q, p) += A_IN(r, q, s) * C4(p, s);
+				}
+				/*if (p < nr) {
+					A_OUT(r, q, p) = cur_sum;
+				}*/
+			}
+		}
+	}
+}
 
-				for (uint64_t qq = q; qq < q + BLOCKING_WINDOW; ++qq) {
-					for (uint64_t pp = p; pp < p + BLOCKING_WINDOW; ++pp) {
-						double cur_sum = 0.0;
-						for (uint64_t s = 0; s < np; s++) {
-							cur_sum = cur_sum + A_IN(r, qq, s) * C4(pp, s);
+void kernel_doitgen_transpose_blocking(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* a_out,
+	double* c4,
+	double* sum
+) {
+	#pragma omp parallel for
+	for (uint64_t r = 0; r < nr; r++) {
+		for (uint64_t p = 0; p < np; p += BLOCKING_WINDOW) {
+			for (uint64_t s = 0; s < np; s += BLOCKING_WINDOW) {
+				for (uint64_t q = 0; q < nq; q++) {
+					for (uint64_t pp = p; pp < p + BLOCKING_WINDOW; pp++) {
+						//double cur_sum = SUM(r, q, pp);
+						for (uint64_t ss = s; ss < s + BLOCKING_WINDOW; ss++) {
+							A_OUT(r, q, pp) += A_IN(r, q, ss) * C4(pp, ss);
 						}
-						if (p < nr) {
-							A_OUT(r, qq, pp) = cur_sum;
-						}
+						/*SUM(r, q, pp) = cur_sum;
+						if (pp < nr) {
+							A_OUT(r, q, pp) = SUM(r, q, pp);
+						}*/
+						//A_OUT(r, q, pp) = SUM(r, q, pp) * (pp < nr) + A_IN(r, q, pp) * (pp >= nr);
 					}
 				}
 			}

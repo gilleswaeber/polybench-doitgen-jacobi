@@ -135,6 +135,20 @@ void kernel_doitgen_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	double* sum
 );
 
+void kernel_doitgen_transpose_blocking(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* a_out,
+	double* c4,
+	double* sum
+);
+
+void kernel_doitgen_no_blocking(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* a_out,
+	double* c4,
+	double* sum
+);
+
 void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a,
 	double* c4,
