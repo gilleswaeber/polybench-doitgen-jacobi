@@ -76,15 +76,15 @@ START_TEST(test_doitgen)
 	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
 
 	init_array(nr, nq, np, a_in, c4);
-	copy_array(a_in, a_out, nr, nq, np);
+	//copy_array(a_in, a_out, nr, nq, np);
 
-	memset(sum, 0.0, nr * nq * np);
+	memset(a_out, 0.0, nr * nq * np);
 	//transpose(c4, c4_transposed, np, np);
 
 	flush_cache();
 
 	auto t1 = std::chrono::high_resolution_clock::now();
-	kernel_doitgen_blocking(nr, nq, np, a_in, a_out, c4, sum);
+	kernel_doitgen_no_blocking(nr, nq, np, a_in, a_out, c4, sum);
 	auto t2 = std::chrono::high_resolution_clock::now();
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
@@ -144,45 +144,4 @@ int main(void)
 	getchar();
 
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
-
-	/*uint64_t nr = NR;
-	uint64_t nq = NQ;
-	uint64_t np = NP;
-
-	
-
-	POLYBENCH_3D_ARRAY_DECL(A_test, DATA_TYPE, NR, NQ, NP, nr, nq, np);
-	//loadFile(nr, nq, np, POLYBENCH_ARRAY(A_test));
-
-	POLYBENCH_3D_ARRAY_DECL(A, DATA_TYPE, NR, NQ, NP, nr, nq, np);
-	POLYBENCH_3D_ARRAY_DECL(sum, DATA_TYPE, NR, NQ, NP, nr, nq, np);
-	POLYBENCH_2D_ARRAY_DECL(C4, DATA_TYPE, NP, NP, np, np);
-
-	init_array(nr, nq, np, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(C4));
-	
-
-	kernel_doitgen(nr, nq, np,
-		POLYBENCH_ARRAY(A),
-		POLYBENCH_ARRAY(C4),
-		POLYBENCH_ARRAY(sum));
-
-	//writeFile("doitgen_custom.dat", nr, nq, np, POLYBENCH_ARRAY(A));
-
-	loadFile("doitgen_custom.dat", nr, nq, np, POLYBENCH_ARRAY(A_test));
-	bool result = compare_results(nr, nq, np, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_test));
-
-	if (result) {
-		std::cout << "Success" << std::endl;
-	}
-	else {
-		std::cout << "Failure" << std::endl;
-	}
-
-	POLYBENCH_FREE_ARRAY(A);
-	POLYBENCH_FREE_ARRAY(C4);
-	POLYBENCH_FREE_ARRAY(sum);
-	POLYBENCH_FREE_ARRAY(A_test);
-
-
-	return 0;*/
 }
