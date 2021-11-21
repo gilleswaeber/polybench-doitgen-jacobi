@@ -19,21 +19,19 @@ set(
     "polybench.cpp"
 )
 
+find_package(OpenMP REQUIRED)
+find_package(MPI REQUIRED)
+
+
 add_library(dphpc_lib STATIC ${SRC})
+target_link_libraries(dphpc_lib PUBLIC OpenMP::OpenMP_CXX)
+target_link_libraries(dphpc_lib PUBLIC MPI::MPI_CXX)
 
 target_include_directories(dphpc_lib
     PUBLIC "jacobi_1D"
     PUBLIC "doitgen"
     PUBLIC "polybench/utilities"
 )
-
-find_package(OpenMP REQUIRED)
-if(OpenMP_CXX_FOUND)
-    target_link_libraries(dphpc_lib PUBLIC OpenMP::OpenMP_CXX)
-endif()
-
-find_package(MPI REQUIRED)
-target_link_libraries(dphpc_lib PUBLIC MPI::MPI_CXX)
 
 add_subdirectory(utils)
 add_subdirectory(doitgen/test)
