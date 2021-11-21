@@ -37,6 +37,7 @@ target_link_libraries(dphpc_lib PUBLIC MPI::MPI_CXX)
 
 add_subdirectory(utils)
 add_subdirectory(doitgen/test)
+add_subdirectory(doitgen/benchmark)
 add_subdirectory(jacobi_1D/test)
 add_subdirectory(jacobi_1D/benchmark)
 
