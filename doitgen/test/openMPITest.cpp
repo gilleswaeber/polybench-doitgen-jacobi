@@ -108,9 +108,9 @@ int main()
 
 	MPI::Init();
 
-	uint64_t nr = 512;
-	uint64_t nq = 512;
-	uint64_t np = 512;
+	uint64_t nr = 257;
+	uint64_t nq = 257;
+	uint64_t np = 257;
 
 	double* a_test 	= 0;
 	double* a 		= 0;
