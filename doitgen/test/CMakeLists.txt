@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(dphpc-doitgen-test VERSION 0.1.0)
 
-add_compile_definitions(TEST_DIRECTORY_PATH="${CMAKE_CURRENT_BINARY_DIR}")
+add_definitions(-DTEST_DIRECTORY_PATH="${CMAKE_CURRENT_BINARY_DIR}")
 
 message("doitgen test binary directory at ${CMAKE_CURRENT_BINARY_DIR}")
 message("doitgen test directory at ${CMAKE_CURRENT_SOURCE_DIR}")
