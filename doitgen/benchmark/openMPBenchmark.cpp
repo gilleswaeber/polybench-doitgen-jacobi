@@ -1,14 +1,16 @@
 #include <doitgen.hpp>
 #include <utils.hpp>
-#include <liblsb.h>
+#include <chrono>
+
+/*#include <liblsb.h>
 #include <papi.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <linux/perf_event.h>
 #include <asm/unistd.h>
-#include <iostream>
+#include <iostream>*/
 
-struct read_format {
+/*struct read_format {
 	uint64_t nr;
 	struct {
 		uint64_t value;
@@ -25,7 +27,7 @@ long perf_event_open(
 ) {
 	int ret = syscall(__NR_perf_event_open, hw_event, pid, cpu, group_fd, flags);
 	return ret;
-}
+}*/
 
 #define RUNS 10
 
@@ -39,18 +41,8 @@ void init(double** a_in, double** a_out, double** c4, double** sum, uint64_t nr,
 	memset(*a_out, 0.0, nr * nq * np);
 }
 
-int main() {
-	uint64_t nr = 512;
-	uint64_t nq = 512;
-	uint64_t np = 512;
-
-	double* a_in;
-	double* a_out;
-	double* c4;
-	double* sum;
-	init(&a_in, &a_out, &c4, &sum, nr, nq, np);
-
-	perf_event_attr attr;
+/*
+* perf_event_attr attr;
 
 	uint64_t id1, id2;
 	// select what we want to count
@@ -62,14 +54,15 @@ int main() {
 	attr.exclude_kernel = 1; // do not count the instruction the kernel executes
 	attr.exclude_hv = 1;
 	attr.read_format = PERF_FORMAT_GROUP | PERF_FORMAT_ID;
+	attr.inherit = 0;
 
 	// open a file descriptor
 	int fd_flops = perf_event_open(&attr, 0, -1, -1, 0);
 
 	ioctl(fd_flops, PERF_EVENT_IOC_ID, &id1);
 
-
-	attr.config = 0x003c;
+	attr.config = PERF_COUNT_HW_REF_CPU_CYCLES;
+	attr.type = PERF_TYPE_HARDWARE;
 	int fd_cycles = perf_event_open(&attr, 0, -1, fd_flops, 0);
 	ioctl(fd_cycles, PERF_EVENT_IOC_ID, &id2);
 
@@ -84,15 +77,12 @@ int main() {
 	ioctl(fd_flops, PERF_EVENT_IOC_RESET, PERF_IOC_FLAG_GROUP);
 	ioctl(fd_flops, PERF_EVENT_IOC_ENABLE, PERF_IOC_FLAG_GROUP);
 
-	kernel_doitgen_no_blocking(nr, nq, np, a_in, a_out, c4, sum);
+	kernel_func
 
 	ioctl(fd_flops, PERF_EVENT_IOC_DISABLE, PERF_IOC_FLAG_GROUP);
 
-	/*long long count_flops;
-	read(fd_flops, &count_flops, sizeof(long long));
 
-	long long count_cycles;
-	read(fd_cycles, &count_flops, sizeof(long long));*/
+	after 
 
 	char buf[4096];
 	struct read_format* rf = (struct read_format*)buf;
@@ -117,6 +107,25 @@ int main() {
 	// close the file descriptor
 	close(fd_flops);
 	close(fd_cycles);
+*/
+
+int main() {
+	uint64_t nr = 512;
+	uint64_t nq = 512;
+	uint64_t np = 512;
+
+	double* a_in;
+	double* a_out;
+	double* c4;
+	double* sum;
+	init(&a_in, &a_out, &c4, &sum, nr, nq, np);
+
+	auto t1 = std::chrono::high_resolution_clock::now();
+	kernel_doitgen_no_blocking(nr, nq, np, a_in, a_out, c4, sum);
+	auto t2 = std::chrono::high_resolution_clock::now();
+	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+
+	std::cout << "Parallel time : " << ms_int.count() << std::endl;
 
 	cleanup(a_in);
 	cleanup(a_out);

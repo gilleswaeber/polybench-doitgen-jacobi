@@ -220,7 +220,7 @@ void kernel_doitgen_no_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	double* sum
 ) {
 
-	//#pragma omp parallel for
+	#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 		for (uint64_t q = 0; q < nq; q++) {
 			for (uint64_t s = 0; s < np; s++) {
