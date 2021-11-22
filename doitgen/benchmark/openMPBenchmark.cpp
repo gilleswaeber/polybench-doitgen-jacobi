@@ -1,6 +1,7 @@
 #include <doitgen.hpp>
 #include <utils.hpp>
 #include <chrono>
+#include <omp.h>
 
 /*#include <liblsb.h>
 #include <papi.h>
