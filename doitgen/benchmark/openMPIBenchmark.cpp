@@ -1,6 +1,9 @@
 #include <openmpi/mpi.h>
 #include <chrono>
 #include <thread>
+#include <math.h>
+
+#include "liblsb.h"
 
 #include "doitgen.hpp"
 #include "utils.hpp"
@@ -11,6 +14,9 @@
 //PROCESS_MESSAGE(rank_world, "selected");
 //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 //benchmark here
+
+const int num_cores_per_bench = 7;
+const int cores[] = { 1, 2, 4, 8, 16, 32, 48 };
 
 int main() {
 
@@ -34,16 +40,25 @@ int main() {
 		PROCESS_MESSAGE(rank_world, std::string("num processes = ") + std::to_string(num_proc_world));
 	}
 
+	LSB_Init("doitgen mpi benchmark", 0);
+	
+	
+	LSB_Set_Rparam_int("rank", rank_world);
+    LSB_Set_Rparam_int("cores", num_cores_per_bench);
+
 	//init data for the benchmark
 	kernel_doitgen_mpi_init(&shared_window, nr, nq, np, &a, &c4, &sum);
 
 	MPI_Barrier(MPI_COMM_WORLD);
+	int limit = std::min(num_proc_world, num_cores_per_bench);
 
 	// select all power of two cores for the benchmark
-	for (int i = 1; i <= num_proc_world; i *= 2) {
+	for (int i = 0; i < limit; i++) {
+		
+		int num_current_cores = cores[i];
 
 		MPI_Comm bench_comm = 0;
-		MPI_Comm_split(MPI_COMM_WORLD, rank_world < i, rank_world, &bench_comm);
+		MPI_Comm_split(MPI_COMM_WORLD, rank_world < num_current_cores, rank_world, &bench_comm);
 
 		if (rank_world == 0) {
 			//PROCESS_MESSAGE(rank_world, std::string("cores # = ") + std::to_string(i));
@@ -57,19 +72,13 @@ int main() {
 			}
 
 			MPI_Barrier(bench_comm);
+			LSB_Res();
+	
+			kernel_doitgen_mpi(bench_comm, nr, nq, np, a, c4, sum);
 
-			auto t1 = std::chrono::high_resolution_clock::now();
-				kernel_doitgen_mpi(bench_comm, nr, nq, np, a, c4, sum);
+			LSB_Rec(i);
 			MPI_Barrier(bench_comm); //sync all selected processes
-			auto t2 = std::chrono::high_resolution_clock::now();
-			auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
-			
-			if (rank_world == 0) {
-				PROCESS_MESSAGE(rank_world, std::to_string(i) + std::string(" : ") + std::to_string(ms_int.count()));
-			}
 
-		} else {
-			//PROCESS_MESSAGE(rank_world, "Ho no :(");
 		}
 		
 		MPI_Comm_free(&bench_comm);
@@ -125,6 +134,8 @@ int test() {
 
 	PROCESS_MESSAGE(rank_world, "bye !");
 
+	LSB_Finalize();
 	MPI::Finalize();
+
 	return 0;
 }
