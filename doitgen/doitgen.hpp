@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <openmpi/mpi.h>
+#include <mpi.h>
 
 /**
  * doitgen.h: This file is part of the PolyBench/C 3.2 test suite.

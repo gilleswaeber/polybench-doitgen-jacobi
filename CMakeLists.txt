@@ -5,7 +5,7 @@ cmake_policy(SET CMP0074 NEW)
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-mavx2 -ffast-math -O3")
+set(CMAKE_CXX_FLAGS_RELEASE "-mavx2 -ffast-math -O3 -ftree-vectorizer-verbose=2")
 
 
 include(CTest)

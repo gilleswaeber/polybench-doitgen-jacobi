@@ -224,7 +224,6 @@ void kernel_doitgen_no_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	for (uint64_t r = 0; r < nr; r++) {
 		for (uint64_t q = 0; q < nq; q++) {
 			for (uint64_t s = 0; s < np; s++) {
-				#pragma omp simd
 				for (uint64_t p = 0; p < np; p++) {
 					A_OUT(r, q, p) += A_IN(r, q, s) * C4(s, p);
 				}
