@@ -110,7 +110,7 @@ void init(double** a_in, double** a_out, double** c4, double** sum, uint64_t nr,
 */
 
 int main() {
-	uint64_t nr = 512;
+	uint64_t nr = 128;
 	uint64_t nq = 512;
 	uint64_t np = 512;
 
