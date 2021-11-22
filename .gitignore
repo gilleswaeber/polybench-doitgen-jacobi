@@ -1,5 +1,7 @@
 build/
+cmake_*/
 .vs/
+.idea/
 CMakePresets.json
 
 
