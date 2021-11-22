@@ -7,6 +7,8 @@
 #include <omp.h>
 #include <iostream>
 #include <cassert>
+#define _OPENMP
+#include <liblsb.h>
 
 /*
 * For every pair of index r, q we access  3 * 256 doubles on the large data set.
