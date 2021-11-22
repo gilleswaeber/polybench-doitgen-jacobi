@@ -333,11 +333,6 @@ void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
 		l = (rank - normal) * (chunk_size + 1) + imbalanced_start;
 		u = (rank - normal + 1) * (chunk_size + 1) + imbalanced_start;
 	}
-
-	//std::cout << std::endl;
-	//std::cout << "Hello in doitgen!" << std::endl;
-	//std::cout << "num_proc: " << num_proc << std::endl;
-	//std::cout << "rank: " << process_rank << std::endl;
   	
 	uint64_t r = 0, q = 0, p = 0, s = 0;
 	
@@ -365,9 +360,84 @@ void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
 
 
 void kernel_doitgen_mpi_init(MPI_Win* shared_window, uint64_t nr, uint64_t nq, uint64_t np, double** a, double** c4, double** sum) {
+    
+	int num_processors = 0;
+	int rank = 0;
 
+    //Get the total number of processes available for the work (in the world)
+	MPI_Comm_size(MPI_COMM_WORLD, &num_processors);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+	//PROCESS_MESSAGE(rank, "starting :)");
+
+	MPI_Aint a_size = nr * nq * np * sizeof(double);
+	MPI_Aint c4_size = np * np * sizeof(double);
+	int displacement_unit = sizeof(double); //placeholder
+
+	if (rank == 0) {
+      
+		MPI_Win_allocate_shared(
+			a_size, 
+			sizeof(double),
+			MPI_INFO_NULL,
+			MPI_COMM_WORLD, 
+			a, 
+			shared_window
+		);
+
+		MPI_Win_allocate_shared(
+			c4_size, 
+			sizeof(double),
+			MPI_INFO_NULL,
+			MPI_COMM_WORLD, 
+			c4, 
+			shared_window
+		);
+
+
+	} else {
+
+		MPI_Win_allocate_shared(
+			0, 
+		   	sizeof(double), 
+		  	MPI_INFO_NULL,
+        	MPI_COMM_WORLD,
+			a,
+			shared_window
+		);
+
+		MPI_Win_shared_query(*shared_window, 0, &a_size, &displacement_unit, a);
+
+		displacement_unit = 0;
+		MPI_Win_allocate_shared(
+			0, 
+		   	sizeof(double), 
+		  	MPI_INFO_NULL,
+        	MPI_COMM_WORLD,
+			c4,
+			shared_window
+		);
+
+		MPI_Win_shared_query(*shared_window, 0, &c4_size, &displacement_unit, c4);
+	
+	}
+
+	MPI_Barrier(MPI_COMM_WORLD); // wait that all processes have requested thier memory
+
+	// sum is private too (everyone allocates its own)
+	*sum = (double*) MPI::Alloc_mem(np * sizeof(double), MPI_INFO_NULL);
+	memset(*sum, 0.0, np);
+
+	if (rank == 0) {
+		init_array(nr, nq, np, *a, *c4);
+	}
+
+	MPI_Barrier(MPI_COMM_WORLD); // wait that all threads have seen initialization of a and C4
 }
 
-void kernel_doitgen_mpi_clean(MPI_Win* shared_window, uint64_t nr, uint64_t nq, uint64_t np, double* sum) {
-
+void kernel_doitgen_mpi_clean(MPI_Win* shared_window, double** sum) {
+	MPI_Free_mem(*sum);
+	*sum = 0;
+	MPI_Win_free(shared_window);
+	*shared_window = 0;
 }

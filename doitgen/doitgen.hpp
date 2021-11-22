@@ -170,7 +170,8 @@ void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
 void kernel_doitgen_mpi_init(MPI_Win* shared_window, uint64_t nr, uint64_t nq, uint64_t np, double** a, double** c4, double** sum);
 
 /**
- * @brief Free memory used by MPI. This function does not call MPI_Finalize.
+ * @brief Free non shared memory used by MPI. This function does not call MPI_Finalize.
+ * Note: Util now, we believe free memory is freed by finallize but not sure? KEEP IN MIND
  * 
  * @param shared_window 
  * @param nr 
@@ -178,7 +179,7 @@ void kernel_doitgen_mpi_init(MPI_Win* shared_window, uint64_t nr, uint64_t nq, u
  * @param np 
  * @param sum 
  */
-void kernel_doitgen_mpi_clean(MPI_Win* shared_window, uint64_t nr, uint64_t nq, uint64_t np, double* sum);
+void kernel_doitgen_mpi_clean(MPI_Win* shared_window, double** sum);
 
 const static problem_instance_t kernels_to_benchmark[] = {
 	{kernel_doitgen_seq, "reference kernel"},
