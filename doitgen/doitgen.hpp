@@ -157,6 +157,29 @@ void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
 	double* sum
 );
 
+/**
+ * @brief Initialize the memory used by each process, MPI_Init must have been called previously.
+ * 
+ * @param nr 
+ * @param nq 
+ * @param np 
+ * @param a 
+ * @param c4 
+ * @param sum 
+ */
+void kernel_doitgen_mpi_init(MPI_Win* shared_window, uint64_t nr, uint64_t nq, uint64_t np, double** a, double** c4, double** sum);
+
+/**
+ * @brief Free memory used by MPI. This function does not call MPI_Finalize.
+ * 
+ * @param shared_window 
+ * @param nr 
+ * @param nq 
+ * @param np 
+ * @param sum 
+ */
+void kernel_doitgen_mpi_clean(MPI_Win* shared_window, uint64_t nr, uint64_t nq, uint64_t np, double* sum);
+
 const static problem_instance_t kernels_to_benchmark[] = {
 	{kernel_doitgen_seq, "reference kernel"},
 	{kernel_doitgen_openmp, "openMp implementation"}
