@@ -17,7 +17,7 @@
 #include <iostream>
 #include <vector>
 
-#include <openmpi/mpi.h>
+#include <mpi.h>
 
 #define EXTRALARGE_DATASET
 
