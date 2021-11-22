@@ -3,7 +3,7 @@ project(dphpc-doitgen-benchmark VERSION 0.1.0)
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-march=native -ffast-math -mprefer-vector-width=512 -O3")
+set(CMAKE_CXX_FLAGS_RELEASE "-march=native -ffast-math -O3")
 
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
 set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
