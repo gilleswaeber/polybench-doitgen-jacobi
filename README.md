@@ -5,7 +5,7 @@ No need to install liblsb.
 Otherwise:
 
 ```
-sudo apt-get install -y openmpi-bin
+sudo apt-get install -y openmpi-bin libpapi-dev
 sudo apt install r-base-core 
 ```
 

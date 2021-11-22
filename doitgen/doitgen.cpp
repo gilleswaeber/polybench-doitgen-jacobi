@@ -361,3 +361,12 @@ void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
 
 
 }
+
+
+void kernel_doitgen_mpi_init(MPI_Win* shared_window, uint64_t nr, uint64_t nq, uint64_t np, double** a, double** c4, double** sum) {
+
+}
+
+void kernel_doitgen_mpi_clean(MPI_Win* shared_window, uint64_t nr, uint64_t nq, uint64_t np, double* sum) {
+
+}

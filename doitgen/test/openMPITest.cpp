@@ -128,8 +128,6 @@ int main()
 
 	PROCESS_MESSAGE(world_rank, "starting :)");
 
-	
-
 	MPI_Aint a_size = nr * nq * np * sizeof(double);
 	MPI_Aint c4_size = np * np * sizeof(double);
 	int displacement_unit = sizeof(double); //placeholder
