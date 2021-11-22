@@ -52,9 +52,7 @@
 #  define DATA_PRINTF_MODIFIER "%0.2lf "
 # endif
 
-void init_array(int n,
-    DATA_TYPE POLYBENCH_1D(A, N, n),
-    DATA_TYPE POLYBENCH_1D(B, N, n));
+void init_array(int n, DATA_TYPE POLYBENCH_1D(A, N, n));
 
 void kernel_jacobi_1d_imper(int tsteps, int n,
     DATA_TYPE POLYBENCH_1D(A, N, n),
@@ -63,5 +61,7 @@ void kernel_jacobi_1d_imper(int tsteps, int n,
 void parallel_jacobi_1d_imper(int tsteps, int n,
     DATA_TYPE POLYBENCH_1D(A, N, n),
     DATA_TYPE POLYBENCH_1D(B, N, n));
+
+void jacobi_1d_imper_mpi(int tsteps, int n, DATA_TYPE POLYBENCH_1D(A, N, n));
 
 #endif /* !JACOBI_1D_IMPER */

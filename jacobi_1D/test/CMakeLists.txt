@@ -17,6 +17,9 @@ set(
 target_include_directories(dphpc_lib
         PUBLIC "../../"
         )
+
 add_executable(dphpc-jacobi-test ${JACOBI_TEST_SRC})
+add_executable(dphpc-jacobi-mpi-test "jacobi1dMpiTest.cpp")
 
 target_link_libraries(dphpc-jacobi-test PUBLIC dphpc_lib check m rt pthread subunit)
+target_link_libraries(dphpc-jacobi-mpi-test PUBLIC dphpc_lib check m rt pthread subunit)
