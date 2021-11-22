@@ -151,6 +151,12 @@ void kernel_doitgen_no_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	double* sum
 );
 
+void kernel_doitgen_mpi(MPI_Comm bench_comm, uint64_t nr, uint64_t nq, uint64_t np,
+	double* a,
+	double* c4,
+	double* sum
+);
+
 void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a,
 	double* c4,

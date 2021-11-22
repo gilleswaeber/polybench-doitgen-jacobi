@@ -303,7 +303,7 @@ void kernel_doitgen_transpose_blocking(uint64_t nr, uint64_t nq, uint64_t np,
  * our processes in two groups, they will have a rank in the original MPI_COMM_WORLD and
  * in the new one.
  */
-void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
+void kernel_doitgen_mpi(MPI_Comm bench_comm, uint64_t nr, uint64_t nq, uint64_t np,
 	double* a,
 	double* c4,
 	double* sum
@@ -313,8 +313,8 @@ void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
 	int rank = 0;
 
 	//Get the total number of processes available for the work
-	MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
-	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	MPI_Comm_size(bench_comm, &num_proc);
+	MPI_Comm_rank(bench_comm, &rank);
 	
 	uint64_t chunk_size = nr / num_proc;
 	uint64_t leftover = nr % num_proc; // we compute the imbalance in jobs
@@ -355,6 +355,14 @@ void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
 
 
 
+}
+
+void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a,
+	double* c4,
+	double* sum
+) {
+	kernel_doitgen_mpi(MPI_COMM_WORLD, nr, nq, np, a, c4, sum);
 }
 
 
