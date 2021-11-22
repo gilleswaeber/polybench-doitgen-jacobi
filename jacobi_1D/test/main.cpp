@@ -8,13 +8,18 @@
 
 #define LARGE_DATASET
 
-void compare_results(int n,
+bool compare_results(int n,
     DATA_TYPE POLYBENCH_1D(A, N, n),
     DATA_TYPE POLYBENCH_1D(A_par, N, n)) {
-
+    bool result = true;
     for (int i = 0; i < n; i++) {
-        ck_assert_double_eq(A[i], A_par[i]);
+        //ck_assert_double_eq(A[i], A_par[i]);
+        bool test = std::abs(A[i] - A_par[i]) < std::numeric_limits<double>::epsilon();
+        if (!test) {
+            result = false;
+        }
     }
+    return result;
 }
 
 START_TEST(test_jacobi)
@@ -27,7 +32,7 @@ START_TEST(test_jacobi)
     POLYBENCH_1D_ARRAY_DECL(B, DATA_TYPE, N, n);
 
     init_array(n, POLYBENCH_ARRAY(A));
-    polybench_flush_cache();
+    //polybench_flush_cache();
     clock_t begin = clock();
     kernel_jacobi_1d_imper(tsteps, n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(B));
     clock_t end = clock();
@@ -41,7 +46,7 @@ START_TEST(test_jacobi)
     POLYBENCH_1D_ARRAY_DECL(B_par, DATA_TYPE, N, n);
 
     init_array(n, POLYBENCH_ARRAY(A_par));
-    polybench_flush_cache();
+    //polybench_flush_cache();
     begin = clock();
     parallel_jacobi_1d_imper(tsteps, n, POLYBENCH_ARRAY(A_par), POLYBENCH_ARRAY(B_par));
     end = clock();
@@ -51,7 +56,8 @@ START_TEST(test_jacobi)
     std::cout << "Parallel time : " << time_spent << std::endl;
 
     //(*A)[10] *= 2;
-    compare_results(n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_par));
+    bool result = compare_results(n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_par));
+    ck_assert(result);
 
     POLYBENCH_FREE_ARRAY(A);
     POLYBENCH_FREE_ARRAY(A_par);
