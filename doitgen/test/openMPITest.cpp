@@ -108,24 +108,72 @@ int main()
 
 	MPI::Init();
 
-	uint64_t nr = 257;
-	uint64_t nq = 257;
-	uint64_t np = 257;
+	uint64_t nr = 32;
+	uint64_t nq = 32;
+	uint64_t np = 32;
 
-	double* a_test 	= 0;
-	double* a 		= 0;
-	double* sum 	= 0;
-	double* c4 		= 0;
+	double* a_test = 0; double* a = 0; double* sum = 0; double* c4 = 0;
 
     int world_size = 0;
 	int world_rank = 0;
 
-	MPI_Win shared_window;
+	MPI_Win shared_window = 0;
 
     //Get the total number of processes available for the work (in the world)
 	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 
+	MPI_Aint a_size = nr * nq * np * sizeof(double);
+
+	//init memory for all the processes
+	kernel_doitgen_mpi_init(&shared_window, nr, nq, np, &a, &c4, &sum);
+
+	if (world_rank == 0) { //allocate the test array only on the master
+		a_test = (double*) MPI::Alloc_mem(a_size, MPI_INFO_NULL);
+		loadFile(get_dataset_path(nr, nq, np), nr * nq * np, a_test);
+	}
+
+	MPI_Barrier(MPI_COMM_WORLD); // Everyone begin at the same time 
+
+	auto t1 = std::chrono::high_resolution_clock::now();
+	
+		// launch kernel
+		PROCESS_MESSAGE(world_rank, "Proceeding to kernel execution");
+		kernel_doitgen_mpi(nr, nq, np, a, c4, sum);
+		PROCESS_MESSAGE(world_rank, "waiting for friends");
+		MPI_Barrier(MPI_COMM_WORLD);
+	
+	auto t2 = std::chrono::high_resolution_clock::now();
+	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+
+	if (world_rank == 0) {
+		PROCESS_MESSAGE(world_rank, ms_int.count());
+		bool result = compare_results(nr, nq, np, a, a_test);
+		if (result) {
+			PROCESS_MESSAGE(world_rank, "SUCCESS");
+		} else {
+			PROCESS_MESSAGE(world_rank, "FAILED");
+		}
+	}
+
+	if (world_rank == 0) {
+		MPI_Free_mem(a_test);
+	}
+
+	//MPI_Free_mem(sum);
+	//MPI_Win_free(&shared_window);
+	kernel_doitgen_mpi_clean(&shared_window, &sum);
+
+    MPI::Finalize();
+	
+	PROCESS_MESSAGE(world_rank, "exiting :)");
+
+	return 0;
+
+}
+
+
+/*
 	PROCESS_MESSAGE(world_rank, "starting :)");
 
 	MPI_Aint a_size = nr * nq * np * sizeof(double);
@@ -209,42 +257,7 @@ int main()
 			//PROCESS_MESSAGE(world_rank, print_array3D(a_test, nr, nq, np));
 		}
 	}
-
-	auto t1 = std::chrono::high_resolution_clock::now();
-	
-		// launch kernel
-		PROCESS_MESSAGE(world_rank, "Proceeding to kernel execution");
-		kernel_doitgen_mpi(nr, nq, np, a, c4, sum);
-		PROCESS_MESSAGE(world_rank, "waiting for friends");
-		MPI_Barrier(MPI_COMM_WORLD);
-	
-	auto t2 = std::chrono::high_resolution_clock::now();
-	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
-
-	if (world_rank == 0) {
-		PROCESS_MESSAGE(world_rank, ms_int.count());
-		bool result = compare_results(nr, nq, np, a, a_test);
-		if (result) {
-			PROCESS_MESSAGE(world_rank, "SUCCESS");
-		} else {
-			PROCESS_MESSAGE(world_rank, "FAILED");
-		}
-	}
-
-	if (world_rank == 0) {
-		MPI_Free_mem(a_test);
-	}
-
-	MPI_Free_mem(sum);
-
-	MPI_Win_free(&shared_window);
-    MPI::Finalize();
-	
-	PROCESS_MESSAGE(world_rank, "exiting :)");
-
-	return 0;
-
-}
+	*/
 
 //double * mem = 0;
 	//https://www.mpich.org/static/docs/v3.3/www3/MPI_Win_allocate.html
