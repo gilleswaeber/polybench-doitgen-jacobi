@@ -2,7 +2,8 @@
 #include <utils.hpp>
 #include <chrono>
 #include <omp.h>
-
+#define _OPENMP
+#include <liblsb.h>
 /*#include <liblsb.h>
 #include <papi.h>
 #include <unistd.h>
@@ -111,7 +112,7 @@ void init(double** a_in, double** a_out, double** c4, double** sum, uint64_t nr,
 */
 
 int main() {
-	uint64_t nr = 128;
+	uint64_t nr = 512;
 	uint64_t nq = 512;
 	uint64_t np = 512;
 
@@ -121,12 +122,33 @@ int main() {
 	double* sum;
 	init(&a_in, &a_out, &c4, &sum, nr, nq, np);
 
-	auto t1 = std::chrono::high_resolution_clock::now();
-	kernel_doitgen_no_blocking(nr, nq, np, a_in, a_out, c4, sum);
-	auto t2 = std::chrono::high_resolution_clock::now();
-	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+	MPI::Init();
 
-	std::cout << "Parallel time : " << ms_int.count() << std::endl;
+	LSB_Init("doitgen-openMP-benchmark", 0);
+
+	LSB_Set_Rparam_string("benchmark", "doitgen");
+
+	LSB_Set_Rparam_long("NR", nr);
+	LSB_Set_Rparam_long("NQ", nq);
+	LSB_Set_Rparam_long("NP", np);
+
+	uint64_t threads = 1;
+	for (uint64_t i = 0; i < 5; ++i) {
+		omp_set_num_threads(threads << i);
+		LSB_Set_Rparam_int("threads", threads << i);
+		for (uint64_t i = 0; i < RUNS; ++i) {
+			LSB_Res();
+			kernel_doitgen_no_blocking(nr, nq, np, a_in, a_out, c4, sum);
+			LSB_Rec(i);
+			memset(a_out, 0.0, nr * nq * np);
+		}
+
+	}
+	
+
+	
+
+	MPI::Finalize();
 
 	cleanup(a_in);
 	cleanup(a_out);
