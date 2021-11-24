@@ -3,6 +3,7 @@
 #include <chrono>
 #include <thread>
 #include <math.h>
+#include <string>
 
 #include "liblsb.h"
 
