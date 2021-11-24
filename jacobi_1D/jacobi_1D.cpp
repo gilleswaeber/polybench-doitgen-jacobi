@@ -158,12 +158,12 @@ void jacobi_1d_imper_mpi(int tsteps, int n, DATA_TYPE POLYBENCH_1D(A, N, n))
 
         if (t % sync_every == 0) { // sync processes
             if (rank != 0) {
-                MPI_Isend(A_chunk.data() + sync_every, sync_every, MPI_DOUBLE, rank - 1, TAG_ToPrev, MPI::COMM_WORLD, req_s1);
-                MPI_Irecv(A_chunk.data(), sync_every, MPI_DOUBLE, rank - 1, TAG_ToNext, MPI::COMM_WORLD, req_r1);
+                MPI_Isend(A_chunk.data() + sync_every, sync_every, MPI_DOUBLE, rank - 1, TAG_ToPrev, MPI_COMM_WORLD, req_s1);
+                MPI_Irecv(A_chunk.data(), sync_every, MPI_DOUBLE, rank - 1, TAG_ToNext, MPI_COMM_WORLD, req_r1);
             }
             if (rank != last_rank) {
-                MPI_Isend(A_chunk.data() + padded_chunk_size - 2 * sync_every, sync_every, MPI_DOUBLE, rank + 1, TAG_ToNext, MPI::COMM_WORLD, req_s2);
-                MPI_Irecv(A_chunk.data() + padded_chunk_size - sync_every, sync_every, MPI_DOUBLE, rank + 1, TAG_ToPrev, MPI::COMM_WORLD, req_r2);
+                MPI_Isend(A_chunk.data() + padded_chunk_size - 2 * sync_every, sync_every, MPI_DOUBLE, rank + 1, TAG_ToNext, MPI_COMM_WORLD, req_s2);
+                MPI_Irecv(A_chunk.data() + padded_chunk_size - sync_every, sync_every, MPI_DOUBLE, rank + 1, TAG_ToPrev, MPI_COMM_WORLD, req_r2);
             }
             if (rank != 0 && rank != last_rank) MPI_Waitall(4, requests, MPI_STATUSES_IGNORE);
             else if (rank != 0) MPI_Waitall(2, &requests[0], MPI_STATUSES_IGNORE);
@@ -177,10 +177,10 @@ void jacobi_1d_imper_mpi(int tsteps, int n, DATA_TYPE POLYBENCH_1D(A, N, n))
         std::vector<MPI_Request> collect_reqs(num_proc);
         for (int p = 1; p < num_proc; ++p) {
             int other_block_size = (p != last_rank ? block_size : n - (num_proc - 1) * block_size);
-            MPI_Irecv(A + p * block_size, other_block_size, MPI_DOUBLE, p, TAG_Collect, MPI::COMM_WORLD, &collect_reqs[p]);
+            MPI_Irecv(A + p * block_size, other_block_size, MPI_DOUBLE, p, TAG_Collect, MPI_COMM_WORLD, &collect_reqs[p]);
         }
         if (num_proc > 1) MPI_Waitall(num_proc - 1, collect_reqs.data() + 1, MPI_STATUSES_IGNORE);
     } else {
-        MPI_Send(A_chunk.data() + real_chunk_start - padded_chunk_start, real_chunk_size, MPI_DOUBLE, 0, TAG_Collect, MPI::COMM_WORLD);
+        MPI_Send(A_chunk.data() + real_chunk_start - padded_chunk_start, real_chunk_size, MPI_DOUBLE, 0, TAG_Collect, MPI_COMM_WORLD);
     }
 }

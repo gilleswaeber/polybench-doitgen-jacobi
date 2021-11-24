@@ -22,7 +22,7 @@ bool compare_results(int n,
 
 int main()
 {
-	MPI::Init();
+	MPI_Init();
     int rank;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
@@ -37,7 +37,7 @@ int main()
         jacobi_1d_imper_mpi(tsteps, n, POLYBENCH_ARRAY(A));
         clock_t end = clock();
         double time_spent = (double)(end - begin);
-        std::cout << "Running time : " << time_spent << std::endl;
+        std::cout << "Running time : " << (long) time_spent << std::endl;
 
         POLYBENCH_1D_ARRAY_DECL(A_ref, DATA_TYPE, N, n);
         POLYBENCH_1D_ARRAY_DECL(B_ref, DATA_TYPE, N, n);
