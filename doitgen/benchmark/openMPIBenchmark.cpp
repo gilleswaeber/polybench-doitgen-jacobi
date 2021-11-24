@@ -23,7 +23,7 @@ const int RUN = 10;
 
 int main() {
 
-	MPI::Init();
+	MPI_Init(NULL, NULL);
 
 	uint64_t nr = benchmark_size.nr;
 	uint64_t nq = benchmark_size.nq;
@@ -126,7 +126,7 @@ int main() {
  */
 int test() {
 
-	MPI::Init();
+	MPI_Init(NULL, NULL);
 
 	int num_proc_world = 0;
 	int rank_world = 0;
