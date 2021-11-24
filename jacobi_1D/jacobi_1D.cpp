@@ -5,7 +5,6 @@
  * Contact: Louis-Noel Pouchet <pouchet@cse.ohio-state.edu>
  * Web address: http://polybench.sourceforge.net
  */
-/* Include polybench common header. */
 #include <iostream>
 #include <vector>
 #include <cmath>
@@ -40,11 +39,11 @@ void parallel_jacobi_1d_imper(int tsteps, int n, double *A) {
     std::vector<double> B_(n);
     double *B = B_.data();
     for (int t = 0; t < tsteps; t++) {
-        #pragma omp parallel for
+#pragma omp parallel for
         for (int i = 1; i < n - 1; i++)
             B[i] = 0.33333 * (A[i - 1] + A[i] + A[i + 1]);
 
-        #pragma omp parallel for
+#pragma omp parallel for
         for (int j = 1; j < n - 1; j++)
             A[j] = B[j];
 
@@ -78,71 +77,67 @@ enum TAGS : int {
     TAG_Collect = 12,
 };
 
-void jacobi_1d_imper_mpi(int tsteps, int n, double *A) {
-    int num_proc, rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    int last_rank = num_proc - 1;
+void jacobi_1d_imper_mpi(int time_steps, int n, double *A, MpiParams mpi) {
+    if (mpi.rank >= mpi.num_proc) return;  // no work to do
 
-    int block_size = n / num_proc;
-    int sync_every = 1;
-    int real_chunk_start = rank * block_size;
-    int real_chunk_size;
+    const int last_rank = mpi.num_proc - 1;
+    const int prev_rank = mpi.rank - 1;
+    const int next_rank = mpi.rank + 1;
 
-    if (rank == last_rank) {
-        real_chunk_size = n - ((num_proc - 1) * block_size);
-    } else {
-        real_chunk_size = block_size;
-    }
+    const int block_size = n / mpi.num_proc;
+    const int real_chunk_start = mpi.rank * block_size;
+    const int real_chunk_size = (mpi.rank == last_rank
+                                 ? n - ((mpi.num_proc - 1) * block_size)
+                                 : block_size);
 
-    int padded_chunk_start = real_chunk_start - (rank != 0 ? sync_every : 0);
-    int padded_chunk_size = real_chunk_size + (rank != 0 ? sync_every : 0) + (rank != last_rank ? sync_every : 0);
+    const int padded_chunk_start = real_chunk_start - (mpi.rank != 0 ? mpi.sync_steps : 0);
+    const int padded_chunk_size = real_chunk_size + (mpi.rank != 0 ? mpi.sync_steps : 0) + (mpi.rank != last_rank ? mpi.sync_steps : 0);
 
     std::vector<double> A_chunk(&A[padded_chunk_start], &A[padded_chunk_start + padded_chunk_size]);
     std::vector<double> B_chunk(padded_chunk_size);
     B_chunk[0] = A_chunk[0];
     B_chunk[padded_chunk_size - 1] = A_chunk[padded_chunk_size - 1];
 
-    std::cout << "    MPI" << rank << '/' << num_proc << ": started for "
+    std::cout << "    MPI" << mpi.rank << '/' << mpi.num_proc << ": started for "
               << real_chunk_start << '-' << real_chunk_start + real_chunk_size
               << " (" << padded_chunk_start << '-' << padded_chunk_start + padded_chunk_size << ") "
               << A_chunk[padded_chunk_size - 1] << "\n";
 
     MPI_Request requests[4];
     MPI_Request *req_s1{&requests[0]}, *req_r1{&requests[1]}, *req_s2{&requests[2]}, *req_r2{&requests[3]};
-    for (int t = 0; t < tsteps; ++t) {
+    for (int t = 0; t < time_steps; ++t) {
         for (int i = 1; i < padded_chunk_size - 1; i++)
             B_chunk[i] = 0.33333 * (A_chunk[i - 1] + A_chunk[i] + A_chunk[i + 1]);
         std::swap(A_chunk, B_chunk);
 
-        if (t % sync_every == 0) { // sync processes
-            if (rank != 0) {
-                MPI_Isend(A_chunk.data() + sync_every, sync_every, MPI_DOUBLE, rank - 1, TAG_ToPrev, MPI_COMM_WORLD,
+        if (t % mpi.sync_steps == 0) { // sync processes
+            if (mpi.rank != 0) {
+                MPI_Isend(A_chunk.data() + mpi.sync_steps, mpi.sync_steps, MPI_DOUBLE, prev_rank, TAG_ToPrev, MPI_COMM_WORLD,
                           req_s1);
-                MPI_Irecv(A_chunk.data(), sync_every, MPI_DOUBLE, rank - 1, TAG_ToNext, MPI_COMM_WORLD, req_r1);
+                MPI_Irecv(A_chunk.data(), mpi.sync_steps, MPI_DOUBLE, prev_rank, TAG_ToNext, MPI_COMM_WORLD, req_r1);
             }
-            if (rank != last_rank) {
-                MPI_Isend(A_chunk.data() + padded_chunk_size - 2 * sync_every, sync_every, MPI_DOUBLE, rank + 1,
+            if (mpi.rank != last_rank) {
+                MPI_Isend(A_chunk.data() + padded_chunk_size - 2 * mpi.sync_steps, mpi.sync_steps, MPI_DOUBLE, next_rank,
                           TAG_ToNext, MPI_COMM_WORLD, req_s2);
-                MPI_Irecv(A_chunk.data() + padded_chunk_size - sync_every, sync_every, MPI_DOUBLE, rank + 1, TAG_ToPrev,
+                MPI_Irecv(A_chunk.data() + padded_chunk_size - mpi.sync_steps, mpi.sync_steps, MPI_DOUBLE, next_rank, TAG_ToPrev,
                           MPI_COMM_WORLD, req_r2);
             }
-            if (rank != 0 && rank != last_rank) MPI_Waitall(4, requests, MPI_STATUSES_IGNORE);
-            else if (rank != 0) MPI_Waitall(2, &requests[0], MPI_STATUSES_IGNORE);
-            else if (rank != last_rank) MPI_Waitall(2, &requests[2], MPI_STATUSES_IGNORE);
+            if (mpi.rank != 0 && mpi.rank != last_rank) MPI_Waitall(4, requests, MPI_STATUSES_IGNORE);
+            else if (mpi.rank != 0) MPI_Waitall(2, &requests[0], MPI_STATUSES_IGNORE);
+            else if (mpi.rank != last_rank) MPI_Waitall(2, &requests[2], MPI_STATUSES_IGNORE);
         }
     }
 
     // collect results in process 0
-    if (rank == 0) {
+    if (mpi.rank == 0) {
         std::copy(A_chunk.data(), A_chunk.data() + real_chunk_size, A);
-        std::vector<MPI_Request> collect_reqs(num_proc);
-        for (int p = 1; p < num_proc; ++p) {
-            int other_block_size = (p != last_rank ? block_size : n - (num_proc - 1) * block_size);
+        std::vector<MPI_Request> collect_reqs(mpi.num_proc);
+        for (int p = 1; p < mpi.num_proc; ++p) {
+            int other_block_size = (p != last_rank ? block_size : n - (mpi.num_proc - 1) * block_size);
             MPI_Irecv(A + p * block_size, other_block_size, MPI_DOUBLE, p, TAG_Collect, MPI_COMM_WORLD,
                       &collect_reqs[p]);
         }
-        if (num_proc > 1) MPI_Waitall(num_proc - 1, collect_reqs.data() + 1, MPI_STATUSES_IGNORE);
+        if (mpi.num_proc > 1) MPI_Waitall(mpi.num_proc - 1, collect_reqs.data() + 1, MPI_STATUSES_IGNORE);
     } else {
         MPI_Send(A_chunk.data() + real_chunk_start - padded_chunk_start, real_chunk_size, MPI_DOUBLE, 0, TAG_Collect,
                  MPI_COMM_WORLD);
@@ -157,11 +152,13 @@ bool compare_results(int n, double *A, double *B) {
     long errors = 0;
     long close = 0;
     for (int i = 0; i < n; i++) {
-        if(A[i] != B[i]) {
+        if (A[i] != B[i]) {
             double a = std::min(A[i], B[i]), b = std::max(A[i], B[i]);
             if (!(a + std::abs(a) * allowed_relative_error > b)) {
                 ++errors;
-                if (errors <= show_errors) std::cerr << "  A[" << i << "] = " << A[i] << " ≠ B[" << i << "] = " << B[i] << "! (diff" << (A[i] - B[i]) << " )\n";
+                if (errors <= show_errors)
+                    std::cerr << "  A[" << i << "] = " << A[i] << " ≠ B[" << i << "] = " << B[i] << "! (diff"
+                              << (A[i] - B[i]) << " )\n";
             } else ++close;
         }
     }

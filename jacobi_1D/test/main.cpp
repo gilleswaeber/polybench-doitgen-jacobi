@@ -9,8 +9,8 @@
 #include "jacobi_1D.hpp"
 
 struct Case {
-    long n;
-    long tsteps;
+    int n;
+    int time_steps;
 };
 
 START_TEST(test_jacobi)
@@ -24,10 +24,10 @@ START_TEST(test_jacobi)
     };
 
     for (const auto & c : cases) {
-        long n = c.n;
-        long tsteps = c.tsteps;
+        int n = c.n;
+        int time_steps = c.time_steps;
 
-        std::cout << "Testing with n=" << n << ", tsteps=" << tsteps << "\n";
+        std::cout << "Testing with n=" << n << ", tsteps=" << time_steps << "\n";
 
         // Sequential execution ============================================================
         std::vector<double> A(n);
@@ -35,7 +35,7 @@ START_TEST(test_jacobi)
             init_array(n, A.data());
             flush_cache();
             auto begin = std::chrono::high_resolution_clock::now();
-            kernel_jacobi_1d_imper(tsteps, n, A.data());
+            kernel_jacobi_1d_imper(time_steps, n, A.data());
             auto end = std::chrono::high_resolution_clock::now();
             auto time_spent = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
             std::cout << "  Sequential time : " << time_spent << "ms" << std::endl;
@@ -47,7 +47,7 @@ START_TEST(test_jacobi)
             init_array(n, A_par.data());
             flush_cache();
             auto begin = std::chrono::high_resolution_clock::now();
-            parallel_jacobi_1d_imper(tsteps, n, A_par.data());
+            parallel_jacobi_1d_imper(time_steps, n, A_par.data());
             auto end = std::chrono::high_resolution_clock::now();
             auto time_spent = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
             std::cout << "  Parallel time : " << time_spent << "ms" << std::endl;
@@ -60,7 +60,7 @@ START_TEST(test_jacobi)
             init_array(n, A_mpi.data());
             flush_cache();
             auto begin = std::chrono::high_resolution_clock::now();
-            jacobi_1d_imper_mpi(tsteps, n, A_mpi.data());
+            jacobi_1d_imper_mpi(time_steps, n, A_mpi.data(), {0, 1, 1});
             auto end = std::chrono::high_resolution_clock::now();
             auto time_spent = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
             std::cout << "  MPI time : " << time_spent << "ms" << std::endl;
