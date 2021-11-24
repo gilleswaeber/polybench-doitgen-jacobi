@@ -1,4 +1,4 @@
-#include <openmpi/mpi.h>
+#include <mpi.h>
 #include <chrono>
 #include <thread>
 #include <math.h>
@@ -89,7 +89,7 @@ int main() {
 
 				memset(sum, 0, np);
 				flush_cache();
-				
+
 				PROCESS_MESSAGE(rank_world, std::string("executing the kernel for # cores = ") + std::to_string(num_current_cores))
 
 				MPI_Barrier(bench_comm);
