@@ -111,7 +111,7 @@ void init(double** a_in, double** a_out, double** c4, double** sum, uint64_t nr,
 */
 
 //To change to 7 for the cluster
-#define THREADS_SIZES 5
+#define THREADS_SIZES 7
 const static int threads[] = { 1, 2, 4, 8, 16, 32, 48 };
 
 #define BLOCKING_WINDOW_SIZES 6
@@ -242,6 +242,7 @@ int main() {
 	LSB_Set_Rparam_string("benchmark", "doitgen-seq-blocking");
 	LSB_Set_Rparam_int("threads", threads[0]);
 	for (uint64_t i = 0; i < BLOCKING_WINDOW_SIZES; ++i) {
+		LSB_Set_Rparam_long("blocking_size", blocking_windows[i]);
 		for (uint64_t j = 0; j < RUNS; ++j) {
 			LSB_Res();
 			kernel_doitgen_blocking(nr, nq, np, a_in, a_out, c4, sum, blocking_windows[i]);
