@@ -2,7 +2,6 @@
 #include <utils.hpp>
 #include <chrono>
 #include <omp.h>
-#define _OPENMP
 #include <liblsb.h>
 /*#include <liblsb.h>
 #include <papi.h>
@@ -40,7 +39,7 @@ void init(double** a_in, double** a_out, double** c4, double** sum, uint64_t nr,
 	*a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
 
 	init_array(nr, nq, np, *a_in, *c4);
-	memset(*a_out, 0.0, nr * nq * np);
+	memset(*a_out, 0.0, nr * nq * np * sizeof(double));
 }
 
 /*
@@ -70,7 +69,7 @@ void init(double** a_in, double** a_out, double** c4, double** sum, uint64_t nr,
 
 
 
-	if (fd_flops == -1 ||fd_cycles == -1)
+	if (fd_flops == -1 || fd_cycles == -1)
 	{
 		// handle error
 		printf("ERROR\n");
@@ -84,7 +83,7 @@ void init(double** a_in, double** a_out, double** c4, double** sum, uint64_t nr,
 	ioctl(fd_flops, PERF_EVENT_IOC_DISABLE, PERF_IOC_FLAG_GROUP);
 
 
-	after 
+	after
 
 	char buf[4096];
 	struct read_format* rf = (struct read_format*)buf;
@@ -111,8 +110,24 @@ void init(double** a_in, double** a_out, double** c4, double** sum, uint64_t nr,
 	close(fd_cycles);
 */
 
+//To change to 7 for the cluster
+#define THREADS_SIZES 5
+const static int threads[] = { 1, 2, 4, 8, 16, 32, 48 };
+
+#define BLOCKING_WINDOW_SIZES 6
+const static uint64_t blocking_windows[] = { 8, 16, 32, 64, 128, 256 };
+
+void transpose(double* src, double* dst, uint64_t N, const int M) {
+#pragma omp parallel for
+	for (uint64_t n = 0; n < N * M; n++) {
+		uint64_t i = n / N;
+		uint64_t j = n % N;
+		dst[n] = src[M * j + i];
+	}
+}
+
 int main() {
-	uint64_t nr = 512;
+	uint64_t nr = 128;
 	uint64_t nq = 512;
 	uint64_t np = 512;
 
@@ -124,35 +139,126 @@ int main() {
 
 	MPI::Init();
 
-	LSB_Init("doitgen-openMP-benchmark", 0);
-
-	LSB_Set_Rparam_string("benchmark", "doitgen");
+	LSB_Init("doitgen-openMP", 0);
 
 	LSB_Set_Rparam_long("NR", nr);
 	LSB_Set_Rparam_long("NQ", nq);
 	LSB_Set_Rparam_long("NP", np);
 
-	uint64_t threads = 1;
-	for (uint64_t i = 0; i < 5; ++i) {
-		omp_set_num_threads(threads << i);
-		LSB_Set_Rparam_int("threads", threads << i);
-		for (uint64_t i = 0; i < RUNS; ++i) {
+	/*
+	* Benchmark with the optimal doitgen version.
+	*/
+	LSB_Set_Rparam_string("benchmark", "doitgen-optimal");
+	for (uint64_t i = 0; i < THREADS_SIZES; ++i) {
+		omp_set_num_threads(threads[i]);
+		LSB_Set_Rparam_int("threads", threads[i]);
+		for (uint64_t j = 0; j < RUNS; ++j) {
 			LSB_Res();
 			kernel_doitgen_no_blocking(nr, nq, np, a_in, a_out, c4, sum);
-			LSB_Rec(i);
-			memset(a_out, 0.0, nr * nq * np);
+			LSB_Rec(j);
+			memset(a_out, 0.0, nr * nq * np * sizeof(double));
 		}
+	}
 
+	/*
+	* Benchmark with the default sequential doitgen version.
+	*/
+	LSB_Set_Rparam_string("benchmark", "doitgen-seq");
+	LSB_Set_Rparam_int("threads", threads[0]);
+	for (uint64_t i = 0; i < RUNS; ++i) {
+		LSB_Res();
+		kernel_doitgen_seq(nr, nq, np, a_in, c4, sum);
+		LSB_Rec(i);
+		memset(a_in, 0, nr * nq * np * sizeof(double));
+		memset(c4, 0, np * np * sizeof(double));
+		init_array(nr, nq, np, a_in, c4);
+	}
+
+	/*
+	* Benchmark with the parallel default doitgen version.
+	*/
+	LSB_Set_Rparam_string("benchmark", "doitgen-parallel-default");
+	cleanup(sum);
+
+	for (uint64_t i = 0; i < THREADS_SIZES; ++i) {
+		omp_set_num_threads(threads[i]);
+		LSB_Set_Rparam_int("threads", threads[i]);
+		for (uint64_t j = 0; j < RUNS; ++j) {
+			sum = (double*)allocate_data(np * threads[i], sizeof(double));
+			LSB_Res();
+			kernel_doitgen_openmp(nr, nq, np, a_in, c4, sum);
+			LSB_Rec(j);
+			memset(a_in, 0, nr * nq * np * sizeof(double));
+			memset(c4, 0, np * np * sizeof(double));
+			init_array(nr, nq, np, a_in, c4);
+			cleanup(sum);
+		}
+	}
+
+	/*
+	* Benchmark with the transpose version.
+	* In this version, the cost of the transposition is not counted.
+	*/
+	LSB_Set_Rparam_string("benchmark", "doitgen-parallel-transpose-not-counted");
+	double* c4_transposed = (double*)allocate_data(np * np, sizeof(double));
+	transpose(c4, c4_transposed, np, np);
+
+	for (uint64_t i = 0; i < THREADS_SIZES; ++i) {
+		omp_set_num_threads(threads[i]);
+		LSB_Set_Rparam_int("threads", threads[i]);
+		for (uint64_t j = 0; j < RUNS; ++j) {
+			LSB_Res();
+			kernel_doitgen_transpose(nr, nq, np, a_in, a_out, c4_transposed, sum);
+			LSB_Rec(j);
+			memset(a_out, 0, nr * nq * np * sizeof(double));
+		}
+	}
+
+	/*
+	* Benchmark with the transpose version.
+	* In this version, the cost of the transposition is counted.
+	*/
+	LSB_Set_Rparam_string("benchmark", "doitgen-parallel-transpose-counted");
+	memset(c4_transposed, 0.0, np * np * sizeof(double));
+
+	for (uint64_t i = 0; i < THREADS_SIZES; ++i) {
+		omp_set_num_threads(threads[i]);
+		LSB_Set_Rparam_int("threads", threads[i]);
+		for (uint64_t j = 0; j < RUNS; ++j) {
+			LSB_Res();
+			transpose(c4, c4_transposed, np, np);
+			kernel_doitgen_transpose(nr, nq, np, a_in, a_out, c4_transposed, sum);
+			LSB_Rec(j);
+			memset(c4_transposed, 0, np * np * sizeof(double));
+			memset(a_out, 0, nr * nq * np * sizeof(double));
+		}
+	}
+
+	cleanup(c4_transposed);
+
+	/*
+	* Benchmark with the blocking version.
+	*/
+	LSB_Set_Rparam_string("benchmark", "doitgen-seq-blocking");
+	LSB_Set_Rparam_int("threads", threads[0]);
+	for (uint64_t i = 0; i < BLOCKING_WINDOW_SIZES; ++i) {
+		for (uint64_t j = 0; j < RUNS; ++j) {
+			LSB_Res();
+			kernel_doitgen_blocking(nr, nq, np, a_in, a_out, c4, sum, blocking_windows[i]);
+			LSB_Rec(j);
+			memset(a_out, 0, nr * nq * np * sizeof(double));
+		}
 	}
 	
 
-	
 
+
+	LSB_Finalize();
 	MPI::Finalize();
 
 	cleanup(a_in);
 	cleanup(a_out);
 	cleanup(c4);
-	cleanup(sum);
+	//cleanup(sum);
 	return 0;
 }

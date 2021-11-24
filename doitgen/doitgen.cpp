@@ -7,7 +7,6 @@
 #include <omp.h>
 #include <iostream>
 #include <cassert>
-#define _OPENMP
 #include <liblsb.h>
 
 /*
@@ -83,15 +82,6 @@ void kernel_doitgen_openmp(uint64_t nr, uint64_t nq, uint64_t np,
 	double* c4,
 	double* sum
 ) {
-	//We reduce false sharing by having a sum array for each thread.
-	//double* new_sum = new double[omp_get_max_threads() * _PB_NP];
-
-	/*
-	* Maybe we should do blocking on C4 because we access a lot of those values.
-	* I will try this.
-	* Blocking on the 114-121 lines of code.
-	*/
-	double* new_sum = new double[np * omp_get_max_threads()];
 
 #pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
@@ -109,17 +99,16 @@ void kernel_doitgen_openmp(uint64_t nr, uint64_t nq, uint64_t np,
 					//cur_sum = cur_sum + A[r][q][s] * C4[s][p];
 					cur_sum = cur_sum + A(r, q, s) * C4(s, p);
 				}
-				new_sum[omp_get_thread_num() * np + p] = cur_sum;
+				sum[omp_get_thread_num() * np + p] = cur_sum;
 			}
 
 			for (uint64_t p = 0; p < nr; p++) {
 				//A[r][q][p] = new_sum[omp_get_thread_num() * np + p];
-				A(r, q, p) = new_sum[omp_get_thread_num() * np + p];
+				A(r, q, p) = sum[omp_get_thread_num() * np + p];
 			}
 
 		}
 	}
-	delete[]new_sum;
 }
 
 void kernel_doitgen_experimental(uint64_t nr, uint64_t nq, uint64_t np,
@@ -163,50 +152,22 @@ void kernel_doitgen_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_in,
 	double* a_out,
 	double* c4,
-	double* sum
+	double* sum,
+	uint64_t blocking_window
 ) {
 
-#pragma omp parallel for
+	#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
-		/*for (uint64_t q = 0; q < nq; q += BLOCKING_WINDOW) {
-			for (uint64_t p = 0; p < np; p += BLOCKING_WINDOW) {
-
-				for (uint64_t s = 0; s < np; s += BLOCKING_WINDOW) {
-					for (uint64_t qq = q; qq < q + BLOCKING_WINDOW; ++qq) {
-						for (uint64_t pp = p; pp < p + BLOCKING_WINDOW; ++pp) {
-							double cur_sum = SUM(r, qq, pp);
-							for (uint64_t ss = s; ss < s + BLOCKING_WINDOW; ++ss) {
-								cur_sum += A_IN(r, qq, ss) * C4(ss, pp);
-							}
-							SUM(r, qq, pp) = cur_sum;
-							if (pp < nr) {
-								A_OUT(r, q, pp) = SUM(r, qq, pp);
-
-							}
-
-						}
-					}
-
-				}
-
-
-
-			}
-		}*/
 		/*
 		* Only works for now because the matrix size is a facor of the BLOCKING_WINDOW
 		*/
-		for (uint64_t p = 0; p < np; p += BLOCKING_WINDOW) {
-			for (uint64_t s = 0; s < np; s += BLOCKING_WINDOW) {
+		for (uint64_t p = 0; p < np; p += blocking_window) {
+			for (uint64_t s = 0; s < np; s += blocking_window) {
 				for (uint64_t q = 0; q < nq; q++) {
-					for (uint64_t pp = p; pp < p + BLOCKING_WINDOW; pp++) {
-						//double cur_sum = SUM(r, q, pp);
-						for (uint64_t ss = s; ss < s + BLOCKING_WINDOW; ss++) {
-							//cur_sum += A_IN(r, q, ss) * C4(ss, pp);
+					for (uint64_t pp = p; pp < p + blocking_window; pp++) {
+						for (uint64_t ss = s; ss < s + blocking_window; ss++) {
 							A_OUT(r, q, pp) += A_IN(r, q, ss) * C4(ss, pp);
 						}
-						//SUM(r, q, pp) = cur_sum;
-						//A_OUT(r, q, pp) = SUM(r, q, pp) * (pp < nr) + A_IN(r, q, pp) * (pp >= nr);
 					}
 				}
 			}
@@ -222,7 +183,7 @@ void kernel_doitgen_no_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	double* sum
 ) {
 
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 		for (uint64_t q = 0; q < nq; q++) {
 			for (uint64_t s = 0; s < np; s++) {
@@ -243,8 +204,8 @@ void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,
 ) {
 #pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
-		for (uint64_t q = 0; q < nq; q ++) {
-			for (uint64_t p = 0; p < np; p ++) {
+		for (uint64_t q = 0; q < nq; q++) {
+			for (uint64_t p = 0; p < np; p++) {
 				//double cur_sum = 0.0;
 				for (uint64_t s = 0; s < np; s++) {
 					A_OUT(r, q, p) += A_IN(r, q, s) * C4(p, s);
@@ -263,7 +224,7 @@ void kernel_doitgen_transpose_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	double* c4,
 	double* sum
 ) {
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 		for (uint64_t p = 0; p < np; p += BLOCKING_WINDOW) {
 			for (uint64_t s = 0; s < np; s += BLOCKING_WINDOW) {
@@ -286,16 +247,16 @@ void kernel_doitgen_transpose_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 }
 
 /**
- * @brief 
- * 
- * @param nr 
- * @param nq 
- * @param np 
- * @param a_in 
- * @param a_out 
- * @param c4 
- * @param sum 
- * 
+ * @brief
+ *
+ * @param nr
+ * @param nq
+ * @param np
+ * @param a_in
+ * @param a_out
+ * @param c4
+ * @param sum
+ *
  * Processes are instances of the program that openMpi runs (communicator_size).
  * Processes can be organized into logical groups. The communicators
  * are objects that handle communications between processes. There also exists
@@ -317,7 +278,7 @@ void kernel_doitgen_mpi(MPI_Comm bench_comm, uint64_t nr, uint64_t nq, uint64_t 
 	//Get the total number of processes available for the work
 	MPI_Comm_size(bench_comm, &num_proc);
 	MPI_Comm_rank(bench_comm, &rank);
-	
+
 	uint64_t chunk_size = nr / num_proc;
 	uint64_t leftover = nr % num_proc; // we compute the imbalance in jobs
 	uint64_t normal = num_proc - leftover; // the amount of processes that will not have an additional job
@@ -327,21 +288,22 @@ void kernel_doitgen_mpi(MPI_Comm bench_comm, uint64_t nr, uint64_t nq, uint64_t 
 	uint64_t u = 0;
 
 	// TODO check 
-	if ((uint64_t) rank < normal) {
+	if ((uint64_t)rank < normal) {
 		l = rank * chunk_size;
 		u = (rank + 1) * chunk_size;
-	} else { // imbalanced workload process
+	}
+	else { // imbalanced workload process
 		l = (rank - normal) * (chunk_size + 1) + imbalanced_start;
 		u = (rank - normal + 1) * (chunk_size + 1) + imbalanced_start;
 	}
-  	
+
 	uint64_t r = 0, q = 0, p = 0, s = 0;
-	
+
 	// instead of r in [0, nr], each process do its part of the job
 	for (r = l; r < u; r++) {
 
-		for (q = 0; q < nq; q++)  {
-			for (p = 0; p < np; p++)  {
+		for (q = 0; q < nq; q++) {
+			for (p = 0; p < np; p++) {
 				sum[p] = 0;
 				for (s = 0; s < np; s++) {
 					sum[p] += A(r, q, s) * C4(s, p);
@@ -369,11 +331,11 @@ void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
 
 
 void kernel_doitgen_mpi_init(MPI_Win* shared_window, uint64_t nr, uint64_t nq, uint64_t np, double** a, double** c4, double** sum) {
-    
+
 	int num_processors = 0;
 	int rank = 0;
 
-    //Get the total number of processes available for the work (in the world)
+	//Get the total number of processes available for the work (in the world)
 	MPI_Comm_size(MPI_COMM_WORLD, &num_processors);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
@@ -384,33 +346,34 @@ void kernel_doitgen_mpi_init(MPI_Win* shared_window, uint64_t nr, uint64_t nq, u
 	int displacement_unit = sizeof(double); //placeholder
 
 	if (rank == 0) {
-      
+
 		MPI_Win_allocate_shared(
-			a_size, 
+			a_size,
 			sizeof(double),
 			MPI_INFO_NULL,
-			MPI_COMM_WORLD, 
-			a, 
+			MPI_COMM_WORLD,
+			a,
 			shared_window
 		);
 
 		MPI_Win_allocate_shared(
-			c4_size, 
+			c4_size,
 			sizeof(double),
 			MPI_INFO_NULL,
-			MPI_COMM_WORLD, 
-			c4, 
+			MPI_COMM_WORLD,
+			c4,
 			shared_window
 		);
 
 
-	} else {
+	}
+	else {
 
 		MPI_Win_allocate_shared(
-			0, 
-		   	sizeof(double), 
-		  	MPI_INFO_NULL,
-        	MPI_COMM_WORLD,
+			0,
+			sizeof(double),
+			MPI_INFO_NULL,
+			MPI_COMM_WORLD,
 			a,
 			shared_window
 		);
@@ -419,22 +382,22 @@ void kernel_doitgen_mpi_init(MPI_Win* shared_window, uint64_t nr, uint64_t nq, u
 
 		displacement_unit = 0;
 		MPI_Win_allocate_shared(
-			0, 
-		   	sizeof(double), 
-		  	MPI_INFO_NULL,
-        	MPI_COMM_WORLD,
+			0,
+			sizeof(double),
+			MPI_INFO_NULL,
+			MPI_COMM_WORLD,
 			c4,
 			shared_window
 		);
 
 		MPI_Win_shared_query(*shared_window, 0, &c4_size, &displacement_unit, c4);
-	
+
 	}
 
 	MPI_Barrier(MPI_COMM_WORLD); // wait that all processes have requested thier memory
 
 	// sum is private too (everyone allocates its own)
-	*sum = (double*) MPI::Alloc_mem(np * sizeof(double), MPI_INFO_NULL);
+	*sum = (double*)MPI::Alloc_mem(np * sizeof(double), MPI_INFO_NULL);
 	memset(*sum, 0.0, np);
 
 	if (rank == 0) {

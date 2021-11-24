@@ -1,4 +1,4 @@
-
+set(CMAKE_CXX_FLAGS_RELEASE "-march=native -ffast-math -O3")
 
 set(
     SRC 

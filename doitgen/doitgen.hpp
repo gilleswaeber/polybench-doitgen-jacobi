@@ -134,7 +134,8 @@ void kernel_doitgen_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_in,
 	double* a_out,
 	double* c4,
-	double* sum
+	double* sum,
+	uint64_t blocking_window
 );
 
 void kernel_doitgen_transpose_blocking(uint64_t nr, uint64_t nq, uint64_t np,
