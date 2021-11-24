@@ -8,6 +8,7 @@
 /* Include polybench common header. */
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 #include <mpi.h>
 

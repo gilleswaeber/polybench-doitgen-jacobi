@@ -8,6 +8,7 @@
 #include <string.h>
 #include <iostream>
 #include <assert.h>
+#include <cstdio>
 
 static
 void *
