@@ -42,7 +42,7 @@ void* allocate_data(unsigned long long int n, int elt_size)
 
 void flush_cache()
 {
-  unsigned long long cs = POLYBENCH_CACHE_SIZE_KB * (unsigned long long)1024 * (unsigned long long)512 / (unsigned long long)sizeof(double);
+  unsigned long long cs = POLYBENCH_CACHE_SIZE_KB * 1024ULL / (unsigned long long)sizeof(double);
   double* flush = (double*) calloc (cs, sizeof(double));
   unsigned long long i;
   double tmp = 0.0;

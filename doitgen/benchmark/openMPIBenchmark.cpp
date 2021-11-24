@@ -1,6 +1,9 @@
 #include <openmpi/mpi.h>
 #include <chrono>
 #include <thread>
+#include <math.h>
+
+#include "liblsb.h"
 
 #include "doitgen.hpp"
 #include "utils.hpp"
@@ -12,13 +15,16 @@
 //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 //benchmark here
 
+const int num_cores_per_bench = 7;
+const int cores[] = { 1, 2, 4, 8, 16, 32, 48 };
+
 int main() {
 
 	MPI::Init();
 
-	uint64_t nr = 257;
-	uint64_t nq = 257;
-	uint64_t np = 257;
+	uint64_t nr = 32;
+	uint64_t nq = 32;
+	uint64_t np = 32;
 
 	double* a = 0; double* sum = 0; double* c4 = 0; //to be freed at the end
 	MPI_Win shared_window = 0; //to be freed at the end
@@ -31,8 +37,22 @@ int main() {
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank_world);
 
 	if (rank_world == 0) {
-		PROCESS_MESSAGE(rank_world, std::string("num processes = ") + std::to_string(num_proc_world));
+		PROCESS_MESSAGE(rank_world, std::string("\nnum processes = ") + std::to_string(num_proc_world));
 	}
+
+	LSB_Init("doitgen_mpi_benchmark", 0);
+	
+	
+	LSB_Set_Rparam_int("rank", rank_world);
+
+	LSB_Set_Rparam_string("benchmark_type", "simple");
+
+	LSB_Set_Rparam_long("nr", nr);
+	LSB_Set_Rparam_long("nq", nq);
+	LSB_Set_Rparam_long("np", np);
+
+	int limit = std::min(num_proc_world, num_cores_per_bench);
+    LSB_Set_Rparam_int("runs", limit);
 
 	//init data for the benchmark
 	kernel_doitgen_mpi_init(&shared_window, nr, nq, np, &a, &c4, &sum);
@@ -40,38 +60,48 @@ int main() {
 	MPI_Barrier(MPI_COMM_WORLD);
 
 	// select all power of two cores for the benchmark
-	for (int i = 1; i <= num_proc_world; i *= 2) {
+	for (int i = 0; i < num_cores_per_bench; i++) {
+		
+		int num_current_cores = cores[i];
+
+		if (num_current_cores > num_proc_world) {
+			break;
+		}
+
+		LSB_Set_Rparam_int("processes", num_current_cores);
 
 		MPI_Comm bench_comm = 0;
-		MPI_Comm_split(MPI_COMM_WORLD, rank_world < i, rank_world, &bench_comm);
+		MPI_Comm_split(MPI_COMM_WORLD, rank_world < num_current_cores, rank_world, &bench_comm);
 
 		if (rank_world == 0) {
 			//PROCESS_MESSAGE(rank_world, std::string("cores # = ") + std::to_string(i));
 		}
 
-		if (rank_world < i) {
+		if (rank_world < num_current_cores) {
 			
 			//flush the cache before the kernel execution
 			if (rank_world == 0) {
-				flush_cache();
+				//flush_cache();
 			}
+			
+			//LSB_Set_Rparam_int("idle", 0);
+			PROCESS_MESSAGE(rank_world, std::string("executing the kernel for # cores = ") + std::to_string(num_current_cores))
 
 			MPI_Barrier(bench_comm);
-
-			auto t1 = std::chrono::high_resolution_clock::now();
-				kernel_doitgen_mpi(bench_comm, nr, nq, np, a, c4, sum);
-			MPI_Barrier(bench_comm); //sync all selected processes
-			auto t2 = std::chrono::high_resolution_clock::now();
-			auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+			LSB_Res();
+	
+			kernel_doitgen_mpi(bench_comm, nr, nq, np, a, c4, sum);
 			
-			if (rank_world == 0) {
-				PROCESS_MESSAGE(rank_world, std::to_string(i) + std::string(" : ") + std::to_string(ms_int.count()));
-			}
+			LSB_Rec(i);
+			MPI_Barrier(bench_comm); //sync all selected processes
 
 		} else {
-			//PROCESS_MESSAGE(rank_world, "Ho no :(");
+			//LSB_Set_Rparam_int("idle", 1);
+			//LSB_Res();
+			//LSB_Rec(i);
+			PROCESS_MESSAGE(rank_world, "sleeping...");
 		}
-		
+
 		MPI_Comm_free(&bench_comm);
 		MPI_Barrier(MPI_COMM_WORLD); //sync all processes
 	}
@@ -81,6 +111,7 @@ int main() {
 
 	PROCESS_MESSAGE(rank_world, "exiting");
 
+	LSB_Finalize();
 	MPI::Finalize();
 	return 0;
 }
@@ -126,5 +157,6 @@ int test() {
 	PROCESS_MESSAGE(rank_world, "bye !");
 
 	MPI::Finalize();
+
 	return 0;
 }

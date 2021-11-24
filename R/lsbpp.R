@@ -176,7 +176,6 @@ if (opts[["--summarize"]]){
     #print(opts[["groupvars"]])
     #print(opts[["--ci"]])
     #print(opts[["--qi"]])
-
     
     #print("Summarize")
     data <- CalculateDataSummary(data=data, measurevar=opts[["meauservar"]], groupvars=unlist(strsplit(opts[["groupvars"]], split=",")), conf.interval=as.numeric(opts[["--ci"]]), quantile.interval=as.numeric(opts[["--qi"]]))
