@@ -1,9 +1,10 @@
-#include "liblsb.h"
-#include "config.h"
-
 #include <vector>
-#include <mpi.h>
 #include <omp.h>
+#include <iostream>
+
+#include <mpi.h>
+#include <liblsb.h>
+
 #include "jacobi_1D.hpp"
 
 #define RUNS 10
