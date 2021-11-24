@@ -4,6 +4,7 @@
 #include <thread>
 #include <math.h>
 #include <string>
+#include <cstring>
 
 #include "liblsb.h"
 
