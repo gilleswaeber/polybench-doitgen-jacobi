@@ -100,6 +100,8 @@ const static problem_size_t problem_sizes[] = {
 	//{512, 512, 512}
 };
 
+const static problem_size_t benchmark_size = {128, 512, 512};
+
 
 #define ARR_2D(ARRAY, Y_DIM, X, Y) (ARRAY[ (X) * (Y_DIM) + (Y) ])
 

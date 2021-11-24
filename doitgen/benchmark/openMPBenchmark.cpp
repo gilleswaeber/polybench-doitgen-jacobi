@@ -144,9 +144,6 @@ int main() {
 		}
 
 	}
-	
-
-	
 
 	MPI::Finalize();
 
