@@ -29,12 +29,13 @@ int main() {
 	MPI_Barrier(MPI_COMM_WORLD);
 
     // test powers of two for the number of processors
-    Case c = {24'000, 1000}; // initial problem size from the “Productivity, Portability, Performance: Data-Centric Python” paper
+    //Case c = {24'000, 1000}; // initial problem size from the “Productivity, Portability, Performance: Data-Centric Python” paper
+    Case c = {240'000, 10'000}; // first case is way too fast (~8ms)
     LSB_Set_Rparam_int("base_n", c.n);
     LSB_Set_Rparam_int("time_steps", c.time_steps);
     std::vector<double> A_mpi(c.n * num_proc);
 
-	for (int np = 1; np <= num_proc; np *= 2) {
+	for (int np = 1; np <= num_proc; np += (np == 1 ? 1 : 2)) {
         LSB_Set_Rparam_int("num_cores", np);
         for (int sync_steps = 1; sync_steps <= c.time_steps / np; sync_steps *= 2) {
             LSB_Set_Rparam_int("sync_steps", np);
