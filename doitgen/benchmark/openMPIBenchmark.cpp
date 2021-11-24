@@ -1,3 +1,4 @@
+#include <iostream>
 #include <mpi.h>
 #include <chrono>
 #include <thread>
