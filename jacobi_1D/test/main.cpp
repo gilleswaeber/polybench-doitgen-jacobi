@@ -47,10 +47,22 @@ START_TEST(test_jacobi)
             init_array(n, A_par.data());
             flush_cache();
             auto begin = std::chrono::high_resolution_clock::now();
-            parallel_jacobi_1d_imper(time_steps, n, A_par.data());
+            kernel_jacobi_1d_imper_par(time_steps, n, A_par.data());
             auto end = std::chrono::high_resolution_clock::now();
             auto time_spent = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
             std::cout << "  Parallel time : " << time_spent << "ms" << std::endl;
+        }
+
+        // Parallel barrier execution =====================================================
+        std::vector<double> A_barrier(n);
+        {
+            init_array(n, A_barrier.data());
+            flush_cache();
+            auto begin = std::chrono::high_resolution_clock::now();
+            kernel_jacobi_1d_imper_barrier(time_steps, n, A_barrier.data());
+            auto end = std::chrono::high_resolution_clock::now();
+            auto time_spent = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+            std::cout << "  Parallel (barrier) time : " << time_spent << "ms" << std::endl;
         }
 
         // MPI (single) execution ========================================================

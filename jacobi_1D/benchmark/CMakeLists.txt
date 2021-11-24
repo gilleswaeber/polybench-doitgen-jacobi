@@ -3,7 +3,7 @@ project(dphpc-jacobi-benchmarks VERSION 0.1.0)
 
 set(
     TEST_SRC
-    "main.cpp"
+    "openMPBenchmark.cpp"
 )
 
 set(ALL_SRC ${TEST_SRC})

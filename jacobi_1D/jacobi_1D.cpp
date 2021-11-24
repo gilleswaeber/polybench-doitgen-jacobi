@@ -10,6 +10,7 @@
 #include <cmath>
 
 #include <mpi.h>
+#include <omp.h>
 
 #include "jacobi_1D.hpp"
 
@@ -35,7 +36,7 @@ void kernel_jacobi_1d_imper(int tsteps, int n, double *A) {
 #pragma endscop
 }
 
-void parallel_jacobi_1d_imper(int tsteps, int n, double *A) {
+void kernel_jacobi_1d_imper_par(int tsteps, int n, double *A) {
     std::vector<double> B_(n);
     double *B = B_.data();
     for (int t = 0; t < tsteps; t++) {
@@ -48,27 +49,32 @@ void parallel_jacobi_1d_imper(int tsteps, int n, double *A) {
             A[j] = B[j];
 
     }
+}
 
-//    for (int t = 0; t < tsteps; t++)
-//    {
-//        #pragma omp parallel
-//        {
-//            int nthreads = omp_get_num_threads();
-//            int tid = omp_get_thread_num();
-//            int low = (n - 1) * tid / nthreads;
-//            int high = (n - 1) * (tid + 1) / nthreads;
-//            // Make sure we start at 1 and not 0
-//            if(low == 0) {
-//                low = 1;
-//            }
-//            for (int i = low; i < high; i++)
-//                B[i] = 0.33333 * (A[i - 1] + A[i] + A[i + 1]);
-//
-//            #pragma omp barrier
-//            for (int j = 1; j < n - 1; j++)
-//                A[j] = B[j];
-//        }
-//    }
+
+void kernel_jacobi_1d_imper_barrier(int tsteps, int n, double *A) {
+    std::vector<double> B_(n);
+    double *B = B_.data();
+    for (int t = 0; t < tsteps; t++)
+    {
+        #pragma omp parallel
+        {
+            int nthreads = omp_get_num_threads();
+            int tid = omp_get_thread_num();
+            int low = (n - 1) * tid / nthreads;
+            int high = (n - 1) * (tid + 1) / nthreads;
+            // Make sure we start at 1 and not 0
+            if(low == 0) {
+                low = 1;
+            }
+            for (int i = low; i < high; i++)
+                B[i] = 0.33333 * (A[i - 1] + A[i] + A[i + 1]);
+
+            #pragma omp barrier
+            for (int j = 1; j < n - 1; j++)
+                A[j] = B[j];
+        }
+    }
 }
 
 enum TAGS : int {

@@ -22,5 +22,6 @@ void init_array(int n, double *A);
 bool compare_results(int n, double *A, double *B);
 
 void kernel_jacobi_1d_imper(int timeSteps, int n, double *A);
-void parallel_jacobi_1d_imper(int timeSteps, int n, double *A);
+void kernel_jacobi_1d_imper_par(int timeSteps, int n, double *A);
+void kernel_jacobi_1d_imper_barrier(int timeSteps, int n, double *A);
 void jacobi_1d_imper_mpi(int time_steps, int n, double *A, MpiParams params);
