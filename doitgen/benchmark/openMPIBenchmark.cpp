@@ -52,7 +52,7 @@ int main() {
 	LSB_Set_Rparam_long("np", np);
 
 	int limit = std::min(num_proc_world, num_cores_per_bench);
-    LSB_Set_Rparam_int("runs", limit);
+    //LSB_Set_Rparam_int("runs", limit);
 
 	//init data for the benchmark
 	kernel_doitgen_mpi_init(&shared_window, nr, nq, np, &a, &c4, &sum);
