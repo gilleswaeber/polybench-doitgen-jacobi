@@ -84,7 +84,6 @@ int main() {
 				if (rank_world == 0) {
 					//flush_cache();
 					init_array(nr, nq, np, a, c4);
-					
 				}
 
 				memset(sum, 0, np);
@@ -115,7 +114,7 @@ int main() {
 	PROCESS_MESSAGE(rank_world, "exiting");
 
 	LSB_Finalize();
-	MPI::Finalize();
+	MPI_Finalize();
 	return 0;
 }
 
@@ -159,7 +158,7 @@ int test() {
 
 	PROCESS_MESSAGE(rank_world, "bye !");
 
-	MPI::Finalize();
+	MPI_Finalize();
 
 	return 0;
 }
