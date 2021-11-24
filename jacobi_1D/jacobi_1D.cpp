@@ -91,17 +91,20 @@ void jacobi_1d_imper_mpi(int time_steps, int n, double *A, MpiParams mpi) {
                                  : block_size);
 
     const int padded_chunk_start = real_chunk_start - (mpi.rank != 0 ? mpi.sync_steps : 0);
-    const int padded_chunk_size = real_chunk_size + (mpi.rank != 0 ? mpi.sync_steps : 0) + (mpi.rank != last_rank ? mpi.sync_steps : 0);
+    const int padded_chunk_size =
+            real_chunk_size + (mpi.rank != 0 ? mpi.sync_steps : 0) + (mpi.rank != last_rank ? mpi.sync_steps : 0);
 
     std::vector<double> A_chunk(&A[padded_chunk_start], &A[padded_chunk_start + padded_chunk_size]);
     std::vector<double> B_chunk(padded_chunk_size);
     B_chunk[0] = A_chunk[0];
     B_chunk[padded_chunk_size - 1] = A_chunk[padded_chunk_size - 1];
 
-    std::cout << "    MPI" << mpi.rank << '/' << mpi.num_proc << ": started for "
-              << real_chunk_start << '-' << real_chunk_start + real_chunk_size
-              << " (" << padded_chunk_start << '-' << padded_chunk_start + padded_chunk_size << ") "
-              << A_chunk[padded_chunk_size - 1] << "\n";
+    if (mpi.verbose) {
+        std::cout << "    MPI" << mpi.rank << '/' << mpi.num_proc << ": started for "
+                  << real_chunk_start << '-' << real_chunk_start + real_chunk_size
+                  << " (" << padded_chunk_start << '-' << padded_chunk_start + padded_chunk_size << ") "
+                  << A_chunk[padded_chunk_size - 1] << "\n";
+    }
 
     MPI_Request requests[4];
     MPI_Request *req_s1{&requests[0]}, *req_r1{&requests[1]}, *req_s2{&requests[2]}, *req_r2{&requests[3]};
@@ -112,14 +115,17 @@ void jacobi_1d_imper_mpi(int time_steps, int n, double *A, MpiParams mpi) {
 
         if (t % mpi.sync_steps == 0) { // sync processes
             if (mpi.rank != 0) {
-                MPI_Isend(A_chunk.data() + mpi.sync_steps, mpi.sync_steps, MPI_DOUBLE, prev_rank, TAG_ToPrev, MPI_COMM_WORLD,
+                MPI_Isend(A_chunk.data() + mpi.sync_steps, mpi.sync_steps, MPI_DOUBLE, prev_rank, TAG_ToPrev,
+                          MPI_COMM_WORLD,
                           req_s1);
                 MPI_Irecv(A_chunk.data(), mpi.sync_steps, MPI_DOUBLE, prev_rank, TAG_ToNext, MPI_COMM_WORLD, req_r1);
             }
             if (mpi.rank != last_rank) {
-                MPI_Isend(A_chunk.data() + padded_chunk_size - 2 * mpi.sync_steps, mpi.sync_steps, MPI_DOUBLE, next_rank,
+                MPI_Isend(A_chunk.data() + padded_chunk_size - 2 * mpi.sync_steps, mpi.sync_steps, MPI_DOUBLE,
+                          next_rank,
                           TAG_ToNext, MPI_COMM_WORLD, req_s2);
-                MPI_Irecv(A_chunk.data() + padded_chunk_size - mpi.sync_steps, mpi.sync_steps, MPI_DOUBLE, next_rank, TAG_ToPrev,
+                MPI_Irecv(A_chunk.data() + padded_chunk_size - mpi.sync_steps, mpi.sync_steps, MPI_DOUBLE, next_rank,
+                          TAG_ToPrev,
                           MPI_COMM_WORLD, req_r2);
             }
             if (mpi.rank != 0 && mpi.rank != last_rank) MPI_Waitall(4, requests, MPI_STATUSES_IGNORE);

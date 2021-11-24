@@ -12,8 +12,9 @@ struct MpiParams {
     int rank;
     int num_proc;
     int sync_steps;
+    bool verbose;
 
-    MpiParams(int rank, int numProc, int syncSteps) : rank(rank), num_proc(numProc), sync_steps(syncSteps) {}
+    MpiParams(int rank, int numProc, int syncSteps, bool verbose = true) : rank(rank), num_proc(numProc), sync_steps(syncSteps), verbose(verbose) {}
 };
 
 static const double allowed_relative_error = 1e-12;
