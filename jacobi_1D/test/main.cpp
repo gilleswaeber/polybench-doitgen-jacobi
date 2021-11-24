@@ -1,66 +1,79 @@
 #include <iostream>
 #include <check.h>
 #include <ctime>
-#include <limits>
-#include <polybench.hpp>
+#include <vector>
+#include <utils/utils.hpp>
+#include <chrono>
+#include <mpi.h>
 
 #include "jacobi_1D.hpp"
 
-#define LARGE_DATASET
-
-bool compare_results(int n,
-    DATA_TYPE POLYBENCH_1D(A, N, n),
-    DATA_TYPE POLYBENCH_1D(A_par, N, n)) {
-    bool result = true;
-    for (int i = 0; i < n; i++) {
-        //ck_assert_double_eq(A[i], A_par[i]);
-        bool test = std::abs(A[i] - A_par[i]) < std::numeric_limits<double>::epsilon();
-        if (!test) {
-            result = false;
-        }
-    }
-    return result;
-}
+struct Case {
+    long n;
+    long tsteps;
+};
 
 START_TEST(test_jacobi)
 {
-	int n = N;
-    int tsteps = TSTEPS;
+    std::vector<Case> cases = {
+            {1'000, 100},
+            {10'000, 200},
+            {100'000, 500},
+            {500'000, 1'000},
+            {1'000'000, 10'000}
+    };
 
-    // Sequential execution ============================================================
-    POLYBENCH_1D_ARRAY_DECL(A, DATA_TYPE, N, n);
-    POLYBENCH_1D_ARRAY_DECL(B, DATA_TYPE, N, n);
+    for (const auto & c : cases) {
+        long n = c.n;
+        long tsteps = c.tsteps;
 
-    init_array(n, POLYBENCH_ARRAY(A));
-    //polybench_flush_cache();
-    clock_t begin = clock();
-    kernel_jacobi_1d_imper(tsteps, n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(B));
-    clock_t end = clock();
-    double time_spent = (double)(end - begin);
-    POLYBENCH_FREE_ARRAY(B);
+        std::cout << "Testing with n=" << n << ", tsteps=" << tsteps << "\n";
 
-    std::cout << "Sequential time : " << time_spent << std::endl;
+        // Sequential execution ============================================================
+        std::vector<double> A(n);
+        {
+            init_array(n, A.data());
+            flush_cache();
+            auto begin = std::chrono::high_resolution_clock::now();
+            kernel_jacobi_1d_imper(tsteps, n, A.data());
+            auto end = std::chrono::high_resolution_clock::now();
+            auto time_spent = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+            std::cout << "  Sequential time : " << time_spent << "ms" << std::endl;
+        }
 
-    // Parallel execution ============================================================
-    POLYBENCH_1D_ARRAY_DECL(A_par, DATA_TYPE, N, n);
-    POLYBENCH_1D_ARRAY_DECL(B_par, DATA_TYPE, N, n);
+        // Parallel execution ============================================================
+        std::vector<double> A_par(n);
+        {
+            init_array(n, A_par.data());
+            flush_cache();
+            auto begin = std::chrono::high_resolution_clock::now();
+            parallel_jacobi_1d_imper(tsteps, n, A_par.data());
+            auto end = std::chrono::high_resolution_clock::now();
+            auto time_spent = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+            std::cout << "  Parallel time : " << time_spent << "ms" << std::endl;
+        }
 
-    init_array(n, POLYBENCH_ARRAY(A_par));
-    //polybench_flush_cache();
-    begin = clock();
-    parallel_jacobi_1d_imper(tsteps, n, POLYBENCH_ARRAY(A_par), POLYBENCH_ARRAY(B_par));
-    end = clock();
-    time_spent = (double)(end - begin);
-    POLYBENCH_FREE_ARRAY(B_par);
+        // MPI (single) execution ========================================================
+        std::vector<double> A_mpi(n);
 
-    std::cout << "Parallel time : " << time_spent << std::endl;
+        {
+            init_array(n, A_mpi.data());
+            flush_cache();
+            auto begin = std::chrono::high_resolution_clock::now();
+            jacobi_1d_imper_mpi(tsteps, n, A_mpi.data());
+            auto end = std::chrono::high_resolution_clock::now();
+            auto time_spent = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+            std::cout << "  MPI time : " << time_spent << "ms" << std::endl;
+        }
 
-    //(*A)[10] *= 2;
-    bool result = compare_results(n, POLYBENCH_ARRAY(A), POLYBENCH_ARRAY(A_par));
-    ck_assert(result);
-
-    POLYBENCH_FREE_ARRAY(A);
-    POLYBENCH_FREE_ARRAY(A_par);
+        //(*A)[10] *= 2;
+        std::cerr << "  Compare reference with parallel execution\n";
+        bool result = compare_results(n, A.data(), A_par.data());
+        ck_assert(result);
+        std::cerr << "  Compare reference with MPI execution\n";
+        result = compare_results(n, A.data(), A_mpi.data());
+        ck_assert(result);
+    }
 }
 END_TEST
 
@@ -82,9 +95,9 @@ Suite* jacobi_suite(void)
 
 int main()
 {
+	std::cout << "### Test Jacobi Implementations ###" << std::endl;
 
-	std::cout << "### Test Jacobi ###" << std::endl;
-
+    MPI_Init(nullptr, nullptr);
 	int number_failed;
 	Suite* s;
 	SRunner* sr;
@@ -95,5 +108,6 @@ int main()
 	srunner_run_all(sr, CK_NORMAL);
 	number_failed = srunner_ntests_failed(sr);
 	srunner_free(sr);
+    MPI_Finalize();
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
