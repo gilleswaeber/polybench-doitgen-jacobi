@@ -19,7 +19,8 @@
 
 #include <mpi.h>
 
-#define EXTRALARGE_DATASET
+//#define EXTRALARGE_DATASET
+#define SMALL_DATASET
 
 #include "jacobi_1D.hpp"
 

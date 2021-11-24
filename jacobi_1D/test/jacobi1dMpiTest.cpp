@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 
-#include <openmpi/mpi.h>
+#include <mpi.h>
 
 #define EXTRALARGE_DATASET
 #include "../jacobi_1D.hpp"
@@ -13,7 +13,7 @@ bool compare_results(int n,
     bool ok = true;
     for (int i = 0; i < n; i++) {
         if(A_ref[i] != A[i]) {
-            std::cerr << "A_ref[" << i << "] = " << A_ref[i] << " ≠ A[" << i << "] = " << A[i] << "!\n";
+            std::cerr << "A_ref[" << i << "] = " << A_ref[i] << " ≠ A[" << i << "] = " << A[i] << "! (diff" << (A_ref[i] - A[i]) << " )\n";
             ok = false;
         }
     }

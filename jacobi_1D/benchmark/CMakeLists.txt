@@ -21,6 +21,6 @@ target_link_libraries(dphpc-jacobi-benchmarks PUBLIC
     m 
     rt
     pthread 
-    subunit
     ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a
 )
+# subunit
