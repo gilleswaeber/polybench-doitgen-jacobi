@@ -27,9 +27,9 @@ int main() {
 
 	MPI_Init(NULL, NULL);
 
-	uint64_t nr = 10;//benchmark_size.nr;
-	uint64_t nq = 10;//benchmark_size.nq;
-	uint64_t np = 10;//benchmark_size.np;
+	uint64_t nr = 128;//benchmark_size.nr;
+	uint64_t nq = 512;//benchmark_size.nq;
+	uint64_t np = 512;//benchmark_size.np;
 
 	double* a = 0; double* sum = 0; double* c4 = 0; //to be freed at the end
 	MPI_Win shared_window = 0; //to be freed at the end
