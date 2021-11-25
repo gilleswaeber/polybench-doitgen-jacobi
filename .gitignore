@@ -6,6 +6,8 @@ CMakePresets.json
 
 lsb.*.r*
 
+!lsb.doitgen-openMP.r0
+
 #credits to https://github.com/github/gitignore/blob/master/C.gitignore
 # for the following:
 
