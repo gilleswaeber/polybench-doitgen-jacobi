@@ -21,5 +21,5 @@ target_include_directories(dphpc_lib
 add_executable(dphpc-jacobi-test ${JACOBI_TEST_SRC})
 add_executable(dphpc-jacobi-mpi-test "mpi.cpp")
 
-target_link_libraries(dphpc-jacobi-test PUBLIC dphpc_lib dphpc_lib_utils check m rt pthread)
+target_link_libraries(dphpc-jacobi-test PUBLIC dphpc_lib dphpc_lib_utils check m rt pthread subunit)
 target_link_libraries(dphpc-jacobi-mpi-test PUBLIC dphpc_lib dphpc_lib_utils check m rt pthread)

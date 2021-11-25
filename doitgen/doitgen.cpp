@@ -368,7 +368,7 @@ void kernel_doitgen_mpi_init(MPI_Win* shared_window, uint64_t nr, uint64_t nq, u
 
 	}
 	else {
-
+		
 		MPI_Win_allocate_shared(
 			0,
 			sizeof(double),
@@ -396,8 +396,10 @@ void kernel_doitgen_mpi_init(MPI_Win* shared_window, uint64_t nr, uint64_t nq, u
 
 	MPI_Barrier(MPI_COMM_WORLD); // wait that all processes have requested thier memory
 
+	//https://github.com/open-mpi/ompi/issues/3937
 	// sum is private too (everyone allocates its own)
-	MPI_Alloc_mem(np * sizeof(double), MPI_INFO_NULL, *sum);
+	//MPI_Alloc_mem(np * sizeof(double), MPI_INFO_NULL, (double*) *sum);
+	*sum = (double*) MPI::Alloc_mem(np * sizeof(double), MPI_INFO_NULL);
 	memset(*sum, 0.0, np);
 
 	if (rank == 0) {

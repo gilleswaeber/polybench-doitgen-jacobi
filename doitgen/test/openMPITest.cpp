@@ -106,6 +106,9 @@ bool compare_results(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* a
 int main()
 {
 
+
+	std::cout << "hello" << std::endl;
+	
 	MPI::Init();
 
 	uint64_t nr = 32;
