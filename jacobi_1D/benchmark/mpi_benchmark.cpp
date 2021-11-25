@@ -28,34 +28,40 @@ int main() {
 
 	MPI_Barrier(MPI_COMM_WORLD);
 
-    // test powers of two for the number of processors
-    //Case c = {24'000, 1000}; // initial problem size from the “Productivity, Portability, Performance: Data-Centric Python” paper
-    Case c = {240'000, 10'000}; // first case is way too fast (~8ms)
-    LSB_Set_Rparam_int("base_n", c.n);
-    LSB_Set_Rparam_int("time_steps", c.time_steps);
-    std::vector<double> A_mpi(c.n * num_proc);
+    std::vector<Case> cases{
+            {24'000, 1'000}, // initial problem size from the “Productivity, Portability, Performance: Data-Centric Python” paper
+            {240'000, 10'000}, // first case is way too fast (~8ms), this one should take ~800ms/it
+            {10'000'000, 1'000}  // n multiplied by ~400, should take ~4s
+    };
 
-	for (int np = 1; np <= num_proc; np += (np == 1 ? 1 : 2)) {
-        LSB_Set_Rparam_int("num_cores", np);
-        for (int sync_steps = 1; sync_steps <= c.time_steps / np; sync_steps *= 2) {
-            LSB_Set_Rparam_int("sync_steps", np);
-            if (rank == 0) std::cout << "Jacobi MPI, " << RUN << " runs: base_n=" << c.n << ", time_steps=" << c.time_steps << ", np=" << np << ", sync_steps=" << sync_steps << "\n";
-            for (int run = 0; run < RUN; ++run) {
-                if (rank == 0) std::cout << "\r" << run << "/" << RUN << std::flush;
-                // prepare
-                init_array(c.n * np, A_mpi.data());
-                flush_cache();
-                MPI_Barrier(MPI_COMM_WORLD);
+    for (const auto &c : cases) {
+        if (rank == 0) std::cout << "\n--- Jacobi 1D: n=" << c.n << " × np, time_steps=" << c.time_steps << " ---\n";
+        LSB_Set_Rparam_int("base_n", c.n);
+        LSB_Set_Rparam_int("time_steps", c.time_steps);
+        std::vector<double> A_mpi(c.n * num_proc);
 
-                LSB_Res(); // reset counters
-                // execute
-                jacobi_1d_imper_mpi(c.time_steps, c.n * np, A_mpi.data(), {rank, np, sync_steps, false});
+        for (int np = 1; np <= num_proc; np += (np == 1 ? 1 : 2)) {
+            LSB_Set_Rparam_int("num_cores", np);
+            for (int sync_steps = 1; sync_steps <= c.time_steps / np; sync_steps *= 2) {
+                LSB_Set_Rparam_int("sync_steps", sync_steps);
+                if (rank == 0) std::cout << "Jacobi MPI, " << RUN << " runs: n=" << c.n * np << ", time_steps=" << c.time_steps << ", np=" << np << ", sync_steps=" << sync_steps << "\n";
+                for (int run = 0; run < RUN; ++run) {
+                    if (rank == 0) std::cout << "\r" << run << "/" << RUN << std::flush;
+                    // prepare
+                    init_array(c.n * np, A_mpi.data());
+                    flush_cache();
+                    MPI_Barrier(MPI_COMM_WORLD);
 
-                LSB_Rec(run); // save run
+                    LSB_Res(); // reset counters
+                    // execute
+                    jacobi_1d_imper_mpi(c.time_steps, c.n * np, A_mpi.data(), {rank, np, sync_steps, false});
+
+                    LSB_Rec(run); // save run
+                }
+                std::cout << '\r';
             }
-            std::cout << '\r';
-		}
-	}
+        }
+    }
 
     std::cout << "Process #" << rank << " exiting\n";
 

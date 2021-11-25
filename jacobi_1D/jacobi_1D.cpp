@@ -115,11 +115,15 @@ void jacobi_1d_imper_mpi(int time_steps, int n, double *A, MpiParams mpi) {
     MPI_Request requests[4];
     MPI_Request *req_s1{&requests[0]}, *req_r1{&requests[1]}, *req_s2{&requests[2]}, *req_r2{&requests[3]};
     for (int t = 0; t < time_steps; ++t) {
-        for (int i = 1; i < padded_chunk_size - 1; i++)
+        int lpad = (mpi.rank == 0 ? 1 : 1 + t % mpi.sync_steps);
+        int rpad = (mpi.rank == last_rank ? 1 : 1 + t % mpi.sync_steps);
+        for (int i = lpad; i < padded_chunk_size - rpad; i++) {
             B_chunk[i] = 0.33333 * (A_chunk[i - 1] + A_chunk[i] + A_chunk[i + 1]);
+        }
+
         std::swap(A_chunk, B_chunk);
 
-        if (t % mpi.sync_steps == 0) { // sync processes
+        if (t % mpi.sync_steps == mpi.sync_steps - 1) { // sync processes
             if (mpi.rank != 0) {
                 MPI_Isend(A_chunk.data() + mpi.sync_steps, mpi.sync_steps, MPI_DOUBLE, prev_rank, TAG_ToPrev,
                           MPI_COMM_WORLD,
