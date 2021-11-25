@@ -4,6 +4,7 @@ cmake_*/
 .idea/
 CMakePresets.json
 
+lsb.*.r*
 
 #credits to https://github.com/github/gitignore/blob/master/C.gitignore
 # for the following:

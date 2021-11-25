@@ -1,7 +1,10 @@
-#include <openmpi/mpi.h>
+#include <iostream>
+#include <mpi.h>
 #include <chrono>
 #include <thread>
 #include <math.h>
+#include <string>
+#include <cstring>
 
 #include "liblsb.h"
 
@@ -22,11 +25,11 @@ const int RUN = 10;
 
 int main() {
 
-	MPI::Init();
+	MPI_Init(NULL, NULL);
 
-	uint64_t nr = benchmark_size.nr;
-	uint64_t nq = benchmark_size.nq;
-	uint64_t np = benchmark_size.np;
+	uint64_t nr = 10;//benchmark_size.nr;
+	uint64_t nq = 10;//benchmark_size.nq;
+	uint64_t np = 10;//benchmark_size.np;
 
 	double* a = 0; double* sum = 0; double* c4 = 0; //to be freed at the end
 	MPI_Win shared_window = 0; //to be freed at the end
@@ -84,12 +87,11 @@ int main() {
 				if (rank_world == 0) {
 					//flush_cache();
 					init_array(nr, nq, np, a, c4);
-					
 				}
 
 				memset(sum, 0, np);
-				flush_cache();
-				
+				//flush_cache();
+
 				PROCESS_MESSAGE(rank_world, std::string("executing the kernel for # cores = ") + std::to_string(num_current_cores))
 
 				MPI_Barrier(bench_comm);
@@ -115,7 +117,7 @@ int main() {
 	PROCESS_MESSAGE(rank_world, "exiting");
 
 	LSB_Finalize();
-	MPI::Finalize();
+	MPI_Finalize();
 	return 0;
 }
 
@@ -126,7 +128,7 @@ int main() {
  */
 int test() {
 
-	MPI::Init();
+	MPI_Init(NULL, NULL);
 
 	int num_proc_world = 0;
 	int rank_world = 0;
@@ -159,7 +161,7 @@ int test() {
 
 	PROCESS_MESSAGE(rank_world, "bye !");
 
-	MPI::Finalize();
+	MPI_Finalize();
 
 	return 0;
 }
