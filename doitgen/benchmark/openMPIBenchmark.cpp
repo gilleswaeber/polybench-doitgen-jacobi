@@ -21,7 +21,7 @@
 const int num_cores_per_bench = 7;
 const int cores[] = { 1, 2, 4, 8, 16, 32, 48 };
 
-const int RUN = 10;
+const int RUN = 5;
 
 int main() {
 
