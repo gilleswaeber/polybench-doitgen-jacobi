@@ -6,7 +6,8 @@
 #include <string.h>
 #include <openmpi/mpi.h>
 #include <string>
-
+#include <cassert>
+#include <stdio.h>
 
 #include "doitgen.hpp"
 #include "utils.hpp"
@@ -83,12 +84,64 @@ bool compare_results(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* a
 				//bool test = std::abs(A[r][q][p] - A_par[r][q][p]) < std::numeric_limits<double>::epsilon();
 				bool test = std::abs(ARR_3D(a, nr, nq, np, r, q, p) - ARR_3D(a_par, nr, nq, np, r, q, p)) < std::numeric_limits<double>::epsilon();
 				if (!test) {
+					//std::cout << "ERR : exp = " << ARR_3D(a, nr, nq, np, r, q, p) << ", got = " << ARR_3D(a_par, nr, nq, np, r, q, p) << std::endl;
 					result = false;
 				}
 			}
 		}
 	}
 	return result;
+}
+
+int main(int argc, char **argv) {
+
+	MPI_Init(nullptr, nullptr);
+
+	assert(argc == 5);
+
+	char* output_path = argv[1];
+
+	remove(output_path);
+
+	uint64_t nr = strtoull(argv[2], nullptr, 10);
+	uint64_t nq = strtoull(argv[3], nullptr, 10);
+	uint64_t np = strtoull(argv[4], nullptr, 10);
+
+	int num_proc, rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+	kernel_doitgen_mpi_io(nr, nq, np, output_path);
+	
+	//here we load the file and check its result if we are the master
+	if (rank == 0) {
+
+		double* a_test = 0;
+		a_test = (double*) calloc(nr * nq * np, sizeof(double));
+		assert(a_test != 0);
+
+		double* a = 0;
+		a = (double*) calloc(nr * nq * np, sizeof(double));
+		assert(a != 0);
+	
+		loadFile(get_dataset_path(nr, nq, np), nr * nq * np, a_test);
+		loadFile(output_path, nr * nq * np, a);
+
+		int result = compare_results(nr, nq, np, a_test, a);
+		if (!result) {
+			std::cout << "Test failed !" << std::endl;
+			free(a);
+			free(a_test);
+			assert(false);
+		} else {
+			std::cout << "Success !" << std::endl;
+			free(a);
+			free(a_test);
+		}
+
+	}
+
+	MPI_Finalize();
 }
 
 /**
@@ -103,6 +156,7 @@ bool compare_results(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* a
  * 
  * @return int 
  */
+/*
 int main()
 {
 
@@ -173,7 +227,7 @@ int main()
 
 	return 0;
 
-}
+}*/
 
 
 /*
