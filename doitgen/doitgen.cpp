@@ -32,6 +32,19 @@ void init_C4(uint64_t np, double* c4) {
 	}
 }
 
+std::string print_array2D_test(double* arr, uint64_t nq, uint64_t np) {
+	std::string result = "";
+	result += "################### 2D array bellow ######################\n";
+	for (uint64_t i = 0; i < nq; i++) {
+		for (uint64_t j = 0; j < np; j++) {
+			result += std::to_string(ARR_2D(arr, nq, i, j)) + " ";
+		}
+		result += "\n";
+	}
+	result += "-------------------------------------\n";
+	return result;
+}
+
 void init_A_slice(uint64_t nq, uint64_t np, double* a, uint64_t i) {
 
 	uint64_t j, k;
@@ -92,7 +105,7 @@ void kernel_doitgen_seq(uint64_t nr, uint64_t nq, uint64_t np,
 			* loop variable p should be _PB_NP since the last dimension of sum and
 			* A has size np. Maybe this is just how the program should work.
 			*/
-			for (p = 0; p < nr; p++) {
+			for (p = 0; p < np; p++) {
 				A(r, q, p) = SUM(r, q, p);
 				//A[r][q][p] = sum[r][q][p];
 			}
@@ -452,20 +465,6 @@ void kernel_doitgen_mpi_clean(MPI_Win* shared_window, double** sum) {
 }
 
 
-void delete_file_if_exists(const char* output_path) {
-
-}
-
-std::string print2D2(double* arr, uint64_t nq, uint64_t np) {
-	std::string result = "";
-	for (uint64_t i = 0; i < nq; i++) {
-		for (uint64_t j = 0; j < np; ++j) {
-			result += std::to_string(arr[i * np + j]) + " ";
-		}
-		result += "\n";
-	}
-	return result;
-}
 
 void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
 	
@@ -516,7 +515,7 @@ void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* ou
 	}
 
 	uint64_t r = 0, q = 0, p = 0, s = 0;
-	MPI_Offset offset;
+	MPI_Offset offset; // should represent the size in bytes of the data
 
 	// 2 - each do its job
 
@@ -525,7 +524,6 @@ void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* ou
 		// - 2.1 init slice of A
 
 		init_A_slice(nq, np, a, r);
-		//std::cout << print2D2(a, nq, np) << std::endl;
 
 		// - 2.2 execute kernel on slice
 		for (q = 0; q < nq; q++) {
@@ -541,8 +539,6 @@ void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* ou
 				A_SLICE(q, p) = sum[p];
 			}
 		}
-
-		//std::cout << print2D2(a, nq, np) << std::endl;
 
 		// 2.3 write A to the result file
 

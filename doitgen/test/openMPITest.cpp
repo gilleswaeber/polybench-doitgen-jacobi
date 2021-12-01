@@ -32,41 +32,6 @@ std::string get_dataset_path(uint64_t nr, uint64_t nq, uint64_t np) {
 	return result;
 }
 
-std::string print_array1D(double* arr, uint64_t np) {
-	std::string result = "";
-	for (uint64_t i = 0; i < np; i++) {
-		result += std::to_string(arr[i]) + " "; 
-	}
-	result += "\n";
-	return result;
-}
-
-std::string print2D(double* arr, uint64_t nq, uint64_t np) {
-	std::string result = "";
-	for (uint64_t i = 0; i < nq; i++) {
-		for (uint64_t j = 0; j < np; ++j) {
-			result += std::to_string(arr[i * np + j]) + " ";
-		}
-		result += "\n";
-	}
-	return result;
-}
-
-std::string print_array2D(double* arr, uint64_t nq, uint64_t np) {
-	std::string result = "";
-	for (uint64_t i = 0; i < nq; i++) {
-		result += print_array1D(arr + i * np, np);
-	}
-	return result;
-}
-
-std::string print_array3D(double* arr, uint64_t nr, uint64_t nq, uint64_t np) {
-	std::string result = "";
-	for (uint64_t i = 0; i < nr; i++) {
-		result += print_array2D(arr + i * nq * np, nq, np);
-	}
-	return result;
-}
 
 void print_state(int world_rank, double* a, double* c4, double* sum) {
 	std::cout << "----------------------------------------------" << std::endl;
@@ -76,13 +41,13 @@ void print_state(int world_rank, double* a, double* c4, double* sum) {
 	std::cout << "--> sum : " << (std::size_t) sum << std::endl;
 }
 
-bool compare_results(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* a_par) {
+bool compare_results(uint64_t nr, uint64_t nq, uint64_t np, double* expected, double* actual) {
 	bool result = true;
 	for (uint64_t r = 0; r < nr; ++r) {
 		for (uint64_t q = 0; q < nq; ++q) {
 			for (uint64_t p = 0; p < np; ++p) {
 				//bool test = std::abs(A[r][q][p] - A_par[r][q][p]) < std::numeric_limits<double>::epsilon();
-				bool test = std::abs(ARR_3D(a, nr, nq, np, r, q, p) - ARR_3D(a_par, nr, nq, np, r, q, p)) < std::numeric_limits<double>::epsilon();
+				bool test = std::abs(ARR_3D(expected, nr, nq, np, r, q, p) - ARR_3D(actual, nr, nq, np, r, q, p)) < std::numeric_limits<double>::epsilon();
 				if (!test) {
 					//std::cout << "ERR : exp = " << ARR_3D(a, nr, nq, np, r, q, p) << ", got = " << ARR_3D(a_par, nr, nq, np, r, q, p) << std::endl;
 					result = false;
@@ -90,12 +55,22 @@ bool compare_results(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* a
 			}
 		}
 	}
+
+	if (result == false) {
+		std::cout << "expected:" << std::endl;
+		std::cout << print_array3D(expected, nr, nq, np) << std::endl;
+		std::cout << "actual:" << std::endl;
+		std::cout << print_array3D(actual, nr, nq, np) << std::endl;
+	}
+
 	return result;
 }
 
 int main(int argc, char **argv) {
 
 	MPI_Init(nullptr, nullptr);
+
+	//std::cout << argc << std::endl;
 
 	assert(argc == 5);
 
@@ -116,27 +91,27 @@ int main(int argc, char **argv) {
 	//here we load the file and check its result if we are the master
 	if (rank == 0) {
 
-		double* a_test = 0;
-		a_test = (double*) calloc(nr * nq * np, sizeof(double));
-		assert(a_test != 0);
+		double* expected = 0;
+		expected = (double*) calloc(nr * nq * np, sizeof(double));
+		assert(expected != 0);
 
 		double* a = 0;
 		a = (double*) calloc(nr * nq * np, sizeof(double));
 		assert(a != 0);
 	
-		loadFile(get_dataset_path(nr, nq, np), nr * nq * np, a_test);
+		loadFile(get_dataset_path(nr, nq, np), nr * nq * np, expected);
 		loadFile(output_path, nr * nq * np, a);
 
-		int result = compare_results(nr, nq, np, a_test, a);
+		int result = compare_results(nr, nq, np, expected, a);
 		if (!result) {
 			std::cout << "Test failed !" << std::endl;
 			free(a);
-			free(a_test);
+			free(expected);
 			assert(false);
 		} else {
 			std::cout << "Success !" << std::endl;
 			free(a);
-			free(a_test);
+			free(expected);
 		}
 
 	}

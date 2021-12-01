@@ -63,3 +63,36 @@ void flush_cache()
 extern void cleanup(void* ptr) {
   free((void*)ptr);
 }
+
+#define ARR_2D_UTILS(ARRAY, Y_DIM, X, Y) (ARRAY[ (X) * (Y_DIM) + (Y) ])
+
+#define ARR_3D_UTILS(ARRAY, X_DIM, Y_DIM, Z_DIM, X, Y, Z) \
+	(ARRAY[ ((Z_DIM) * (Y_DIM) * (X)) + ((Z_DIM) * (Y)) + (Z) ])
+
+extern std::string print_array3D(double* arr, uint64_t nr, uint64_t nq, uint64_t np) {
+	std::string result = "";
+	result += "################### 3D array bellow ######################\n";
+	for (uint64_t i = 0; i < nr; i++) {
+		for (uint64_t j = 0; j < nq; j++) {
+			for (uint64_t k = 0; k < np; k++) {
+				result += std::to_string(ARR_3D_UTILS(arr, nr, nq, np, i, j, k)) + " ";
+			}
+			result += "\n";
+		}
+		result += "-------------------------------------\n";
+	}
+	return result;
+}
+
+extern std::string print_array2D(double* arr, uint64_t nq, uint64_t np) {
+	std::string result = "";
+	result += "################### 2D array bellow ##################";
+	for (uint64_t i = 0; i < nq; i++) { //
+		for (uint64_t j = 0; j < np; ++j) { 
+			result += std::to_string(arr[i * np + j]) + " ";
+		}
+		result += "\n";
+	}
+  result += "-------------------------------------\n";
+	return result;
+}
