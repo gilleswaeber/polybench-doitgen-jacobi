@@ -24,7 +24,7 @@ const int RUN = 5;
 const char* output_file_path = "a.out";
 
 int main(int argc, char **argv) {
-
+	
 	MPI_Init(nullptr, nullptr);
 
 	//std::cout << argc << std::endl;
@@ -43,6 +43,8 @@ int main(int argc, char **argv) {
     MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+	LSB_Init((std::string("doitgen_") + std::to_string(num_proc)).c_str(), 0);
+
 	if (rank == 0) {
 		std::cout << "starting benchmark " << nr << "x" << nq << "x" << np << std::endl;
 		std::cout << "num process = " << num_proc << std::endl;
@@ -53,10 +55,11 @@ int main(int argc, char **argv) {
 	kernel_doitgen_mpi_io(nr, nq, np, output_path);
 	
 	MPI_Barrier(MPI_COMM_WORLD);
-	
+
 	MASTER_MESSAGE("finished execution");
 	//remove(output_path);
 	
+	LSB_Finalize();
 	MPI_Finalize();
 }
 
