@@ -10,7 +10,7 @@
 #include "utils.hpp"
 #include "serializer.hpp"
 
-#define THREAD_NUM 1
+#define THREAD_NUM 16
 
 /*
 * After thinking a bit about it, I'm in favor of dropping everything
@@ -82,7 +82,7 @@ START_TEST(test_doitgen)
 	flush_cache();
 
 	auto t1 = std::chrono::high_resolution_clock::now();
-	kernel_doitgen_bikj(nr, nq, np, a_in, a_out, c4, 16);
+	kernel_doitgen_no_blocking_avx2(nr, nq, np, a_in, a_out, c4, sum);
 	auto t2 = std::chrono::high_resolution_clock::now();
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 

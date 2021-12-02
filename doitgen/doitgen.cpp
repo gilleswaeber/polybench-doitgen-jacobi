@@ -9,6 +9,7 @@
 #include <cassert>
 #include <liblsb.h>
 #include <string>
+#include <immintrin.h>
 
 /*
 * For every pair of index r, q we access  3 * 256 doubles on the large data set.
@@ -203,6 +204,7 @@ void kernel_doitgen_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 					for (uint64_t pp = p; pp < p + blocking_window; pp++) {
 						for (uint64_t ss = s; ss < s + blocking_window; ss++) {
 							A_OUT(r, q, pp) += A_IN(r, q, ss) * C4(ss, pp);
+
 						}
 					}
 				}
@@ -246,10 +248,39 @@ void kernel_doitgen_no_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 
-		for (uint64_t q = 0; q < nq; q++) {
-			for (uint64_t s = 0; s < np; s++) {
-				for (uint64_t p = 0; p < np; p++) {
-					A_OUT(r, q, p) += A_IN(r, q, s) * C4(s, p);
+		for (uint64_t i = 0; i < nq; i++) {
+			for (uint64_t k = 0; k < np; k++) {
+				for (uint64_t j = 0; j < np; j++) {
+					A_OUT(r, i, j) += A_IN(r, i, k) * C4(k, j);
+				}
+			}
+		}
+	}
+
+}
+
+void kernel_doitgen_no_blocking_avx2(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* a_out,
+	double* c4,
+	double* sum
+) {
+
+#pragma omp parallel for
+	for (uint64_t r = 0; r < nr; r++) {
+
+		for (uint64_t i = 0; i < nq; i++) {
+			for (uint64_t k = 0; k < np; k++) {
+				__m256d a_in_val = _mm256_set1_pd(A_IN(r, i, k));
+				for (uint64_t j = 0; j < np; j+=4) {
+					__m256d a_out_val = _mm256_load_pd(&(A_OUT(r, i, j)));
+					__m256d c4_val = _mm256_load_pd(&(C4(k, j)));
+					
+					__m256d res = _mm256_fmadd_pd(a_in_val, c4_val, a_out_val);
+
+					_mm256_store_pd(&(A_OUT(r, i, j)), res);
+
+					//A_OUT(r, i, j) = A_OUT(r, i, j) + A_IN(r, i, k) * C4(k, j);
 				}
 			}
 		}

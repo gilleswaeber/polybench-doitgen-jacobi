@@ -51,7 +51,7 @@ int main() {
 	/*
 	* Benchmark with the blocking version.
 	*/
-	LSB_Set_Rparam_string("benchmark", "doitgen-seq-blocking");
+	LSB_Set_Rparam_string("benchmark", "doitgen-blocking");
 
 	for (uint64_t i = 0; i < BLOCKING_WINDOW_SIZES; ++i) {
 		LSB_Set_Rparam_long("blocking_size", blocking_windows[i]);
@@ -65,10 +65,20 @@ int main() {
 	}
 
 	flush_cache();
-	LSB_Set_Rparam_string("benchmark", "doitgen-seq-no-blocking");
+	LSB_Set_Rparam_string("benchmark", "doitgen-no-blocking");
 	for (uint64_t i = 0; i < RUNS; ++i) {
 		LSB_Res();
 		kernel_doitgen_no_blocking(nr, nq, np, a_in, a_out, c4, sum);
+		LSB_Rec(i);
+		memset(a_out, 0, nr * nq * np * sizeof(double));
+		flush_cache();
+	}
+
+	flush_cache();
+	LSB_Set_Rparam_string("benchmark", "doitgen-no-blocking-avx2");
+	for (uint64_t i = 0; i < RUNS; ++i) {
+		LSB_Res();
+		kernel_doitgen_no_blocking_avx2(nr, nq, np, a_in, a_out, c4, sum);
 		LSB_Rec(i);
 		memset(a_out, 0, nr * nq * np * sizeof(double));
 		flush_cache();
