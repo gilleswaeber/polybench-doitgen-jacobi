@@ -20,16 +20,12 @@ const static uint64_t num_processor = 8;
 const static uint64_t PROBLEM_SIZE_N = 7;
 
 const static problem_size_t problem_sizes[] = {
-	{16, 128, 128},
+	{10, 10, 10},
 	{32, 32, 32},
-	{1, 20, 20},
-	{1, 10, 10},
-	{128, 32, 32},
-	{2, 64, 64},
-	//{256, 256, 256},
-	{128, 512, 512}
+	{64, 64, 64},
+	{256, 256, 256},
 	//{257, 257, 257}//,
-	//{512, 512, 512}
+	{512, 512, 512}
 };
 
 const static problem_size_t benchmark_size = {128, 512, 512};
@@ -113,6 +109,9 @@ void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
 	double* c4,
 	double* sum
 );
+
+void kernel_doitgen_bikj(uint64_t nr, uint64_t nq, uint64_t np, double* a_in,
+	double* a_out, double* c4, uint64_t blocking_size);
 
 /**
  * @brief Initialize the memory used by each process, MPI_Init must have been called previously.
