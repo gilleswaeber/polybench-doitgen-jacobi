@@ -5,7 +5,7 @@ cmake_policy(SET CMP0074 NEW)
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -fno-tree-vectorize")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -mavx2")
 
 
 include(CTest)
