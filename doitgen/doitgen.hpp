@@ -89,7 +89,7 @@ struct problem_instance_t {
 };
 
 const static uint64_t num_processor = 8;
-const static uint64_t PROBLEM_SIZE_N = 5;
+const static uint64_t PROBLEM_SIZE_N = 7;
 
 const static problem_size_t problem_sizes[] = {
 	{10, 10, 10},
@@ -102,10 +102,15 @@ const static problem_size_t problem_sizes[] = {
 
 const static problem_size_t benchmark_size = {128, 512, 512};
 
+#define PROCESS_MESSAGE(RANK, MESSAGE) std::cout << "(" << (RANK) << ") " << (MESSAGE) << std::endl;
+#define PROCESS_MESSAGE_2(RANK, MESSAGE_1, MESSAGE_2) std::cout << "(" << (RANK) << ") " << (MESSAGE_1) << (MESSAGE_2) << std::endl;
 
 #define ARR_2D(ARRAY, Y_DIM, X, Y) (ARRAY[ (X) * (Y_DIM) + (Y) ])
 
 #define C4(X, Y) ARR_2D(c4, np, X, Y)
+
+//WARNING is A nq * np ?
+#define A_SLICE(X, Y) ARR_2D(a, np, X, Y)
 
 #define ARR_3D(ARRAY, X_DIM, Y_DIM, Z_DIM, X, Y, Z) \
 	(ARRAY[ ((Z_DIM) * (Y_DIM) * (X)) + ((Z_DIM) * (Y)) + (Z) ])
@@ -117,6 +122,12 @@ const static problem_size_t benchmark_size = {128, 512, 512};
 #define SUM(X, Y, Z) ARR_3D(sum, nr, nq, np, X, Y, Z)
 
 void init_array(uint64_t nr, uint64_t nq, uint64_t np, double* A, double* C4);
+void init_C4(uint64_t np, double* c4);
+void init_A_slice(uint64_t nq, uint64_t np, double* a, uint64_t i);
+
+void delete_file_if_exists(const char* output_path);
+void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
+
 void kernel_doitgen_seq(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4, double* sum);
 void kernel_doitgen_openmp(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4, double* sum);
 void kernel_doitgen_experimental(uint64_t nr, uint64_t nq, uint64_t np,

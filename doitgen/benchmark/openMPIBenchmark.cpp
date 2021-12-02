@@ -5,6 +5,7 @@
 #include <math.h>
 #include <string>
 #include <cstring>
+#include <cassert>
 
 #include "liblsb.h"
 
@@ -12,154 +13,115 @@
 #include "utils.hpp"
 #include "serializer.hpp"
 
-#define PROCESS_MESSAGE(RANK, MESSAGE) std::cout << "(" << (RANK) << ") " << (MESSAGE) << std::endl;
 
 //PROCESS_MESSAGE(rank_world, "selected");
 //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 //benchmark here
 
-const int num_cores_per_bench = 7;
-const int cores[] = { 1, 2, 4, 8, 16, 32, 48 };
 
 const int RUN = 5;
 
+const char* output_file_path = "a.out";
+
 int main() {
 
-	MPI_Init(NULL, NULL);
+	MPI_Init(nullptr, nullptr);
 
-	uint64_t nr = 128;//benchmark_size.nr;
-	uint64_t nq = 512;//benchmark_size.nq;
-	uint64_t np = 512;//benchmark_size.np;
+	// 0 - Init
 
-	double* a = 0; double* sum = 0; double* c4 = 0; //to be freed at the end
-	MPI_Win shared_window = 0; //to be freed at the end
+	uint64_t nr = 128;
+	uint64_t nq = 32;//512;
+	uint64_t np = 32;//512;
 
-	int num_proc_world = 0;
-	int rank_world = 0;
+	int num_proc, rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    //Get the total number of processes available for the work (in the world)
-	MPI_Comm_size(MPI_COMM_WORLD, &num_proc_world);
-	MPI_Comm_rank(MPI_COMM_WORLD, &rank_world);
-
-	if (rank_world == 0) {
-		PROCESS_MESSAGE(rank_world, std::string("\nnum processes = ") + std::to_string(num_proc_world));
+	if (rank == 0) {
+		PROCESS_MESSAGE_2(rank, "starting with #process = ", num_proc);
 	}
 
-	LSB_Init("doitgen_mpi_benchmark", 0);
+	double* a = 0;
+	double* sum = 0;
+	double* c4 = 0;
+
+	a = (double*) calloc(nq * np, sizeof(double));
+	sum = (double*) calloc(np, sizeof(double));
+	c4 = (double*) calloc(np * np, sizeof(double));
+
+	assert(a != nullptr);
+	assert(sum != nullptr);
+	assert(c4 != nullptr);
+
+	init_C4(np, c4);
+
+	// 1 - split the job
+
+	uint64_t chunk_size = nr / num_proc;
+	uint64_t leftover = nr % num_proc; // we compute the imbalance in jobs
+	uint64_t normal = num_proc - leftover; // the amount of processes that will not have an additional job
+	uint64_t imbalanced_start = normal * chunk_size; //start index of the increased jobs
+
+	uint64_t l = 0;
+	uint64_t u = 0;
 	
-	
-	//LSB_Set_Rparam_int("rank", rank_world);
+	if ((uint64_t)rank < normal) {
+		l = rank * chunk_size;
+		u = (rank + 1) * chunk_size;
+	} else { // imbalanced workload process
+		l = (rank - normal) * (chunk_size + 1) + imbalanced_start;
+		u = (rank - normal + 1) * (chunk_size + 1) + imbalanced_start;
+	}
 
-	LSB_Set_Rparam_string("benchmark_type", "simple");
+	uint64_t r = 0, q = 0, p = 0, s = 0;
+	MPI_Offset offset;
 
-	LSB_Set_Rparam_long("nr", nr);
-	LSB_Set_Rparam_long("nq", nq);
-	LSB_Set_Rparam_long("np", np);
+	// 2 - each do its job
 
-	//init data for the benchmark
-	kernel_doitgen_mpi_init(&shared_window, nr, nq, np, &a, &c4, &sum);
+	for (r = l; r < u; r++) {
 
-	MPI_Barrier(MPI_COMM_WORLD);
+		// - 2.1 init slice of A
 
-	// select all power of two cores for the benchmark
-	for (int i = 0; i < num_cores_per_bench; i++) {
-		
-		int num_current_cores = cores[i];
+		init_A_slice(nq, np, a, r);
 
-		if (num_current_cores > num_proc_world) {
-			break;
-		}
+		// - 2.2 execute kernel on slice
+		for (q = 0; q < nq; q++) {
 
-		LSB_Set_Rparam_int("rank", rank_world);
-		LSB_Set_Rparam_int("num_cores", num_current_cores);
-		for (int j = 0; j < RUN; j++) { // do the benchmark RUN times per process
-
-			MPI_Comm bench_comm = 0;
-			MPI_Comm_split(MPI_COMM_WORLD, rank_world < num_current_cores, rank_world, &bench_comm);
-
-			if (rank_world == 0) {
-				//PROCESS_MESSAGE(rank_world, std::string("cores # = ") + std::to_string(i));
-			}
-
-			if (rank_world < num_current_cores) {
-				
-				//flush the cache before the kernel execution
-				if (rank_world == 0) {
-					//flush_cache();
-					init_array(nr, nq, np, a, c4);
+			for (p = 0; p < np; p++) {
+				sum[p] = 0;
+				for (s = 0; s < np; s++) {
+					sum[p] += A_SLICE(q, s) * C4(s, p);
 				}
-
-				memset(sum, 0, np);
-				//flush_cache();
-
-				PROCESS_MESSAGE(rank_world, std::string("executing the kernel for # cores = ") + std::to_string(num_current_cores))
-
-				MPI_Barrier(bench_comm);
-				LSB_Res();
-		
-				kernel_doitgen_mpi(bench_comm, nr, nq, np, a, c4, sum);
-				
-				LSB_Rec(i);
-				MPI_Barrier(bench_comm); //sync all selected processes
-
-			} else {
-				PROCESS_MESSAGE(rank_world, "sleeping...");
 			}
 
-			MPI_Comm_free(&bench_comm);
-			MPI_Barrier(MPI_COMM_WORLD); //sync all processes
-
+			for (p = 0; p < np; p++) {
+				A_SLICE(q, p) = sum[p];
+			}
 		}
+
+		// 2.3 write A to the result file
+
+		offset = nq * np * sizeof(double) * r;
+
+		MPI_File file;
+		MPI_File_open(MPI_COMM_WORLD, output_file_path, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file); 
+		MPI_File_write_at(file, offset, a, nq * np, MPI_DOUBLE, MPI_STATUS_IGNORE);
+		
+		MPI_File_close(&file);
+
 	}
 
-	kernel_doitgen_mpi_clean(&shared_window, &sum);
+	//job finished we can exit
 
-	PROCESS_MESSAGE(rank_world, "exiting");
-
-	LSB_Finalize();
-	MPI_Finalize();
-	return 0;
-}
-
-/**
- * @brief Proof of concept of selecting a waiting process
- * 
- * @return int 
- */
-int test() {
-
-	MPI_Init(NULL, NULL);
-
-	int num_proc_world = 0;
-	int rank_world = 0;
-
-    //Get the total number of processes available for the work (in the world)
-	MPI_Comm_size(MPI_COMM_WORLD, &num_proc_world);
-	MPI_Comm_rank(MPI_COMM_WORLD, &rank_world);
-
-	if (rank_world == 0) {
-		PROCESS_MESSAGE(rank_world, std::string("num processes = ") + std::to_string(num_proc_world));
-	}
+	free(a);
+	free(sum);
+	free(c4);
 
 	MPI_Barrier(MPI_COMM_WORLD);
 
-	for (int i = 0; i < num_proc_world; i++) {
-
-		MPI_Comm bench_comm = 0;
-		MPI_Comm_split(MPI_COMM_WORLD, rank_world <= i, rank_world, &bench_comm);
-
-		if (rank_world <= i) {
-			PROCESS_MESSAGE(rank_world, "Bonjour, j'execute :) dans le comm");
-			std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-			MPI_Barrier(bench_comm); //sync all selected processes
-		} else {
-			PROCESS_MESSAGE(rank_world, "Ho no :(");
-		}
-		
-		MPI_Barrier(MPI_COMM_WORLD); //sync all processes
+	if (rank == 0) {
+		PROCESS_MESSAGE(rank, "exiting!");
 	}
-
-	PROCESS_MESSAGE(rank_world, "bye !");
 
 	MPI_Finalize();
 

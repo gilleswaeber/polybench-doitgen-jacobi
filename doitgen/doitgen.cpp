@@ -8,6 +8,7 @@
 #include <iostream>
 #include <cassert>
 #include <liblsb.h>
+#include <string>
 
 /*
 * For every pair of index r, q we access  3 * 256 doubles on the large data set.
@@ -21,6 +22,41 @@
 
 /* Include benchmark-specific header. */
 /* Default data type is double, default size is 4000. */
+
+void init_C4(uint64_t np, double* c4) {
+	uint64_t i, j;
+	for (i = 0; i < np; i++) {
+		for (j = 0; j < np; j++) {
+			C4(i, j) = ((double)i * j) / np;
+		}
+	}
+}
+
+std::string print_array2D_test(double* arr, uint64_t nq, uint64_t np) {
+	std::string result = "";
+	result += "################### 2D array bellow ######################\n";
+	for (uint64_t i = 0; i < nq; i++) {
+		for (uint64_t j = 0; j < np; j++) {
+			result += std::to_string(ARR_2D(arr, nq, i, j)) + " ";
+		}
+		result += "\n";
+	}
+	result += "-------------------------------------\n";
+	return result;
+}
+
+void init_A_slice(uint64_t nq, uint64_t np, double* a, uint64_t i) {
+
+	uint64_t j, k;
+
+	for (j = 0; j < nq; j++) {
+		for (k = 0; k < np; k++) {
+			double result = ((double)i * j + k) / np;
+			A_SLICE(j, k) = result;
+		}
+	}
+
+}
 
 /* Array initialization. */
 void init_array(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4)
@@ -69,7 +105,7 @@ void kernel_doitgen_seq(uint64_t nr, uint64_t nq, uint64_t np,
 			* loop variable p should be _PB_NP since the last dimension of sum and
 			* A has size np. Maybe this is just how the program should work.
 			*/
-			for (p = 0; p < nr; p++) {
+			for (p = 0; p < np; p++) {
 				A(r, q, p) = SUM(r, q, p);
 				//A[r][q][p] = sum[r][q][p];
 			}
@@ -354,13 +390,25 @@ void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
 }
 
 
+#define CRASH_REPORT(FUN) \
+	{ \
+	int ERROR_VAR = FUN; \
+	if (ERROR_VAR) { \
+		char* ERROR_STR = (char*) malloc(MPI_MAX_ERROR_STRING * sizeof(char)); \
+		int ERROR_LENGTH = 0; \
+		MPI_Error_string(ERROR_VAR, ERROR_STR, &ERROR_LENGTH); \
+		std::cout << std::string("ERROR at line ") << __LINE__ << std::string(" in file ") << std::string(__FILE__) << std::endl; \ 
+		std::cout << std::string(ERROR_STR) << std::endl; \ 
+	} \
+	}\
+
 void kernel_doitgen_mpi_init(MPI_Win* shared_window, uint64_t nr, uint64_t nq, uint64_t np, double** a, double** c4, double** sum) {
 
 	int num_processors = 0;
 	int rank = 0;
 
 	//Get the total number of processes available for the work (in the world)
-	MPI_Comm_size(MPI_COMM_WORLD, &num_processors);
+	CRASH_REPORT(MPI_Comm_size(MPI_COMM_WORLD, &num_processors));
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 	//PROCESS_MESSAGE(rank, "starting :)");
@@ -422,8 +470,8 @@ void kernel_doitgen_mpi_init(MPI_Win* shared_window, uint64_t nr, uint64_t nq, u
 
 	//https://github.com/open-mpi/ompi/issues/3937
 	// sum is private too (everyone allocates its own)
-	//MPI_Alloc_mem(np * sizeof(double), MPI_INFO_NULL, (double*) *sum);
-	*sum = (double*)MPI::Alloc_mem(np * sizeof(double), MPI_INFO_NULL);
+	CRASH_REPORT(MPI_Alloc_mem(np * sizeof(double), MPI_INFO_NULL, (double*) *sum));
+	//*sum = (double*) MPI::Alloc_mem(np * sizeof(double), MPI_INFO_NULL);
 	memset(*sum, 0.0, np);
 
 	if (rank == 0) {
@@ -438,4 +486,108 @@ void kernel_doitgen_mpi_clean(MPI_Win* shared_window, double** sum) {
 	*sum = 0;
 	MPI_Win_free(shared_window);
 	*shared_window = 0;
+}
+
+
+
+void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
+	
+	//MPI_Init(nullptr, nullptr);
+
+	// 0 - Init
+
+	int num_proc, rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+	if (rank == 0) {
+		std::cout << "num proc = " << num_proc << " for size " << nr << "x" << nq << "x" << np << std::endl;
+	}
+
+	double* a = 0;
+	double* sum = 0;
+	double* c4 = 0;
+
+	a = (double*) calloc(nq * np, sizeof(double));
+	sum = (double*) calloc(np, sizeof(double));
+	c4 = (double*) calloc(np * np, sizeof(double));
+
+	assert(a != nullptr);
+	assert(sum != nullptr);
+	assert(c4 != nullptr);
+
+	init_C4(np, c4);
+	//std::cout << print2D2(c4, np, np) << std::endl;
+	memset(sum, 0, np);
+
+	// 1 - split the job
+
+	uint64_t chunk_size = nr / num_proc;
+	uint64_t leftover = nr % num_proc; // we compute the imbalance in jobs
+	uint64_t normal = num_proc - leftover; // the amount of processes that will not have an additional job
+	uint64_t imbalanced_start = normal * chunk_size; //start index of the increased jobs
+
+	uint64_t l = 0;
+	uint64_t u = 0;
+	
+	if ((uint64_t)rank < normal) {
+		l = rank * chunk_size;
+		u = (rank + 1) * chunk_size;
+	} else { // imbalanced workload process
+		l = (rank - normal) * (chunk_size + 1) + imbalanced_start;
+		u = (rank - normal + 1) * (chunk_size + 1) + imbalanced_start;
+	}
+
+	uint64_t r = 0, q = 0, p = 0, s = 0;
+	MPI_Offset offset; // should represent the size in bytes of the data
+
+	// 2 - each do its job
+
+	for (r = l; r < u; r++) {
+
+		// - 2.1 init slice of A
+
+		init_A_slice(nq, np, a, r);
+
+		// - 2.2 execute kernel on slice
+		for (q = 0; q < nq; q++) {
+
+			for (p = 0; p < np; p++) {
+				sum[p] = 0;
+				for (s = 0; s < np; s++) {
+					sum[p] += A_SLICE(q, s) * C4(s, p); //a[q * np + p] * c4[s * np + p];
+				}
+			}
+
+			for (p = 0; p < np; p++) {
+				A_SLICE(q, p) = sum[p];
+			}
+		}
+
+		// 2.3 write A to the result file
+
+		offset = nq * np * sizeof(double) * r;
+
+		MPI_File file;
+		MPI_File_open(MPI_COMM_WORLD, output_path, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file); 
+		MPI_File_write_at(file, offset, a, nq * np, MPI_DOUBLE, MPI_STATUS_IGNORE);
+		
+		MPI_File_close(&file);
+
+	}
+
+	//job finished we can exit
+
+	free(a);
+	free(sum);
+	free(c4);
+
+	MPI_Barrier(MPI_COMM_WORLD);
+
+	if (rank == 0) {
+		PROCESS_MESSAGE(rank, "exiting!");
+	}
+
+	//MPI_Finalize();
+
 }
