@@ -23,11 +23,16 @@ set(
     "generate_datasets.cpp"
 )
 
-add_executable(dphpc-doitgen-test ${DOITGEN_TEST_SRC})
-add_executable(dphpc-doitgen-mpi-test "openMPITest.cpp")
+find_library(SUBUNIT_LIB subunit)
 
-add_executable(dphpc-doitgen-gen ${DOITGEN_DATASET_GEN_SRC})
+if(SUBUNIT_LIB)
+    message("subunit found !")
+    
+    add_executable(dphpc-doitgen-test ${DOITGEN_TEST_SRC})
+    add_executable(dphpc-doitgen-mpi-test "openMPITest.cpp")
+    add_executable(dphpc-doitgen-gen ${DOITGEN_DATASET_GEN_SRC})
 
-target_link_libraries(dphpc-doitgen-test PUBLIC dphpc_lib_utils dphpc_lib check m rt pthread subunit)
-target_link_libraries(dphpc-doitgen-mpi-test PUBLIC dphpc_lib_utils dphpc_lib check m rt pthread subunit)
-target_link_libraries(dphpc-doitgen-gen PUBLIC dphpc_lib_utils dphpc_lib check m rt pthread subunit)
+    target_link_libraries(dphpc-doitgen-test PUBLIC dphpc_lib_utils dphpc_lib check m rt pthread subunit)
+    target_link_libraries(dphpc-doitgen-mpi-test PUBLIC dphpc_lib_utils dphpc_lib check m rt pthread subunit)
+    target_link_libraries(dphpc-doitgen-gen PUBLIC dphpc_lib_utils dphpc_lib check m rt pthread subunit)
+endif()
