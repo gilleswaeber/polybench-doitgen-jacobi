@@ -156,7 +156,7 @@ void kernel_doitgen_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	uint64_t blocking_window
 ) {
 
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 		/*
 		* Only works for now because the matrix size is a facor of the BLOCKING_WINDOW
@@ -176,6 +176,29 @@ void kernel_doitgen_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	}
 }
 
+void kernel_doitgen_bikj(uint64_t nr, uint64_t nq, uint64_t np, double* a_in,
+	double* a_out, double* c4, uint64_t blocking_size) {
+
+	for (uint64_t r = 0; r < nr; r++) {
+
+		for (uint64_t i = 0; i < nq; i += blocking_size) {
+			for (uint64_t k = 0; k < np; k += blocking_size) {
+				for (uint64_t j = 0; j < np; j += blocking_size) {
+					for (uint64_t ii = i; ii < i + blocking_size; ii++) {
+						for (uint64_t kk = k; kk < k + blocking_size; kk++) {
+							for (uint64_t jj = j; jj < j + blocking_size; jj++) {
+								A_OUT(r, ii, jj) += A_IN(r, ii, kk) * C4(kk, jj);
+							}
+						}
+					}
+
+				}
+			}
+		}
+
+	}
+}
+
 void kernel_doitgen_no_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_in,
 	double* a_out,
@@ -185,6 +208,7 @@ void kernel_doitgen_no_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 
 #pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
+
 		for (uint64_t q = 0; q < nq; q++) {
 			for (uint64_t s = 0; s < np; s++) {
 				for (uint64_t p = 0; p < np; p++) {
@@ -368,7 +392,7 @@ void kernel_doitgen_mpi_init(MPI_Win* shared_window, uint64_t nr, uint64_t nq, u
 
 	}
 	else {
-		
+
 		MPI_Win_allocate_shared(
 			0,
 			sizeof(double),
@@ -399,7 +423,7 @@ void kernel_doitgen_mpi_init(MPI_Win* shared_window, uint64_t nr, uint64_t nq, u
 	//https://github.com/open-mpi/ompi/issues/3937
 	// sum is private too (everyone allocates its own)
 	//MPI_Alloc_mem(np * sizeof(double), MPI_INFO_NULL, (double*) *sum);
-	*sum = (double*) MPI::Alloc_mem(np * sizeof(double), MPI_INFO_NULL);
+	*sum = (double*)MPI::Alloc_mem(np * sizeof(double), MPI_INFO_NULL);
 	memset(*sum, 0.0, np);
 
 	if (rank == 0) {

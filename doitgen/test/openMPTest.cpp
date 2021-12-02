@@ -10,7 +10,7 @@
 #include "utils.hpp"
 #include "serializer.hpp"
 
-#define THREAD_NUM 16
+#define THREAD_NUM 1
 
 /*
 * After thinking a bit about it, I'm in favor of dropping everything
@@ -62,14 +62,9 @@ START_TEST(test_doitgen)
 	uint64_t nq = 512;
 	uint64_t np = 512;
 
-	//POLYBENCH_3D_ARRAY_DECL(A_test, DATA_TYPE, NR, NQ, NP, nr, nq, np);
 	double* a_test = (double*) allocate_data(nr * nq * np, sizeof(double));
 
 	loadFile("doitgen_dataset_512_512_512", nr * nq * np, a_test);
-
-	//POLYBENCH_3D_ARRAY_DECL(A, DATA_TYPE, NR, NQ, NP, nr, nq, np);
-	//POLYBENCH_3D_ARRAY_DECL(sum, DATA_TYPE, NR, NQ, NP, nr, nq, np);
-	//POLYBENCH_2D_ARRAY_DECL(C4, DATA_TYPE, NP, NP, np, np);
 
 	double* a_in 	= (double*) allocate_data(nr * nq * np, sizeof(double));
 	double* sum = (double*) allocate_data(nr * nq * np, sizeof(double));
@@ -84,10 +79,10 @@ START_TEST(test_doitgen)
 	memset(a_out, 0.0, nr * nq * np);
 	//transpose(c4, c4_transposed, np, np);
 
-	//flush_cache();
+	flush_cache();
 
 	auto t1 = std::chrono::high_resolution_clock::now();
-	kernel_doitgen_no_blocking(nr, nq, np, a_in, a_out, c4, sum);
+	kernel_doitgen_bikj(nr, nq, np, a_in, a_out, c4, 32);
 	auto t2 = std::chrono::high_resolution_clock::now();
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
