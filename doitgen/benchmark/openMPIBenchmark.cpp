@@ -23,6 +23,44 @@ const int RUN = 5;
 
 const char* output_file_path = "a.out";
 
+int main(int argc, char **argv) {
+
+	MPI_Init(nullptr, nullptr);
+
+	//std::cout << argc << std::endl;
+
+	assert(argc == 5);
+
+	char* output_path = argv[1];
+
+	remove(output_path);
+
+	uint64_t nr = strtoull(argv[2], nullptr, 10);
+	uint64_t nq = strtoull(argv[3], nullptr, 10);
+	uint64_t np = strtoull(argv[4], nullptr, 10);
+
+	int num_proc, rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+	if (rank == 0) {
+		std::cout << "starting benchmark " << nr << "x" << nq << "x" << np << std::endl;
+		std::cout << "num process = " << num_proc << std::endl;
+	}
+
+	MPI_Barrier(MPI_COMM_WORLD);
+
+	kernel_doitgen_mpi_io(nr, nq, np, output_path);
+	
+	MPI_Barrier(MPI_COMM_WORLD);
+	
+	MASTER_MESSAGE("finished execution");
+	//remove(output_path);
+	
+	MPI_Finalize();
+}
+
+/*
 int main() {
 
 	MPI_Init(nullptr, nullptr);
@@ -126,4 +164,4 @@ int main() {
 	MPI_Finalize();
 
 	return 0;
-}
+}*/
