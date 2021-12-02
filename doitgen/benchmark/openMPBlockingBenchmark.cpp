@@ -30,8 +30,8 @@ void transpose(double* src, double* dst, uint64_t N, const int M) {
 
 int main() {
 	uint64_t nr = 512;
-	uint64_t nq = 512;
-	uint64_t np = 512;
+	uint64_t nq = 1024;
+	uint64_t np = 1024;
 
 	double* a_in;
 	double* a_out;
