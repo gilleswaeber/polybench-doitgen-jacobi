@@ -212,9 +212,11 @@ void kernel_doitgen_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	}
 }
 
+extern "C" __attribute__((optimize("no-tree-vectorize")))
 void kernel_doitgen_bikj(uint64_t nr, uint64_t nq, uint64_t np, double* a_in,
 	double* a_out, double* c4, uint64_t blocking_size) {
 
+	#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 
 		for (uint64_t i = 0; i < nq; i += blocking_size) {
@@ -235,6 +237,7 @@ void kernel_doitgen_bikj(uint64_t nr, uint64_t nq, uint64_t np, double* a_in,
 	}
 }
 
+extern "C" __attribute__((optimize("no-tree-vectorize")))
 void kernel_doitgen_no_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_in,
 	double* a_out,
@@ -242,7 +245,7 @@ void kernel_doitgen_no_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	double* sum
 ) {
 
-#pragma omp parallel for
+	#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 
 		for (uint64_t q = 0; q < nq; q++) {
