@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.0)
 project(dphpc-doitgen-benchmark VERSION 0.1.0)
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -march=native")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native")
 
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
