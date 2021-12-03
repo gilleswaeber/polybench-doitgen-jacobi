@@ -10,6 +10,7 @@
 #include <liblsb.h>
 #include <string>
 #include <immintrin.h>
+#include <liblsb.h>
 
 /*
 * For every pair of index r, q we access  3 * 256 doubles on the large data set.
@@ -579,8 +580,11 @@ void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* ou
 
 		// - 2.1 init slice of A
 
+		LSB_Res();
 		init_A_slice(nq, np, a, r);
+		LSB_Rec(0);
 
+		LSB_Res();
 		// - 2.2 execute kernel on slice
 		for (q = 0; q < nq; q++) {
 
@@ -596,6 +600,8 @@ void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* ou
 			}
 		}
 
+		LSB_Rec(1);
+		LSB_Res();
 		// 2.3 write A to the result file
 
 		offset = nq * np * sizeof(double) * r;
@@ -606,7 +612,7 @@ void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* ou
 		
 		MPI_File_close(&file);
 		*/
-
+		LSB_Rec(2);
 	}
 
 	//job finished we can exit

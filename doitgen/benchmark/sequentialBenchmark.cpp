@@ -27,7 +27,7 @@ void init_array_seq(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4
 	}
 }
 
-//launch with ./exec 128 512 512 
+//./dphpc-doitgen-sequential-benchmark 128 512 512 (for example)
 
 int main(int argc, char **argv) {
  
@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 	double* c4 = 0;
 	double* sum = 0;
 
-    a = (double*) calloc(nq * np, sizeof(double));
+    a = (double*) calloc(nr * nq * np, sizeof(double));
 	sum = (double*) calloc(np, sizeof(double));
 	c4 = (double*) calloc(np * np, sizeof(double));
 
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
 	//kernel doigten polybench 4.0
 	for (r = 0; r < nr; r++) {
 		
-		//LSB_Res();
+		LSB_Res();
 
 		for (q = 0; q < nq; q++) {
 			
@@ -74,10 +74,13 @@ int main(int argc, char **argv) {
 			}	
 		}
 
-		//LSB_Rec(r);
+		LSB_Rec(r);
 
 	}
 
+	free(a);
+	free(c4);
+	free(sum);
 
     LSB_Finalize();
 	MPI_Finalize();
