@@ -120,6 +120,12 @@ void kernel_doitgen_no_blocking_avx2(uint64_t nr, uint64_t nq, uint64_t np,
 	double* sum
 );
 
+void kernel_doitgen_bikj_block_mapping(uint64_t nr, uint64_t nq, uint64_t np, double* a_in,
+	double* a_out, double* c4, uint64_t blocking_size);
+
+void kernel_doitgen_bikj_prime(uint64_t nr, uint64_t nq, uint64_t np, double* a_in,
+	double* a_out, double* c4, uint64_t blocking_size);
+
 /**
  * @brief Initialize the memory used by each process, MPI_Init must have been called previously.
  * 
