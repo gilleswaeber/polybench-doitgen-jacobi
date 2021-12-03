@@ -4,7 +4,7 @@
 #include <omp.h>
 #include <liblsb.h>
 
-#define RUNS 100
+#define RUNS 5
 
 void init(double** a_in, double** a_out, double** c4, double** sum, uint64_t nr, uint64_t nq, uint64_t np) {
 	*a_in = (double*)allocate_data(nr * nq * np, sizeof(double));
@@ -43,7 +43,6 @@ int main() {
 	init(&a_in, &a_out, &c4, &sum, nr, nq, np);
 
 	MPI::Init();
-	omp_set_num_threads(48);
 
 	LSB_Init("doitgen-openMP-benchmark", 0);
 
@@ -62,6 +61,7 @@ int main() {
 			kernel_doitgen_seq(nr, nq, np, a_in, c4, sum);
 			LSB_Rec(j);
 			init_array(nr, nq, np, a_in, c4);
+			memset(sum, 0, nr * nq * np * sizeof(double));
 			flush_cache();
 		}
 	}
