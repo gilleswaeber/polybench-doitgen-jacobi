@@ -29,6 +29,7 @@ message(STATUS "OpenMPI include dir : ${MPI_CXX_INCLUDE_DIRS}")
 target_include_directories(dphpc_lib PUBLIC ${MPI_CXX_INCLUDE_DIRS})
 target_link_libraries(dphpc_lib PUBLIC OpenMP::OpenMP_CXX)
 target_link_libraries(dphpc_lib PUBLIC MPI::MPI_CXX)
+target_link_libraries(dphpc_lib PUBLIC ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
 
 target_include_directories(dphpc_lib
     PUBLIC "jacobi_1D"
