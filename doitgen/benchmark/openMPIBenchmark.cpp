@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
 	LSB_Init((std::string("doitgen_") + std::to_string(num_proc)).c_str(), 0);
 
 	if (rank == 0) {
-		std::cout << "starting benchmark " << nr << "x" << nq << "x" << np << std::endl;
+		std::cout << "starting benchmark without file" << nr << "x" << nq << "x" << np << std::endl;
 		std::cout << "num process = " << num_proc << std::endl;
 	}
 

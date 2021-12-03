@@ -42,6 +42,7 @@ void init(double** a_in, double** a_out, double** c4, double** sum, uint64_t nr,
 	memset(*a_out, 0.0, nr * nq * np * sizeof(double));
 }
 
+
 /*
 * perf_event_attr attr;
 
