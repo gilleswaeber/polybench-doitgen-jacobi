@@ -8,6 +8,7 @@
 #include <string>
 #include <cassert>
 #include <stdio.h>
+#include <liblsb.h>
 
 #include "doitgen.hpp"
 #include "utils.hpp"
@@ -86,6 +87,8 @@ int main(int argc, char **argv) {
     MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+	LSB_Init((std::string("doitgen_") + std::to_string(num_proc)).c_str(), 0);
+
 	kernel_doitgen_mpi_io(nr, nq, np, output_path);
 	
 	//here we load the file and check its result if we are the master
@@ -116,6 +119,7 @@ int main(int argc, char **argv) {
 
 	}
 
+	LSB_Finalize();
 	MPI_Finalize();
 }
 

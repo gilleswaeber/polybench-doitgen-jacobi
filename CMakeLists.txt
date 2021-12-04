@@ -13,6 +13,8 @@ enable_testing()
 
 #add_executable(dphpc-project main.cpp)
 
+message("### build mode ### : ${CMAKE_BUILD_TYPE}")
+
 set(
     SRC 
     "jacobi_1D/jacobi_1D.cpp"

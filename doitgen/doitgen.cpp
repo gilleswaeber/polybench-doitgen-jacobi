@@ -588,7 +588,7 @@ void kernel_doitgen_mpi_clean(MPI_Win* shared_window, double** sum) {
 }
 
 
-
+//https://pages.tacc.utexas.edu/~eijkhout/pcse/html/mpi-io.html
 void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
 
 	//MPI_Init(nullptr, nullptr);
@@ -672,13 +672,11 @@ void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* ou
 		// 2.3 write A to the result file
 
 		offset = nq * np * sizeof(double) * r;
-		/*
+		
 		MPI_File file;
 		MPI_File_open(MPI_COMM_WORLD, output_path, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
-		MPI_File_write_at(file, offset, a, nq * np, MPI_DOUBLE, MPI_STATUS_IGNORE);
-
+		MPI_File_write_at_all(file, offset, a, nq * np, MPI_DOUBLE, MPI_STATUS_IGNORE);
 		MPI_File_close(&file);
-		*/
 		LSB_Rec(2);
 	}
 
