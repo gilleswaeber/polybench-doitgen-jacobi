@@ -25,11 +25,11 @@ def parse_args():
     # training
     parser.add_argument('--runs',
                         help='number of runs per benchmark',
-                        default=1,
+                        default=10,
                         type=int)
     parser.add_argument('--n',
                         help='number of cores on the cluster /also processes',
-                        default=4,
+                        default=48,
                         type=int)
     parser.add_argument('--output',
                         help='name of the output',
@@ -53,7 +53,7 @@ def parse_args():
     return args
 
 
-def create_file_at(target_name, result):
+def create_file_at(result):
 
     path = Path(".")
     root = path.parent.absolute()
@@ -84,11 +84,13 @@ def main():
 
     cores = range(0, args.n + 1, 2)
     result = ""
+    index = 0
     for c in cores:
         for i in range(args.runs):
             if (c == 0): # for the 0 cores
                 c = 1
-            result += get_sub(c, args.output, args.nr, args.nq, args.np) + "\n"
+            result += get_sub(c, "/scratch/" + args.output + str(index), c * args.nr, args.nq, args.np) + "\n"
+            index += 1
 
     print(result)
     try:
