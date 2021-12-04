@@ -643,6 +643,9 @@ void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* ou
 
 	// 2 - each do its job
 
+	MPI_File file;
+	MPI_File_open(MPI_COMM_WORLD, output_path, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
+
 	for (r = l; r < u; r++) {
 
 		// - 2.1 init slice of A
@@ -668,17 +671,17 @@ void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* ou
 		}
 
 		LSB_Rec(1);
+
 		LSB_Res();
 		// 2.3 write A to the result file
 
 		offset = nq * np * sizeof(double) * r;
-		
-		MPI_File file;
-		MPI_File_open(MPI_COMM_WORLD, output_path, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
 		MPI_File_write_at_all(file, offset, a, nq * np, MPI_DOUBLE, MPI_STATUS_IGNORE);
-		MPI_File_close(&file);
+		
 		LSB_Rec(2);
 	}
+
+	MPI_File_close(&file);
 
 	//job finished we can exit
 
