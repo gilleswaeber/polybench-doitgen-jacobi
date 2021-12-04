@@ -17,16 +17,18 @@ struct problem_instance_t {
 };
 
 const static uint64_t num_processor = 8;
-const static uint64_t PROBLEM_SIZE_N = 6;
+const static uint64_t PROBLEM_SIZE_N = 5;
 
 const static problem_size_t problem_sizes[] = {
 	{10, 10, 10},
 	{32, 32, 32},
 	{64, 64, 64},
-	{256, 256, 256},
-	//{257, 257, 257}//,
-	{128, 512, 512},
+	{64, 128, 128},
 	{512, 512, 512}
+	//{256, 256, 256},
+	//{257, 257, 257}//,
+	//{128, 512, 512},
+	//{512, 512, 512}
 };
 
 const static problem_size_t benchmark_size = {128, 512, 512};
