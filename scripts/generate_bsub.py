@@ -5,9 +5,9 @@ benchmarks = [
     "polybench_parallel",
     "polybench_parallel_local_sum",
     "transpose",
-    "blocking",
+    # "blocking",
     "inverted_loop",
-    "inverted_loop_blocking",
+    # "inverted_loop_blocking",
     "inverted_loop_avx2",
 ]
 
@@ -24,7 +24,7 @@ def main():
     result = ""
     for i in range(len(benchmarks)):
         for j in range(len(threads)):
-            if i == BLOCKING_IDX:
+            """if i == BLOCKING_IDX:
                 for k in range(len(windows)):
                     for l in range(RUNS):
                         result += (
@@ -47,26 +47,26 @@ def main():
                             + str(windows[l])
                             + "\n"
                         )
-            else:
-                for k in range(RUNS):
-                    result += (
-                        "bsub -n "
-                        + str(threads[j])
-                        + " "
-                        + "../dphpc-doitgen-openmp-benchmark "
-                        + benchmarks[i]
-                        + " "
-                        + str(NR)
-                        + " "
-                        + str(NQ)
-                        + " "
-                        + str(NP)
-                        + " "
-                        + str(threads[j])
-                        + " "
-                        + str(k)
-                        + "\n"
-                    )
+            else:"""
+            for k in range(RUNS):
+                result += (
+                    "bsub -n "
+                    + str(threads[j])
+                    + " "
+                    + "../dphpc-doitgen-openmp-benchmark "
+                    + benchmarks[i]
+                    + " "
+                    + str(NR)
+                    + " "
+                    + str(NQ)
+                    + " "
+                    + str(NP)
+                    + " "
+                    + str(threads[j])
+                    + " "
+                    + str(k)
+                    + "\n"
+                )
     script_file = open("bsub_openMP.sh", "w")
     script_file.write(result)
     script_file.close()
