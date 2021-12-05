@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <omp.h>
 #include <liblsb.h>
+#include <utils.hpp>
 
 void transpose(double* src, double* dst, uint64_t N, uint64_t M) {
 #pragma omp parallel for
@@ -21,7 +22,9 @@ void do_polybench(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_windo
 
 	init_array(nr, nq, np, a, c4);
 
+	LSB_Res();
 	kernel_doitgen_seq(nr, nq, np, a, c4, sum);
+	LSB_Rec(0);
 
 	delete[] a;
 	delete[] c4;
@@ -35,7 +38,9 @@ void do_polybench_parallel(uint64_t nr, uint64_t nq, uint64_t np, uint64_t block
 
 	init_array(nr, nq, np, a, c4);
 
+	LSB_Res();
 	kernel_doitgen_polybench_parallel(nr, nq, np, a, c4, sum);
+	LSB_Rec(0);
 
 	delete[] a;
 	delete[] c4;
@@ -48,7 +53,9 @@ void do_polybench_parallel_local_sum(uint64_t nr, uint64_t nq, uint64_t np, uint
 
 	init_array(nr, nq, np, a, c4);
 
+	LSB_Res();
 	kernel_doitgen_polybench_parallel_local_sum(nr, nq, np, a, c4);
+	LSB_Rec(0);
 
 	delete[] a;
 	delete[] c4;
@@ -64,8 +71,9 @@ void do_transpose(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_windo
 	init_array(nr, nq, np, a_in, c4);
 	transpose(c4, c4_transposed, np, np);
 
-
+	LSB_Res();
 	kernel_doitgen_transpose(nr, nq, np, a_in, a_out, c4);
+	LSB_Rec(0);
 
 
 	delete[] a_in;
@@ -81,7 +89,9 @@ void do_blocking(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window
 
 	init_array(nr, nq, np, a_in, c4);
 
+	LSB_Res();
 	kernel_doitgen_blocking(nr, nq, np, a_in, a_out, c4, blocking_window);
+	LSB_Rec(0);
 
 	delete[] a_in;
 	delete[] a_out;
@@ -95,7 +105,9 @@ void do_inverted_loop(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_w
 
 	init_array(nr, nq, np, a_in, c4);
 
+	LSB_Res();
 	kernel_doitgen_inverted_loop(nr, nq, np, a_in, a_out, c4);
+	LSB_Rec(0);
 
 	delete[] a_in;
 	delete[] a_out;
@@ -109,7 +121,9 @@ void do_inverted_loop_blocking(uint64_t nr, uint64_t nq, uint64_t np, uint64_t b
 
 	init_array(nr, nq, np, a_in, c4);
 
+	LSB_Res();
 	kernel_doitgen_inverted_loop_blocking(nr, nq, np, a_in, a_out, c4, blocking_window);
+	LSB_Rec(0);
 
 	delete[] a_in;
 	delete[] a_out;
@@ -123,7 +137,11 @@ void do_inverted_loop_avx2(uint64_t nr, uint64_t nq, uint64_t np, uint64_t block
 
 	init_array(nr, nq, np, a_in, c4);
 
+	flush_cache();
+
+	LSB_Res();
 	kernel_doitgen_inverted_loop_avx2(nr, nq, np, a_in, a_out, c4);
+	LSB_Rec(0);
 
 	delete[] a_in;
 	delete[] a_out;
@@ -181,7 +199,7 @@ int main(int argc, char** argv) {
 	uint64_t run_id = strtoull(argv[6], NULL, 0);
 	uint64_t blocking_window = 0;
 	if (argc == 8) {
-		blocking_window = atoi(argv[7]);
+		blocking_window = strtoull(argv[7], NULL, 0);
 	}
 
 	omp_set_num_threads(threads);
@@ -206,7 +224,7 @@ int main(int argc, char** argv) {
 
 
 	for (uint64_t i = 0; i < benchmarks_size; ++i) {
-		if (strcmp(benchmark_type, benchmarks[i].name)) {
+		if (strcmp(benchmark_type, benchmarks[i].name) == 0) {
 			benchmarks[i].func(nr, nq, np, blocking_window);
 			break;
 		}
