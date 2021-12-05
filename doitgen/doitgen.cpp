@@ -115,13 +115,46 @@ void kernel_doitgen_seq(uint64_t nr, uint64_t nq, uint64_t np,
 #pragma endscop
 }
 
-void kernel_doitgen_openmp(uint64_t nr, uint64_t nq, uint64_t np,
+void kernel_doitgen_polybench_parallel(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a,
 	double* c4,
 	double* sum
 ) {
 
 #pragma omp parallel for
+	for (uint64_t r = 0; r < nr; r++) {
+		for (uint64_t q = 0; q < nq; q++) {
+
+
+
+			/*
+			* This is the dot product bewtween the row A[r][q] and the column C4[p]
+			*/
+			for (uint64_t p = 0; p < np; p++) {
+				SUM(r, q, p) = 0.0;
+				for (uint64_t s = 0; s < np; s++) {
+					//This needs the old values of A
+					//cur_sum = cur_sum + A[r][q][s] * C4[s][p];
+					SUM(r, q, p) = SUM(r, q, p) + A(r, q, s) * C4(s, p);
+				}
+			}
+
+			for (uint64_t p = 0; p < np; p++) {
+				//A[r][q][p] = new_sum[omp_get_thread_num() * np + p];
+				A(r, q, p) = SUM(r, q, p);
+			}
+
+		}
+	}
+}
+
+void kernel_doitgen_polybench_parallel_local_sum(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a,
+	double* c4
+) {
+	int nb_threads = omp_get_max_threads();
+	double* sum = new double[nb_threads * np];
+	#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 		for (uint64_t q = 0; q < nq; q++) {
 
@@ -140,46 +173,27 @@ void kernel_doitgen_openmp(uint64_t nr, uint64_t nq, uint64_t np,
 				sum[omp_get_thread_num() * np + p] = cur_sum;
 			}
 
-			for (uint64_t p = 0; p < nr; p++) {
+			for (uint64_t p = 0; p < np; p++) {
 				//A[r][q][p] = new_sum[omp_get_thread_num() * np + p];
 				A(r, q, p) = sum[omp_get_thread_num() * np + p];
 			}
 
 		}
 	}
+	delete[] sum;
 }
 
-void kernel_doitgen_experimental(uint64_t nr, uint64_t nq, uint64_t np,
+void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_in,
 	double* a_out,
-	double* c4,
-	double* sum
+	double* c4
 ) {
-	//We reduce false sharing by having a sum array for each thread.
-	//double* new_sum = new double[omp_get_max_threads() * _PB_NP];
-
-	/*
-	* Maybe we should do blocking on C4 because we access a lot of those values.
-	* I will try this.
-	* Blocking on the 114-121 lines of code.
-	*/
-	//double* new_sum = new double[np * omp_get_max_threads()];
-
-#pragma omp parallel for num_threads(16)
+	#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
-		for (uint64_t q = 0; q < nq; q += BLOCKING_WINDOW) {
-			for (uint64_t p = 0; p < np; p += BLOCKING_WINDOW) {
-
-				for (uint64_t qq = q; qq < q + BLOCKING_WINDOW; ++qq) {
-					for (uint64_t pp = p; pp < p + BLOCKING_WINDOW; ++pp) {
-						double cur_sum = 0.0;
-						for (uint64_t s = 0; s < np; s++) {
-							cur_sum = cur_sum + A_IN(r, qq, s) * C4(s, pp);
-						}
-						if (p < nr) {
-							A_OUT(r, qq, pp) = cur_sum;
-						}
-					}
+		for (uint64_t q = 0; q < nq; q++) {
+			for (uint64_t p = 0; p < np; p++) {
+				for (uint64_t s = 0; s < np; s++) {
+					A_OUT(r, q, p) += A_IN(r, q, s) * C4(p, s);
 				}
 			}
 		}
@@ -190,32 +204,47 @@ void kernel_doitgen_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_in,
 	double* a_out,
 	double* c4,
-	double* sum,
 	uint64_t blocking_window
 ) {
 
-#pragma omp parallel for
-	for (uint64_t r = 0; r < nr; r++) {
-		/*
-		* Only works for now because the matrix size is a facor of the BLOCKING_WINDOW
-		*/
-		for (uint64_t p = 0; p < np; p += blocking_window) {
-			for (uint64_t s = 0; s < np; s += blocking_window) {
-				for (uint64_t q = 0; q < nq; q++) {
-					for (uint64_t pp = p; pp < p + blocking_window; pp++) {
-						for (uint64_t ss = s; ss < s + blocking_window; ss++) {
-							A_OUT(r, q, pp) += A_IN(r, q, ss) * C4(ss, pp);
-
+	#pragma omp parallel for
+	for (uint64_t r = 0; r < nr; ++r) {
+		for (uint64_t q = 0; q < nq; q += blocking_window) {
+			for (uint64_t p = 0; p < np; p += blocking_window) {
+				for (uint64_t k = 0; k < np; k += blocking_window) {
+					for (uint64_t qq = q; qq < q + blocking_window; ++qq) {
+						for (uint64_t pp = p; pp < p + blocking_window; ++pp) {
+							for (uint64_t kk = k; kk < k + blocking_window; ++kk) {
+								A_OUT(r, q, pp) += A_IN(r, q, kk) * C4(kk, pp);
+							}
 						}
 					}
 				}
 			}
 		}
-
 	}
 }
 
-void kernel_doitgen_bikj(uint64_t nr, uint64_t nq, uint64_t np, double* a_in,
+void kernel_doitgen_inverted_loop(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* a_out,
+	double* c4
+) {
+
+	#pragma omp parallel for
+	for (uint64_t r = 0; r < nr; r++) {
+
+		for (uint64_t i = 0; i < nq; i++) {
+			for (uint64_t k = 0; k < np; k++) {
+				for (uint64_t j = 0; j < np; j++) {
+					A_OUT(r, i, j) += A_IN(r, i, k) * C4(k, j);
+				}
+			}
+		}
+	}
+}
+
+void kernel_doitgen_inverted_loop_blocking(uint64_t nr, uint64_t nq, uint64_t np, double* a_in,
 	double* a_out, double* c4, uint64_t blocking_size) {
 
 #pragma omp parallel for
@@ -238,6 +267,86 @@ void kernel_doitgen_bikj(uint64_t nr, uint64_t nq, uint64_t np, double* a_in,
 
 	}
 }
+
+void kernel_doitgen_inverted_loop_avx2(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* a_out,
+	double* c4
+) {
+
+	#pragma omp parallel for
+	for (uint64_t r = 0; r < nr; r++) {
+
+		for (uint64_t i = 0; i < nq; i++) {
+			for (uint64_t k = 0; k < np; k++) {
+				__m256d a_in_val = _mm256_set1_pd(A_IN(r, i, k));
+				for (uint64_t j = 0; j < np; j += 4) {
+					__m256d a_out_val = _mm256_load_pd(&(A_OUT(r, i, j)));
+					__m256d c4_val = _mm256_load_pd(&(C4(k, j)));
+
+					__m256d res = _mm256_fmadd_pd(a_in_val, c4_val, a_out_val);
+
+					_mm256_store_pd(&(A_OUT(r, i, j)), res);
+				}
+			}
+		}
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void kernel_doitgen_bikj_block_mapping(uint64_t nr, uint64_t nq, uint64_t np, double* a_in,
 	double* a_out, double* c4, uint64_t blocking_size) {
@@ -303,77 +412,6 @@ void kernel_doitgen_bikj_prime(uint64_t nr, uint64_t nq, uint64_t np, double* a_
 			}
 		}
 
-	}
-}
-
-void kernel_doitgen_no_blocking(uint64_t nr, uint64_t nq, uint64_t np,
-	double* a_in,
-	double* a_out,
-	double* c4,
-	double* sum
-) {
-
-		#pragma omp parallel for
-		for (uint64_t r = 0; r < nr; r++) {
-
-			for (uint64_t i = 0; i < nq; i++) {
-				for (uint64_t k = 0; k < np; k++) {
-					for (uint64_t j = 0; j < np; j++) {
-						A_OUT(r, i, j) += A_IN(r, i, k) * C4(k, j);
-					}
-				}
-			}
-		}
-}
-
-void kernel_doitgen_no_blocking_avx2(uint64_t nr, uint64_t nq, uint64_t np,
-	double* a_in,
-	double* a_out,
-	double* c4,
-	double* sum
-) {
-
-#pragma omp parallel for
-	for (uint64_t r = 0; r < nr; r++) {
-
-		for (uint64_t i = 0; i < nq; i++) {
-			for (uint64_t k = 0; k < np; k++) {
-				__m256d a_in_val = _mm256_set1_pd(A_IN(r, i, k));
-				for (uint64_t j = 0; j < np; j += 4) {
-					__m256d a_out_val = _mm256_load_pd(&(A_OUT(r, i, j)));
-					__m256d c4_val = _mm256_load_pd(&(C4(k, j)));
-
-					__m256d res = _mm256_fmadd_pd(a_in_val, c4_val, a_out_val);
-
-					_mm256_store_pd(&(A_OUT(r, i, j)), res);
-
-					//A_OUT(r, i, j) = A_OUT(r, i, j) + A_IN(r, i, k) * C4(k, j);
-				}
-			}
-		}
-	}
-
-}
-
-void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,
-	double* a_in,
-	double* a_out,
-	double* c4,
-	double* sum
-) {
-#pragma omp parallel for
-	for (uint64_t r = 0; r < nr; r++) {
-		for (uint64_t q = 0; q < nq; q++) {
-			for (uint64_t p = 0; p < np; p++) {
-				//double cur_sum = 0.0;
-				for (uint64_t s = 0; s < np; s++) {
-					A_OUT(r, q, p) += A_IN(r, q, s) * C4(p, s);
-				}
-				/*if (p < nr) {
-					A_OUT(r, q, p) = cur_sum;
-				}*/
-			}
-		}
 	}
 }
 

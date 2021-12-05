@@ -1,124 +1,11 @@
+#include <iostream>
+#include <cstring>
 #include <doitgen.hpp>
-#include <utils.hpp>
-#include <chrono>
+#include <stdlib.h>
 #include <omp.h>
 #include <liblsb.h>
-/*#include <liblsb.h>
-#include <papi.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <linux/perf_event.h>
-#include <asm/unistd.h>
-#include <iostream>*/
 
-/*struct read_format {
-	uint64_t nr;
-	struct {
-		uint64_t value;
-		uint64_t id;
-	} values[];
-};
-
-long perf_event_open(
-	perf_event_attr* hw_event,
-	pid_t pid,
-	int cpu,
-	int group_fd,
-	unsigned long flags
-) {
-	int ret = syscall(__NR_perf_event_open, hw_event, pid, cpu, group_fd, flags);
-	return ret;
-}*/
-
-#define RUNS 10
-
-void init(double** a_in, double** a_out, double** c4, double** sum, uint64_t nr, uint64_t nq, uint64_t np) {
-	*a_in = (double*)allocate_data(nr * nq * np, sizeof(double));
-	*sum = (double*)allocate_data(nr * nq * np, sizeof(double));
-	*c4 = (double*)allocate_data(np * np, sizeof(double));
-	*a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
-
-	init_array(nr, nq, np, *a_in, *c4);
-	memset(*a_out, 0.0, nr * nq * np * sizeof(double));
-}
-
-
-/*
-* perf_event_attr attr;
-
-	uint64_t id1, id2;
-	// select what we want to count
-	memset(&attr, 0, sizeof(perf_event_attr));
-	attr.size = sizeof(perf_event_attr);
-	attr.type = PERF_TYPE_RAW;
-	attr.config = 0x40c7;
-	attr.disabled = 1;
-	attr.exclude_kernel = 1; // do not count the instruction the kernel executes
-	attr.exclude_hv = 1;
-	attr.read_format = PERF_FORMAT_GROUP | PERF_FORMAT_ID;
-	attr.inherit = 0;
-
-	// open a file descriptor
-	int fd_flops = perf_event_open(&attr, 0, -1, -1, 0);
-
-	ioctl(fd_flops, PERF_EVENT_IOC_ID, &id1);
-
-	attr.config = PERF_COUNT_HW_REF_CPU_CYCLES;
-	attr.type = PERF_TYPE_HARDWARE;
-	int fd_cycles = perf_event_open(&attr, 0, -1, fd_flops, 0);
-	ioctl(fd_cycles, PERF_EVENT_IOC_ID, &id2);
-
-
-
-	if (fd_flops == -1 || fd_cycles == -1)
-	{
-		// handle error
-		printf("ERROR\n");
-	}
-
-	ioctl(fd_flops, PERF_EVENT_IOC_RESET, PERF_IOC_FLAG_GROUP);
-	ioctl(fd_flops, PERF_EVENT_IOC_ENABLE, PERF_IOC_FLAG_GROUP);
-
-	kernel_func
-
-	ioctl(fd_flops, PERF_EVENT_IOC_DISABLE, PERF_IOC_FLAG_GROUP);
-
-
-	after
-
-	char buf[4096];
-	struct read_format* rf = (struct read_format*)buf;
-	uint64_t count_flops, count_cycles;
-
-	read(fd_flops, buf, sizeof(buf));
-	for (uint64_t i = 0; i < rf->nr; i++) {
-		if (rf->values[i].id == id1) {
-			count_flops = rf->values[i].value;
-		}
-		else if (rf->values[i].id == id2) {
-			count_cycles = rf->values[i].value;
-		}
-	}
-
-
-
-	std::cout << "Count : " << count_flops << std::endl;
-	std::cout << "Cycles : " << count_cycles << std::endl;
-	// count now has the (approximated) result
-
-	// close the file descriptor
-	close(fd_flops);
-	close(fd_cycles);
-*/
-
-//To change to 7 for the cluster
-#define THREADS_SIZES 1
-const static int threads[] = { 48, 2, 4, 8, 16, 32, 48 };
-
-#define BLOCKING_WINDOW_SIZES 6
-const static uint64_t blocking_windows[] = { 8, 16, 32, 64, 128, 256 };
-
-void transpose(double* src, double* dst, uint64_t N, const int M) {
+void transpose(double* src, double* dst, uint64_t N, uint64_t M) {
 #pragma omp parallel for
 	for (uint64_t n = 0; n < N * M; n++) {
 		uint64_t i = n / N;
@@ -127,140 +14,204 @@ void transpose(double* src, double* dst, uint64_t N, const int M) {
 	}
 }
 
-int main() {
-	uint64_t nr = 128;
-	uint64_t nq = 512;
-	uint64_t np = 512;
+void do_polybench(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
+	double* a = new double[nr * nq * np];
+	double* c4 = new double[np * np];
+	double* sum = new double[nr * nq * np];
 
-	double* a_in;
-	double* a_out;
-	double* c4;
-	double* sum;
-	init(&a_in, &a_out, &c4, &sum, nr, nq, np);
+	init_array(nr, nq, np, a, c4);
 
+	kernel_doitgen_seq(nr, nq, np, a, c4, sum);
+
+	delete[] a;
+	delete[] c4;
+	delete[] sum;
+}
+
+void do_polybench_parallel(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
+	double* a = new double[nr * nq * np];
+	double* c4 = new double[np * np];
+	double* sum = new double[nr * nq * np];
+
+	init_array(nr, nq, np, a, c4);
+
+	kernel_doitgen_polybench_parallel(nr, nq, np, a, c4, sum);
+
+	delete[] a;
+	delete[] c4;
+	delete[] sum;
+}
+
+void do_polybench_parallel_local_sum(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
+	double* a = new double[nr * nq * np];
+	double* c4 = new double[np * np];
+
+	init_array(nr, nq, np, a, c4);
+
+	kernel_doitgen_polybench_parallel_local_sum(nr, nq, np, a, c4);
+
+	delete[] a;
+	delete[] c4;
+}
+
+void do_transpose(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
+	double* a_in = new double[nr * nq * np];
+	double* a_out = new double[nr * nq * np];
+	double* c4 = new double[np * np];
+
+	double* c4_transposed = new double[np * np];
+
+	init_array(nr, nq, np, a_in, c4);
+	transpose(c4, c4_transposed, np, np);
+
+
+	kernel_doitgen_transpose(nr, nq, np, a_in, a_out, c4);
+
+
+	delete[] a_in;
+	delete[] a_out;
+	delete[] c4;
+	delete[] c4_transposed;
+}
+
+void do_blocking(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
+	double* a_in = new double[nr * nq * np];
+	double* a_out = new double[nr * nq * np];
+	double* c4 = new double[np * np];
+
+	init_array(nr, nq, np, a_in, c4);
+
+	kernel_doitgen_blocking(nr, nq, np, a_in, a_out, c4, blocking_window);
+
+	delete[] a_in;
+	delete[] a_out;
+	delete[] c4;
+}
+
+void do_inverted_loop(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
+	double* a_in = new double[nr * nq * np];
+	double* a_out = new double[nr * nq * np];
+	double* c4 = new double[np * np];
+
+	init_array(nr, nq, np, a_in, c4);
+
+	kernel_doitgen_inverted_loop(nr, nq, np, a_in, a_out, c4);
+
+	delete[] a_in;
+	delete[] a_out;
+	delete[] c4;
+}
+
+void do_inverted_loop_blocking(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
+	double* a_in = new double[nr * nq * np];
+	double* a_out = new double[nr * nq * np];
+	double* c4 = new double[np * np];
+
+	init_array(nr, nq, np, a_in, c4);
+
+	kernel_doitgen_inverted_loop_blocking(nr, nq, np, a_in, a_out, c4, blocking_window);
+
+	delete[] a_in;
+	delete[] a_out;
+	delete[] c4;
+}
+
+void do_inverted_loop_avx2(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
+	double* a_in = new double[nr * nq * np];
+	double* a_out = new double[nr * nq * np];
+	double* c4 = new double[np * np];
+
+	init_array(nr, nq, np, a_in, c4);
+
+	kernel_doitgen_inverted_loop_avx2(nr, nq, np, a_in, a_out, c4);
+
+	delete[] a_in;
+	delete[] a_out;
+	delete[] c4;
+}
+
+typedef void (*benchmark_func)(uint64_t, uint64_t, uint64_t, uint64_t);
+
+
+
+struct Benchmark {
+	const char* name;
+	benchmark_func func;
+};
+
+//https://cs61.seas.harvard.edu/wiki/images/0/0f/Lec14-Cache_measurement.pdf
+static const Benchmark benchmarks[] = {
+	{"polybench", &do_polybench},
+	{"polybench_parallel", &do_polybench_parallel},
+	{"polybench_parallel_local_sum", &do_polybench_parallel_local_sum},
+	{"transpose", &do_transpose},
+	{"blocking", &do_blocking},
+	{"inverted_loop", &do_inverted_loop},
+	{"inverted_loop_blocking", &do_inverted_loop_blocking},
+	{"inverted_loop_avx2", &do_inverted_loop_avx2}
+};
+
+static const uint64_t benchmarks_size = sizeof(benchmarks) / sizeof(benchmarks[0]);
+
+void help() {
+	std::cout << "Usage : ./program benchmark_type nr nq np #threads run_id blocking_window(optional)" << '\n';
+	std::cout << "benchmark_type: type of benchmark" << '\n';
+	std::cout << "#threads: the number of threads to use" << '\n';
+	std::cout << "nr nq np : problem size" << '\n';
+	std::cout << "run_id : id of the current run" << '\n';
+	std::cout << "blocking_window : optional argument to specify the blocking windows" << '\n';
+}
+
+int main(int argc, char** argv) {
+	if (argc < 7) {
+		std::cout << "Too few arguments..." << '\n';
+		help();
+	}
+	if (argc > 8) {
+		std::cout << "Too many arguments..." << '\n';
+		help();
+	}
+	const char* benchmark_type = argv[1];
+	uint64_t nr = strtoull(argv[2], NULL, 0);
+	uint64_t nq = strtoull(argv[3], NULL, 0);
+	uint64_t np = strtoull(argv[4], NULL, 0);
+
+	uint64_t threads = strtoull(argv[5], NULL, 0);
+
+	uint64_t run_id = strtoull(argv[6], NULL, 0);
+	uint64_t blocking_window = 0;
+	if (argc == 8) {
+		blocking_window = atoi(argv[7]);
+	}
+
+	omp_set_num_threads(threads);
+	
 	MPI::Init();
 
-	LSB_Init("doitgen-openMP", 0);
+	const std::string benchmark_type_str = benchmark_type;
+	const std::string benchmark_name = "doitgen-openMP-" + benchmark_type_str + "-" + 
+		std::to_string(nr) + "-" + std::to_string(nq) + "-" + std::to_string(np) + "-" +
+		std::to_string(threads) + "-" + std::to_string(blocking_window) + "-" + std::to_string(run_id);
+	LSB_Init(benchmark_name.c_str(), 0);
+	
+	LSB_Set_Rparam_string("benchmark", benchmark_type);
 
 	LSB_Set_Rparam_long("NR", nr);
 	LSB_Set_Rparam_long("NQ", nq);
 	LSB_Set_Rparam_long("NP", np);
 
-	/*
-	* Benchmark with the optimal doitgen version.
-	*/
-	LSB_Set_Rparam_string("benchmark", "doitgen-optimal");
-	for (uint64_t i = 0; i < THREADS_SIZES; ++i) {
-		omp_set_num_threads(threads[i]);
-		LSB_Set_Rparam_int("threads", threads[i]);
-		for (uint64_t j = 0; j < RUNS; ++j) {
-			LSB_Res();
-			kernel_doitgen_no_blocking(nr, nq, np, a_in, a_out, c4, sum);
-			LSB_Rec(j);
-			memset(a_out, 0.0, nr * nq * np * sizeof(double));
+
+	LSB_Set_Rparam_long("threads", threads);
+	LSB_Set_Rparam_long("blocking_size", blocking_window);
+
+
+	for (uint64_t i = 0; i < benchmarks_size; ++i) {
+		if (strcmp(benchmark_type, benchmarks[i].name)) {
+			benchmarks[i].func(nr, nq, np, blocking_window);
+			break;
 		}
 	}
-
-	/*
-	* Benchmark with the default sequential doitgen version.
-	*/
-	LSB_Set_Rparam_string("benchmark", "doitgen-seq");
-	LSB_Set_Rparam_int("threads", threads[0]);
-	for (uint64_t i = 0; i < RUNS; ++i) {
-		LSB_Res();
-		kernel_doitgen_seq(nr, nq, np, a_in, c4, sum);
-		LSB_Rec(i);
-		memset(a_in, 0, nr * nq * np * sizeof(double));
-		memset(c4, 0, np * np * sizeof(double));
-		init_array(nr, nq, np, a_in, c4);
-	}
-
-	/*
-	* Benchmark with the parallel default doitgen version.
-	*/
-	LSB_Set_Rparam_string("benchmark", "doitgen-parallel-default");
-	cleanup(sum);
-
-	for (uint64_t i = 0; i < THREADS_SIZES; ++i) {
-		omp_set_num_threads(threads[i]);
-		LSB_Set_Rparam_int("threads", threads[i]);
-		for (uint64_t j = 0; j < RUNS; ++j) {
-			sum = (double*)allocate_data(np * threads[i], sizeof(double));
-			LSB_Res();
-			kernel_doitgen_openmp(nr, nq, np, a_in, c4, sum);
-			LSB_Rec(j);
-			memset(a_in, 0, nr * nq * np * sizeof(double));
-			memset(c4, 0, np * np * sizeof(double));
-			init_array(nr, nq, np, a_in, c4);
-			cleanup(sum);
-		}
-	}
-
-	/*
-	* Benchmark with the transpose version.
-	* In this version, the cost of the transposition is not counted.
-	*/
-	LSB_Set_Rparam_string("benchmark", "doitgen-parallel-transpose-not-counted");
-	double* c4_transposed = (double*)allocate_data(np * np, sizeof(double));
-	transpose(c4, c4_transposed, np, np);
-
-	for (uint64_t i = 0; i < THREADS_SIZES; ++i) {
-		omp_set_num_threads(threads[i]);
-		LSB_Set_Rparam_int("threads", threads[i]);
-		for (uint64_t j = 0; j < RUNS; ++j) {
-			LSB_Res();
-			kernel_doitgen_transpose(nr, nq, np, a_in, a_out, c4_transposed, sum);
-			LSB_Rec(j);
-			memset(a_out, 0, nr * nq * np * sizeof(double));
-		}
-	}
-
-	/*
-	* Benchmark with the transpose version.
-	* In this version, the cost of the transposition is counted.
-	*/
-	LSB_Set_Rparam_string("benchmark", "doitgen-parallel-transpose-counted");
-	memset(c4_transposed, 0.0, np * np * sizeof(double));
-
-	for (uint64_t i = 0; i < THREADS_SIZES; ++i) {
-		omp_set_num_threads(threads[i]);
-		LSB_Set_Rparam_int("threads", threads[i]);
-		for (uint64_t j = 0; j < RUNS; ++j) {
-			LSB_Res();
-			transpose(c4, c4_transposed, np, np);
-			kernel_doitgen_transpose(nr, nq, np, a_in, a_out, c4_transposed, sum);
-			LSB_Rec(j);
-			memset(c4_transposed, 0, np * np * sizeof(double));
-			memset(a_out, 0, nr * nq * np * sizeof(double));
-		}
-	}
-
-	cleanup(c4_transposed);
-
-	/*
-	* Benchmark with the blocking version.
-	*/
-	LSB_Set_Rparam_string("benchmark", "doitgen-seq-blocking");
-	LSB_Set_Rparam_int("threads", threads[0]);
-	for (uint64_t i = 0; i < BLOCKING_WINDOW_SIZES; ++i) {
-		LSB_Set_Rparam_long("blocking_size", blocking_windows[i]);
-		for (uint64_t j = 0; j < RUNS; ++j) {
-			LSB_Res();
-			kernel_doitgen_blocking(nr, nq, np, a_in, a_out, c4, sum, blocking_windows[i]);
-			LSB_Rec(j);
-			memset(a_out, 0, nr * nq * np * sizeof(double));
-		}
-	}
-	
-
-
-
 	LSB_Finalize();
 	MPI::Finalize();
 
-	cleanup(a_in);
-	cleanup(a_out);
-	cleanup(c4);
-	//cleanup(sum);
-	return 0;
 }

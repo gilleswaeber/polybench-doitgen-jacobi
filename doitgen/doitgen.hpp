@@ -62,40 +62,38 @@ void delete_file_if_exists(const char* output_path);
 void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
 
 void kernel_doitgen_seq(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4, double* sum);
-void kernel_doitgen_openmp(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4, double* sum);
-void kernel_doitgen_experimental(uint64_t nr, uint64_t nq, uint64_t np,
-	double* a_in,
-	double* a_out,
-	double* c4,
-	double* sum
+void kernel_doitgen_polybench_parallel(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4, double* sum);
+void kernel_doitgen_polybench_parallel_local_sum(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a,
+	double* c4
 );
+
 void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_in,
 	double* a_out,
-	double* c4,
-	double* sum
+	double* c4
 );
 
 void kernel_doitgen_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_in,
 	double* a_out,
 	double* c4,
-	double* sum,
 	uint64_t blocking_window
 );
 
-void kernel_doitgen_transpose_blocking(uint64_t nr, uint64_t nq, uint64_t np,
+void kernel_doitgen_inverted_loop(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_in,
 	double* a_out,
-	double* c4,
-	double* sum
+	double* c4
 );
 
-void kernel_doitgen_no_blocking(uint64_t nr, uint64_t nq, uint64_t np,
+void kernel_doitgen_inverted_loop_blocking(uint64_t nr, uint64_t nq, uint64_t np, double* a_in,
+	double* a_out, double* c4, uint64_t blocking_size);
+
+void kernel_doitgen_inverted_loop_avx2(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_in,
 	double* a_out,
-	double* c4,
-	double* sum
+	double* c4
 );
 
 void kernel_doitgen_mpi(MPI_Comm bench_comm, uint64_t nr, uint64_t nq, uint64_t np,
@@ -106,16 +104,6 @@ void kernel_doitgen_mpi(MPI_Comm bench_comm, uint64_t nr, uint64_t nq, uint64_t 
 
 void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a,
-	double* c4,
-	double* sum
-);
-
-void kernel_doitgen_bikj(uint64_t nr, uint64_t nq, uint64_t np, double* a_in,
-	double* a_out, double* c4, uint64_t blocking_size);
-
-void kernel_doitgen_no_blocking_avx2(uint64_t nr, uint64_t nq, uint64_t np,
-	double* a_in,
-	double* a_out,
 	double* c4,
 	double* sum
 );
@@ -150,10 +138,5 @@ void kernel_doitgen_mpi_init(MPI_Win* shared_window, uint64_t nr, uint64_t nq, u
  * @param sum 
  */
 void kernel_doitgen_mpi_clean(MPI_Win* shared_window, double** sum);
-
-const static problem_instance_t kernels_to_benchmark[] = {
-	{kernel_doitgen_seq, "reference kernel"},
-	{kernel_doitgen_openmp, "openMp implementation"}
-};
 
 //#endif /* !DOITGEN */

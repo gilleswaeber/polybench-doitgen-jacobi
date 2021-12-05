@@ -20,7 +20,7 @@ void init(double** a_in, double** a_out, double** c4, double** sum, uint64_t nr,
 const static uint64_t blocking_windows[] = {16, 32, 64, 128, 256, 512 };
 
 #define THREADS_SIZES 1
-const static int threads[] = { 48 };
+const static int threads[] = { 16 };
 
 void transpose(double* src, double* dst, uint64_t N, const int M) {
 #pragma omp parallel for
