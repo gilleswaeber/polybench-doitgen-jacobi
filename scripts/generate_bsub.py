@@ -50,10 +50,7 @@ def main():
             else:"""
             for k in range(RUNS):
                 result += (
-                    "bsub -n "
-                    + str(threads[j])
-                    + " "
-                    + "../dphpc-doitgen-openmp-benchmark "
+                    "bsub -n 48 ../dphpc-doitgen-openmp-benchmark "
                     + benchmarks[i]
                     + " "
                     + str(NR)
