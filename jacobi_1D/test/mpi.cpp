@@ -4,6 +4,7 @@
 #include <mpi.h>
 #include <utils.hpp>
 #include <chrono>
+#include <unistd.h>
 
 #include "jacobi_1D.hpp"
 
@@ -13,8 +14,7 @@ struct Case {
     int sync_steps;
 };
 
-int main(int argc, char **argv)
-{
+int main() {
     std::vector<Case> cases = {
             {1'000, 100, 1},
             {10'000, 200, 1},
@@ -29,9 +29,11 @@ int main(int argc, char **argv)
     };
 	MPI_Init(nullptr, nullptr);
 
+    const char* temp_file = "mpi_test_temp_file~";
     int num_proc, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    if (rank == 0) std::cout << "Using temp file " << temp_file << "\n";
 
     for (const auto & c : cases) {
         if (rank == 0) std::cout << "Testing with n=" << c.n << ", time_steps=" << c.time_steps << ", sync_steps=" << c.sync_steps << "\n";
@@ -48,15 +50,17 @@ int main(int argc, char **argv)
         }
 
         for (int i = 1; i <= num_proc; ++i) {
-            std::vector<double> A_mpi(c.n);
-            init_array(c.n, A_mpi.data());
             flush_cache();
+            if (rank == 0) unlink(temp_file);
             MPI_Barrier(MPI_COMM_WORLD);
             auto begin = std::chrono::high_resolution_clock::now();
-            jacobi_1d_imper_mpi(c.time_steps, c.n, A_mpi.data(), {rank, i, c.sync_steps});
+            jacobi_1d_imper_mpi(c.time_steps, c.n, {rank, i, c.sync_steps, temp_file, false});
             auto end = std::chrono::high_resolution_clock::now();
             auto time_spent = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+
             if (rank == 0) {
+                std::vector<double> A_mpi(c.n);
+                read_results_file(c.n, temp_file, A_mpi.data());
                 std::cout << "  Compare with reference implementation\n";
                 if (!compare_results(c.n, A_seq.data(), A_mpi.data())) {
                     std::cout << "  ! INVALID RESULTS !\n";

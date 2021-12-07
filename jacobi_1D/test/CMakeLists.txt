@@ -20,6 +20,9 @@ target_include_directories(dphpc_lib
 
 find_library(SUBUNIT_LIB subunit)
 
+add_executable(jacobi-check "check_output.cpp")
+target_link_libraries(jacobi-check PUBLIC dphpc_lib check m rt pthread)
+
 if(SUBUNIT_LIB)
     add_executable(dphpc-jacobi-test ${JACOBI_TEST_SRC})
     add_executable(dphpc-jacobi-mpi-test "mpi.cpp")
