@@ -184,10 +184,12 @@ int main(int argc, char** argv) {
 	if (argc < 7) {
 		std::cout << "Too few arguments..." << '\n';
 		help();
+		return -1;
 	}
 	if (argc > 8) {
 		std::cout << "Too many arguments..." << '\n';
 		help();
+		return -1;
 	}
 	const char* benchmark_type = argv[1];
 	uint64_t nr = strtoull(argv[2], NULL, 0);

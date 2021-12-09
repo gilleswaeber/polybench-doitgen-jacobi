@@ -47,10 +47,11 @@ result += (
 def main():
     result_non_blocking = ""
     result_blocking = ""
+    result_total = ""
     for i in range(len(benchmarks_seq)):
         for j in range(RUNS):
-            result_non_blocking += (
-                "bsub -n 48 ../dphpc-doitgen-openmp-benchmark "
+            result_total += (
+                "../dphpc-doitgen-openmp-benchmark "
                 + benchmarks_seq[i]
                 + " "
                 + str(NR)
@@ -67,8 +68,8 @@ def main():
     for i in range(len(benchmarks_non_blocking)):
         for j in range(len(threads)):
             for k in range(RUNS):
-                result_non_blocking += (
-                    "bsub -n 48 ../dphpc-doitgen-openmp-benchmark "
+                result_total += (
+                    "../dphpc-doitgen-openmp-benchmark "
                     + benchmarks_non_blocking[i]
                     + " "
                     + str(NR)
@@ -86,8 +87,8 @@ def main():
         for j in range(len(threads)):
             for k in range(len(windows)):
                 for l in range(RUNS):
-                    result_blocking += (
-                        "bsub -n 48 ../dphpc-doitgen-openmp-benchmark "
+                    result_total += (
+                        "../dphpc-doitgen-openmp-benchmark "
                         + benchmarks_blocking[i]
                         + " "
                         + str(NR)
@@ -103,13 +104,13 @@ def main():
                         + str(windows[k])
                         + "\n"
                     )
-    script_file = open("bsub_openMP_non_blocking.sh", "w")
-    script_file.write(result_non_blocking)
+    script_file = open("bsub_openMP.sh", "w")
+    script_file.write(result_total)
     script_file.close()
 
-    script_file = open("bsub_openMP_blocking.sh", "w")
+    """script_file = open("bsub_openMP_blocking.sh", "w")
     script_file.write(result_blocking)
-    script_file.close()
+    script_file.close()"""
 
 
 if __name__ == "__main__":
