@@ -1,7 +1,9 @@
 #include <iostream>
 
 #include <mpi.h>
+#ifdef WITH_LSB
 #include <liblsb.h>
+#endif
 
 #include "jacobi_1D.hpp"
 
@@ -24,16 +26,19 @@ void run(long n, long time_steps, int ghost_cells, const char* output_file) {
 #ifdef VERBOSE
     if (rank == 0) std::cout << "### MPI testing with " << num_proc << " total processes ###" << std::endl;
 #endif
-
+#ifdef WITH_LSB
     LSB_Init("jacobi1d_mpi_benchmark", 0);
     LSB_Set_Rparam_long("base_n", n);
     LSB_Set_Rparam_long("time_steps", time_steps);
     LSB_Set_Rparam_int("num_cores", num_proc);
     LSB_Set_Rparam_int("ghost_cells", ghost_cells);
+#endif
 
-    jacobi_1d_imper_mpi(time_steps, n * num_proc, {rank, num_proc, ghost_cells, output_file, true}); // execute
+    jacobi_1d_imper_mpi(time_steps, n * num_proc, {rank, num_proc, ghost_cells, output_file}); // execute
 
+#ifdef WITH_LSB
     LSB_Finalize();
+#endif
     MPI_Finalize();
 }
 

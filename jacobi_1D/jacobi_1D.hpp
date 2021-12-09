@@ -13,9 +13,8 @@ struct MpiParams {
     int num_proc;
     int ghost_cells;
     const char* output_file;
-    bool lsb;
 
-    MpiParams(int rank, int num_proc, int ghost_cells, const char* output_file, bool lsb) : rank(rank), num_proc(num_proc), ghost_cells(ghost_cells), output_file(output_file), lsb(lsb) {}
+    MpiParams(int rank, int num_proc, int ghost_cells, const char* output_file) : rank(rank), num_proc(num_proc), ghost_cells(ghost_cells), output_file(output_file) {}
 };
 
 static const double allowed_relative_error = 1e-12;

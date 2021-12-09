@@ -12,7 +12,9 @@
 
 #include <mpi.h>
 #include <omp.h>
+#ifdef WITH_LSB
 #include <liblsb.h>
+#endif
 
 #include "jacobi_1D.hpp"
 
@@ -138,7 +140,9 @@ void jacobi_1d_imper_mpi(long time_steps, long n, MpiParams mpi) {
     MPI_Request requests[4];
     MPI_Request *req_s1{&requests[0]}, *req_r1{&requests[1]}, *req_s2{&requests[2]}, *req_r2{&requests[3]};
     for (int t = 0; t < time_steps; ++t) {
-        if (mpi.lsb) LSB_Res();
+#ifdef WITH_LSB
+        LSB_Res();
+#endif
         const long lpad = (mpi.rank == 0 ? 1 : 1 + t % mpi.ghost_cells);
         const long rpad = (mpi.rank == last_rank ? 1 : 1 + t % mpi.ghost_cells);
         for (long i = lpad; i < padded_size - rpad; i++) {
@@ -146,10 +150,14 @@ void jacobi_1d_imper_mpi(long time_steps, long n, MpiParams mpi) {
         }
 
         std::swap(A_chunk, B_chunk);
-        if (mpi.lsb) LSB_Rec(0);
+#ifdef WITH_LSB
+        LSB_Rec(0);
+#endif
 
         if (t % mpi.ghost_cells == mpi.ghost_cells - 1) { // sync processes
-            if (mpi.lsb) LSB_Res();
+#ifdef WITH_LSB
+            LSB_Res();
+#endif
             if (mpi.rank != 0) {
                 MPI_Isend(A_chunk.data() + mpi.ghost_cells, mpi.ghost_cells, MPI_DOUBLE, prev_rank,
                           TAG_ToPrev, MPI_COMM_WORLD, req_s1);
@@ -165,17 +173,23 @@ void jacobi_1d_imper_mpi(long time_steps, long n, MpiParams mpi) {
             if (mpi.rank != 0 && mpi.rank != last_rank) MPI_Waitall(4, requests, MPI_STATUSES_IGNORE);
             else if (mpi.rank != 0) MPI_Waitall(2, &requests[0], MPI_STATUSES_IGNORE);
             else if (mpi.rank != last_rank) MPI_Waitall(2, &requests[2], MPI_STATUSES_IGNORE);
-            if (mpi.lsb) LSB_Rec(1);
+#ifdef WITH_LSB
+            LSB_Rec(1);
+#endif
         }
     }
 
     // write results to file
     // https://www.cscs.ch/fileadmin/user_upload/contents_publications/tutorials/fast_parallel_IO/MPI-IO_NS.pdf
-    if (mpi.lsb) LSB_Res();
+#ifdef WITH_LSB
+    LSB_Res();
+#endif
     if (MPI_File_open(MPI_COMM_WORLD, mpi.output_file, OPEN_MODE, MPI_INFO_NULL, &fh)) abort();
     if (MPI_File_write_at(fh, true_start * 8, true_data, true_size, MPI_DOUBLE, MPI_STATUS_IGNORE)) abort();
     if (MPI_File_close(&fh)) abort();
-    if (mpi.lsb) LSB_Rec(2);
+#ifdef WITH_LSB
+    LSB_Rec(2);
+#endif
 }
 
 #pragma clang diagnostic push
