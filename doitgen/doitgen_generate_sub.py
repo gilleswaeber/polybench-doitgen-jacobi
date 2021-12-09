@@ -94,7 +94,7 @@ def main():
 
     print(result)
     try:
-        create_file_at(name, result)
+        create_file_at(result)
     except:
         print("failed to create the file")
 

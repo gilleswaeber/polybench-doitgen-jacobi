@@ -72,7 +72,7 @@ START_TEST(test_jacobi)
             init_array(n, A_mpi.data());
             flush_cache();
             auto begin = std::chrono::high_resolution_clock::now();
-            jacobi_1d_imper_mpi(time_steps, n, A_mpi.data(), {0, 1, 1});
+            //jacobi_1d_imper_mpi(time_steps, n, A_mpi.data(), {0, 1, 1});
             auto end = std::chrono::high_resolution_clock::now();
             auto time_spent = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
             std::cout << "  MPI time : " << time_spent << "ms" << std::endl;
