@@ -1,15 +1,16 @@
 RUNS = 10
 threads = [1, 2, 4, 8, 16, 32, 48]
-benchmarks = [
-    "polybench",
+benchmarks_seq = ["polybench"]
+
+benchmarks_non_blocking = [
     "polybench_parallel",
     "polybench_parallel_local_sum",
     "transpose",
-    # "blocking",
     "inverted_loop",
-    # "inverted_loop_blocking",
     "inverted_loop_avx2",
 ]
+
+benchmarks_blocking = ["blocking", "inverted_loop"]
 
 NR = 512
 NQ = 512
@@ -19,15 +20,8 @@ BLOCKING_IDX = 6
 
 windows = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
 
-
-def main():
-    result = ""
-    for i in range(len(benchmarks)):
-        for j in range(len(threads)):
-            """if i == BLOCKING_IDX:
-                for k in range(len(windows)):
-                    for l in range(RUNS):
-                        result += (
+"""
+result += (
                             "bsub -n "
                             + str(threads[j])
                             + " "
@@ -47,11 +41,35 @@ def main():
                             + str(windows[l])
                             + "\n"
                         )
-            else:"""
+"""
+
+
+def main():
+    result_non_blocking = ""
+    result_blocking = ""
+    for i in range(len(benchmarks_seq)):
+        for j in range(RUNS):
+            result_non_blocking += (
+                "bsub -n 48 ../dphpc-doitgen-openmp-benchmark "
+                + benchmarks_seq[i]
+                + " "
+                + str(NR)
+                + " "
+                + str(NQ)
+                + " "
+                + str(NP)
+                + " "
+                + str(1)
+                + " "
+                + str(j)
+                + "\n"
+            )
+    for i in range(len(benchmarks_non_blocking)):
+        for j in range(len(threads)):
             for k in range(RUNS):
-                result += (
+                result_non_blocking += (
                     "bsub -n 48 ../dphpc-doitgen-openmp-benchmark "
-                    + benchmarks[i]
+                    + benchmarks_non_blocking[i]
                     + " "
                     + str(NR)
                     + " "
@@ -64,8 +82,33 @@ def main():
                     + str(k)
                     + "\n"
                 )
-    script_file = open("bsub_openMP.sh", "w")
-    script_file.write(result)
+    for i in range(len(benchmarks_blocking)):
+        for j in range(len(threads)):
+            for k in range(len(windows)):
+                for l in range(RUNS):
+                    result_blocking += (
+                        "bsub -n 48 ../dphpc-doitgen-openmp-benchmark "
+                        + benchmarks_blocking[i]
+                        + " "
+                        + str(NR)
+                        + " "
+                        + str(NQ)
+                        + " "
+                        + str(NP)
+                        + " "
+                        + str(threads[j])
+                        + " "
+                        + str(l)
+                        + " "
+                        + str(windows[k])
+                        + "\n"
+                    )
+    script_file = open("bsub_openMP_non_blocking.sh", "w")
+    script_file.write(result_non_blocking)
+    script_file.close()
+
+    script_file = open("bsub_openMP_blocking.sh", "w")
+    script_file.write(result_blocking)
     script_file.close()
 
 
