@@ -1,71 +1,69 @@
 #include <iostream>
-#include <vector>
 
 #include <mpi.h>
-#include <utils.hpp>
+#ifdef WITH_LSB
 #include <liblsb.h>
+#endif
 
 #include "jacobi_1D.hpp"
 
-const int RUN = 10;
+void print_help(char *program) {
+    std::cout << "Usage: " << program << " N T S FILE\n"
+              << "    N: array size, multiplied by the number of cores\n"
+              << "    T: time steps\n"
+              << "    S: number of ghost cells to use, 1 <= S < N/2\n"
+              << "    FILE: output file for computed data\n"
+              << std::endl;
+}
 
-struct Case {
-    int n;
-    int time_steps;
-};
-
-int main() {
+void run(long n, long time_steps, int ghost_cells, const char* output_file) {
     MPI_Init(nullptr, nullptr);
 
     int num_proc, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-	if (rank == 0) std::cout << "### MPI testing with " << num_proc << " total processes ###" << std::endl;
+#ifdef VERBOSE
+    if (rank == 0) std::cout << "### MPI testing with " << num_proc << " total processes ###" << std::endl;
+#endif
+#ifdef WITH_LSB
+    LSB_Init("jacobi1d_mpi_benchmark", 0);
+    LSB_Set_Rparam_long("base_n", n);
+    LSB_Set_Rparam_long("time_steps", time_steps);
+    LSB_Set_Rparam_int("num_cores", num_proc);
+    LSB_Set_Rparam_int("ghost_cells", ghost_cells);
+#endif
 
-	LSB_Init("jacobi1d_mpi_benchmark", 0);
-	LSB_Set_Rparam_string("benchmark_type", "simple");
+    jacobi_1d_imper_mpi(time_steps, n * num_proc, {rank, num_proc, ghost_cells, output_file}); // execute
 
-	MPI_Barrier(MPI_COMM_WORLD);
+#ifdef WITH_LSB
+    LSB_Finalize();
+#endif
+    MPI_Finalize();
+}
 
-    std::vector<Case> cases{
-            {24'000, 1'000}, // initial problem size from the “Productivity, Portability, Performance: Data-Centric Python” paper
-            {240'000, 10'000}, // first case is way too fast (~8ms), this one should take ~800ms/it
-            {10'000'000, 1'000}  // n multiplied by ~400, should take ~4s
-    };
-
-    for (const auto &c : cases) {
-        if (rank == 0) std::cout << "\n--- Jacobi 1D: n=" << c.n << " × np, time_steps=" << c.time_steps << " ---\n";
-        LSB_Set_Rparam_int("base_n", c.n);
-        LSB_Set_Rparam_int("time_steps", c.time_steps);
-        std::vector<double> A_mpi(c.n * num_proc);
-
-        for (int np = 1; np <= num_proc; np += (np == 1 ? 1 : 2)) {
-            LSB_Set_Rparam_int("num_cores", np);
-            for (int sync_steps = 1; sync_steps <= c.time_steps / np; sync_steps *= 2) {
-                LSB_Set_Rparam_int("sync_steps", sync_steps);
-                if (rank == 0) std::cout << "Jacobi MPI, " << RUN << " runs: n=" << c.n * np << ", time_steps=" << c.time_steps << ", np=" << np << ", sync_steps=" << sync_steps << "\n";
-                for (int run = 0; run < RUN; ++run) {
-                    if (rank == 0) std::cout << "\r" << run << "/" << RUN << std::flush;
-                    // prepare
-                    init_array(c.n * np, A_mpi.data());
-                    flush_cache();
-                    MPI_Barrier(MPI_COMM_WORLD);
-
-                    LSB_Res(); // reset counters
-                    // execute
-                    jacobi_1d_imper_mpi(c.time_steps, c.n * np, A_mpi.data(), {rank, np, sync_steps, false});
-
-                    LSB_Rec(run); // save run
-                }
-                std::cout << '\r';
-            }
-        }
+int main(int argc, char **argv) {
+    std::ios_base::sync_with_stdio(false);
+    if (argc != 5) {
+        print_help(argv[0]);
+        return 1;
     }
-
-    std::cout << "Process #" << rank << " exiting\n";
-
-	LSB_Finalize();
-	MPI_Finalize();
-	return 0;
+    long n = strtol(argv[1], nullptr, 10);
+    if (errno || n <= 3) {
+        print_help(argv[0]);
+        return 1;
+    }
+    long time_steps = strtol(argv[2], nullptr, 10);
+    if (errno) {
+        print_help(argv[0]);
+        return 1;
+    }
+    long ghost_cells = strtol(argv[3], nullptr, 10);
+    if (errno || ghost_cells < 1 || ghost_cells >= n / 2) {
+        print_help(argv[0]);
+        return 1;
+    }
+    const char *output_file = argv[4];
+    run(n, time_steps, ghost_cells, output_file);
+    return 0;
 }
