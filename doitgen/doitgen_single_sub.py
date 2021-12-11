@@ -3,6 +3,14 @@ import argparse
 import os
 from pathlib import Path
 
+
+bench_types = [
+    'basic'
+]
+
+proc_model = "EPYC_7H12"
+
+
 # This scripts generates a submission script for euler in order to run all the
 # benchmarks of doitgen mpi version
 
@@ -12,10 +20,19 @@ copy_sh_to = "copy_benchmark_to_cluster.sh"
 copy_sh_from = "get_results.sh"
 
 copy_local_to_remote = "scp " + name + " qguignard@euler.ethz.ch:dphpc-project/build/doitgen/benchmark"
-copy_remote_to_local = "scp qguignard@euler.ethz.ch:dphpc-project/build/doitgen/benchmark/* ."
+copy_remote_to_local = """
+now=$(date +%m%d%H%M)
+mkdir results_${now}
+mkdir lsfs_${now}
+scp qguignard@euler.ethz.ch:dphpc-project/build/doitgen/benchmark/lsb* ./results_${now}
+scp qguignard@euler.ethz.ch:dphpc-project/build/doitgen/benchmark/lsf* ./lsfs_${now}
+"""
 
-def get_sub(num_cores, out_file, nr, nq, np): 
-    return "bsub -n " + str(num_cores) + " mpirun -np " + str(num_cores) + " ./dphpc-doitgen-mpi-benchmark " + out_file + " " + str(nr) + " " + str(nq) + " " + str(np)
+def get_command(num_cores, out_file, bench_type, nr, nq, np): 
+    return "mpirun -np " + str(num_cores) + " ./dphpc-doitgen-mpi-benchmark " + out_file + " " + bench_type + " " + str(nr) + " " + str(nq) + " " + str(np)
+
+def get_sequential_command(nr, nq, np):
+    return "./dphpc-doitgen-sequential-benchmark " + str(nr) + " " + str(nq) + " " + str(np)
 
 def parse_args():
 
@@ -77,19 +94,27 @@ def create_file_at(result):
     f.write(copy_remote_to_local)
     f.close()
 
+
+def get_proc_selection(model):
+    return f'-R "select[model=={model}]"'
+
 def main():
 
     args = parse_args()
 
     cores = range(0, args.n + 1, 2)
-    result = ""
+    result = "bsub -n 48 " + get_proc_selection(proc_model) + '\n'
+
+    result += get_sequential_command(args.nr, args.nq, args.np) + "\n"
+
     index = 0
-    for c in cores:
-        for i in range(args.runs):
-            if (c == 0): # for the 0 cores
-                c = 1
-            result += get_sub(c, "/scratch/" + args.output + str(index), c * args.nr, args.nq, args.np) + "\n"
-            index += 1
+    for bench_type in bench_types:
+        for c in cores:
+            for i in range(args.runs):
+                if (c == 0): # for the 0 cores
+                    c = 1
+                result += get_command(c, "/scratch/" + args.output + str(index), bench_type, c * args.nr, args.nq, args.np) + "\n"
+                index += 1
 
     print(result)
     try:
