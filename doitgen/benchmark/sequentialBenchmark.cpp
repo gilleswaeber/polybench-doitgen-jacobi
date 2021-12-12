@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
 			}	
 		}
 
-		LSB_Rec(r);
+		LSB_Rec(0);
 
 	}
 
