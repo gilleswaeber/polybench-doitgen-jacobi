@@ -46,6 +46,10 @@ def parse_args():
                         help='size of np',
                         default=512,
                         type=int)
+    parser.add_argument('--output_location',
+                        help='outputpath',
+                        default="/scratch/",
+                        type=str)
     
     args = parser.parse_args()
 
@@ -88,7 +92,7 @@ def main():
         for i in range(args.runs):
             if (c == 0): # for the 0 cores
                 c = 1
-            result += get_sub(c, "/scratch/" + args.output + str(index), c * args.nr, args.nq, args.np) + "\n"
+            result += get_sub(c, args.output_location + args.output + str(index), c * args.nr, args.nq, args.np) + "\n"
             index += 1
 
     print(result)

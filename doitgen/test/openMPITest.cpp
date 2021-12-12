@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
 
 	//std::cout << argc << std::endl;
 
-	assert(argc == 7);
+	assert(argc == 8);
 
 	char* output_path = argv[1];
 	std::string benchmark_name = argv[2];
@@ -81,9 +81,11 @@ int main(int argc, char **argv) {
 
 	remove(output_path);
 
-	uint64_t nr = strtoull(argv[4], nullptr, 10);
-	uint64_t nq = strtoull(argv[5], nullptr, 10);
-	uint64_t np = strtoull(argv[6], nullptr, 10);
+	uint64_t run_index =  strtoull(argv[4], nullptr, 10);
+
+	uint64_t nr = strtoull(argv[5], nullptr, 10);
+	uint64_t nq = strtoull(argv[6], nullptr, 10);
+	uint64_t np = strtoull(argv[7], nullptr, 10);
 
 	int num_proc, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
@@ -93,6 +95,12 @@ int main(int argc, char **argv) {
 
 	LSB_Set_Rparam_string("benchmark_name", benchmark_name.c_str());
 	LSB_Set_Rparam_string("processor_model", processor_model.c_str());
+
+	LSB_Set_Rparam_long("NR", nr);
+	LSB_Set_Rparam_long("NQ", nq);
+	LSB_Set_Rparam_long("NP", np);
+	LSB_Set_Rparam_long("num_processes", num_proc);
+	LSB_Set_Rparam_long("run_index", run_index);
 
 	mpi_kernel_func f;
 	bool found_kernel = find_benchmark_kernel_by_name(benchmark_name, &f);

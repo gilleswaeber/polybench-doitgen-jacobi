@@ -2,6 +2,7 @@
 import argparse
 import os
 from pathlib import Path
+from typing_extensions import runtime
 
 
 bench_types = [
@@ -9,9 +10,9 @@ bench_types = [
     'transpose'
 ]
 
-proc_model = "EPYC_7H12" #
+proc_model = "EPYC_7H12" # "XeonE3_1585Lv5" #"XeonE3_1585Lv5" #XeonE3_1585Lv5 #EPYC_7H12
 
-outputs_locations = "/cluster/scratch/qguignard/"
+#cluster_outputs_locations = "/cluster/scratch/qguignard/"
 
 # This scripts generates a submission script for euler in order to run all the
 # benchmarks of doitgen mpi version
@@ -30,11 +31,11 @@ scp qguignard@euler.ethz.ch:dphpc-project/build/doitgen/benchmark/lsb* ./results
 scp qguignard@euler.ethz.ch:dphpc-project/build/doitgen/benchmark/lsf* ./lsfs_${now}
 """
 
-def get_command(num_cores, out_file, bench_type, processor_model, nr, nq, np): 
-    return "mpirun -np " + str(num_cores) + " ./dphpc-doitgen-mpi-benchmark " + out_file + " " + bench_type + " " + processor_model +" " + str(nr) + " " + str(nq) + " " + str(np)
+def get_command(num_cores, out_file, bench_type, processor_model, run_index, nr, nq, np): 
+    return "mpirun -np " + str(num_cores) + " ./dphpc-doitgen-mpi-benchmark " + out_file + " " + bench_type + " " + processor_model + " " + str(run_index) + " " + str(nr) + " " + str(nq) + " " + str(np)
 
-def get_sequential_command(processor_model, nr, nq, np):
-    return "./dphpc-doitgen-sequential-benchmark " + processor_model + " " + str(nr) + " " + str(nq) + " " + str(np)
+def get_sequential_command(processor_model, run_index, nr, nq, np):
+    return "./dphpc-doitgen-sequential-benchmark " + processor_model + " " + str(run_index) + " " + str(nr) + " " + str(nq) + " " + str(np)
 
 def get_rm_file_command(path):
     return f"rm {path}" + "\n"
@@ -68,7 +69,15 @@ def parse_args():
                         help='size of np',
                         default=512,
                         type=int)
-    
+    parser.add_argument('--output_location',
+                        help='outputpath',
+                        default="/cluster/scratch/qguignard/",
+                        type=str)
+    parser.add_argument('--is_home',
+                        help='default 0 for cluster 1 for laptop',
+                        default=0,
+                        type=int)
+
     args = parser.parse_args()
 
     return args
@@ -110,8 +119,13 @@ def main():
     cores = range(0, args.n + 1, 2)
     result = "#!/bin/bash \n" 
 
-    result += "bsub -n 48 -W 24:00 " + get_proc_selection(proc_model) + " <<EOF " +'\n'
-    result += get_sequential_command(proc_model, args.nr, args.nq, args.np) + "\n"
+    if (args.is_home == 0):
+        result += "bsub -n 48 -W 48:00 " + get_proc_selection(proc_model) + " <<EOF " +'\n'
+    
+    for i in range(args.runs):
+        result += get_sequential_command(proc_model, i, args.nr, args.nq, args.np) + "\n"
+
+    output_location = args.output_location if (args.is_home == 0) else "data/"
 
     index = 0
     for bench_type in bench_types:
@@ -119,11 +133,12 @@ def main():
             for i in range(args.runs):
                 if (c == 0): # for the 0 cores
                     c = 1
-                output_path = outputs_locations + args.output + proc_model + "_" +str(index)
-                result += get_command(c, output_path, bench_type, proc_model, c * args.nr, args.nq, args.np) + "\n"
+                output_path = output_location + args.output + proc_model + "_" + str(index)
+                result += get_command(c, output_path, bench_type, proc_model, i, c * args.nr, args.nq, args.np) + "\n"
                 result += get_rm_file_command(output_path)
                 index += 1
-    result += "EOF\n"
+    if (args.is_home == 0):
+        result += "EOF\n"
 
     print(result)
     try:
