@@ -27,10 +27,11 @@ int main(int argc, char **argv) {
 
 	//std::cout << argc << std::endl;
 
-	assert(argc == 6);
+	assert(argc == 7);
 
 	char* output_path = argv[1];
 	std::string benchmark_name = argv[2];
+	std::string processor_model = argv[3];
 	
 	mpi_kernel_func selected_kernel;
 	bool found_kernel = find_benchmark_kernel_by_name(benchmark_name, &selected_kernel);
@@ -40,20 +41,23 @@ int main(int argc, char **argv) {
 
 	remove(output_path);
 
-	uint64_t nr = strtoull(argv[3], nullptr, 10);
-	uint64_t nq = strtoull(argv[4], nullptr, 10);
-	uint64_t np = strtoull(argv[5], nullptr, 10);
+	uint64_t nr = strtoull(argv[4], nullptr, 10);
+	uint64_t nq = strtoull(argv[5], nullptr, 10);
+	uint64_t np = strtoull(argv[6], nullptr, 10);
 
 	int num_proc, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-	LSB_Init((std::string("doitgen_") + benchmark_name + std::string("_") + std::to_string(num_proc)).c_str(), 0);
+	LSB_Init(get_benchmark_lsb_name(benchmark_name, processor_model, num_proc).c_str(), 0);
 
 	LSB_Set_Rparam_long("NR", nr);
 	LSB_Set_Rparam_long("NQ", nq);
 	LSB_Set_Rparam_long("NP", np);
 	LSB_Set_Rparam_long("num_processes", num_proc);
+
+	LSB_Set_Rparam_string("benchmark_type", benchmark_name.c_str());
+	LSB_Set_Rparam_string("processor_model", processor_model.c_str());
 
 	if (rank == 0) {
 		std::cout << "starting benchmark without file" << nr << "x" << nq << "x" << np << std::endl;

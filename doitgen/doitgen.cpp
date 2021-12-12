@@ -678,6 +678,56 @@ void doitgen_kernel_mpi_init(uint64_t nr, uint64_t nq, uint64_t np, int* num_pro
 	}
 }
 
+void mpi_io_init_file(uint64_t nq, uint64_t np, const char* output_path, MPI_File* file, uint64_t l, uint64_t u) {
+
+	assert(file != nullptr);
+
+	//std::cout << "init file" << std::endl;
+
+	MPI_Datatype arraytype;
+
+	MPI_Offset disp = nq * np * sizeof(double) * l;
+	MPI_Offset end = nq * np * sizeof(double) * u;
+
+	MPI_Type_contiguous(end - disp, MPI_DOUBLE, &arraytype);
+	MPI_Type_commit(&arraytype);
+	MPI_File_open(MPI_COMM_WORLD, output_path, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, file);
+
+	//offset = nq * np * sizeof(double) * l;
+	
+	MPI_File_set_view(*file, disp, MPI_DOUBLE, arraytype, "native", MPI_INFO_NULL);
+
+	MPI_Barrier(MPI_COMM_WORLD);
+
+	//std::cout << "exiting init file" << std::endl;
+}
+
+void mpi_clean_up(MPI_File* file, double* a, double* sum, double* c4) {
+	
+	int rank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+	MPI_File_close(file);
+	if (a != nullptr)
+		free(a);
+	if (sum != nullptr)
+		free(sum);
+	if (c4 != nullptr)
+		free(c4);
+
+	MPI_Barrier(MPI_COMM_WORLD);
+
+	if (rank == 0) {
+		PROCESS_MESSAGE(rank, "exiting!");
+	}
+}
+
+std::string get_benchmark_lsb_name(const std::string& benchmark_name, const std::string& processor_model, int num_processors) {
+	std::string result = "";
+	result += std::string("doitgen_") + benchmark_name + std::string("_") + processor_model + std::string("_") + std::to_string(num_processors);
+	return result;
+}
+
 //////////////////////////////////////////////////// MPI KERNELS ////////////////////////////////////////////
 
 //https://pages.tacc.utexas.edu/~eijkhout/pcse/html/mpi-io.html
@@ -693,23 +743,8 @@ void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* ou
 	doitgen_kernel_mpi_init(nr, nq, np, &num_proc, &rank, &a, &sum, &c4, &l, &u);
 
 	uint64_t r = 0, q = 0, p = 0, s = 0;
-	MPI_Offset offset; // should represent the size in bytes of the data
-
-	// 2 - each do its job
-
-	MPI_Offset disp = nq * np * sizeof(double) * l;
-	MPI_Offset end = nq * np * sizeof(double) * u;
-
 	MPI_File file;
-	MPI_Datatype arraytype;
-
-	MPI_Type_contiguous(end - disp, MPI_DOUBLE, &arraytype);
-	MPI_Type_commit(&arraytype);
-	MPI_File_open(MPI_COMM_WORLD, output_path, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
-
-	//offset = nq * np * sizeof(double) * l;
-	
-	MPI_File_set_view(file, disp, MPI_DOUBLE, arraytype, "native", MPI_INFO_NULL);
+	mpi_io_init_file(nq, np, output_path, &file, l, u);
 
 	for (r = l; r < u; r++) {
 
@@ -740,28 +775,14 @@ void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* ou
 		LSB_Res();
 		// 2.3 write A to the result file
 
-		offset = nq * np * sizeof(double) * r;
+		//offset = nq * np * sizeof(double) * r;
 		MPI_File_write(file, a, np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
 		//MPI_File_write_at_all(file, offset, a, nq * np, MPI_DOUBLE, MPI_STATUS_IGNORE);
 		
 		LSB_Rec(2);
 	}
 
-	MPI_File_close(&file);
-
-	//job finished we can exit
-
-	free(a);
-	free(sum);
-	free(c4);
-
-	MPI_Barrier(MPI_COMM_WORLD);
-
-	if (rank == 0) {
-		PROCESS_MESSAGE(rank, "exiting!");
-	}
-
-	//MPI_Finalize();
+	mpi_clean_up(&file, a, sum, c4);
 
 }
 
@@ -769,75 +790,21 @@ void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* ou
 //https://cvw.cac.cornell.edu/parallelio/fileviewex
 void kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
 
-	//MPI_Init(nullptr, nullptr);
-
-	// 0 - Init
-
 	int num_proc, rank;
-	MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
-	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-	if (rank == 0) {
-		std::cout << "num proc = " << num_proc << " for size " << nr << "x" << nq << "x" << np << std::endl;
-	}
-
 	double* a = 0;
-
 	double* sum = 0;
 	double* c4 = 0;
+	uint64_t l = 0, u = 0;
 
-	a = (double*)calloc(nq * np, sizeof(double));
-	sum = (double*)calloc(np, sizeof(double));
-	c4 = (double*)calloc(np * np, sizeof(double));
-
-	assert(a != nullptr);
-	assert(sum != nullptr);
-
-	init_C4(np, c4);
-
-	memset(sum, 0, np);
-
-	// 1 - split the job
-
-	uint64_t chunk_size = nr / num_proc;
-	uint64_t leftover = nr % num_proc; // we compute the imbalance in jobs
-	uint64_t normal = num_proc - leftover; // the amount of processes that will not have an additional job
-	uint64_t imbalanced_start = normal * chunk_size; //start index of the increased jobs
-
-	uint64_t l = 0;
-	uint64_t u = 0;
-
-	if ((uint64_t)rank < normal) {
-		l = rank * chunk_size;
-		u = (rank + 1) * chunk_size;
-	}
-	else { // imbalanced workload process
-		l = (rank - normal) * (chunk_size + 1) + imbalanced_start;
-		u = (rank - normal + 1) * (chunk_size + 1) + imbalanced_start;
-	}
+	doitgen_kernel_mpi_init(nr, nq, np, &num_proc, &rank, &a, &sum, &c4, &l, &u);
 
 	uint64_t r = 0, q = 0, p = 0, s = 0;
-	MPI_Offset offset; // should represent the size in bytes of the data
-
-	// 2 - each do its job
-
-	MPI_Offset disp = nq * np * sizeof(double) * l;
-	MPI_Offset end = nq * np * sizeof(double) * u;
-
 	MPI_File file;
-	MPI_Datatype arraytype;
-
-	MPI_Type_contiguous(end - disp, MPI_DOUBLE, &arraytype);
-	MPI_Type_commit(&arraytype);
-	MPI_File_open(MPI_COMM_WORLD, output_path, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
-
-	//offset = nq * np * sizeof(double) * l;
-	
-	MPI_File_set_view(file, disp, MPI_DOUBLE, arraytype, "native", MPI_INFO_NULL);
+	mpi_io_init_file(nq, np, output_path, &file, l, u);
 
 	LSB_Res();
 	tranpose_C4(np, c4);
-	LSB_Rec(3);
+	LSB_Rec(0);
 
 	for (r = l; r < u; r++) {
 
@@ -866,14 +833,11 @@ void kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, cons
 		LSB_Rec(1);
 
 		LSB_Res();
-		// 2.3 write A to the result file
-
-		offset = nq * np * sizeof(double) * r;
 		MPI_File_write(file, a, np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
-		
 		LSB_Rec(2);
 	}
 
+	/*
 	MPI_File_close(&file);
 
 	//job finished we can exit
@@ -886,8 +850,9 @@ void kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, cons
 
 	if (rank == 0) {
 		PROCESS_MESSAGE(rank, "exiting!");
-	}
+	}*/
 
+	mpi_clean_up(&file, a, sum, c4);
 	//MPI_Finalize();
 
 }

@@ -5,10 +5,11 @@ from pathlib import Path
 
 
 bench_types = [
-    'basic'
+    'basic',
+    'transpose'
 ]
 
-proc_model = "EPYC_7H12"
+proc_model = "EPYC_7H12" #
 
 outputs_locations = "/cluster/scratch/qguignard/"
 
@@ -29,11 +30,11 @@ scp qguignard@euler.ethz.ch:dphpc-project/build/doitgen/benchmark/lsb* ./results
 scp qguignard@euler.ethz.ch:dphpc-project/build/doitgen/benchmark/lsf* ./lsfs_${now}
 """
 
-def get_command(num_cores, out_file, bench_type, nr, nq, np): 
-    return "mpirun -np " + str(num_cores) + " ./dphpc-doitgen-mpi-benchmark " + out_file + " " + bench_type + " " + str(nr) + " " + str(nq) + " " + str(np)
+def get_command(num_cores, out_file, bench_type, processor_model, nr, nq, np): 
+    return "mpirun -np " + str(num_cores) + " ./dphpc-doitgen-mpi-benchmark " + out_file + " " + bench_type + " " + processor_model +" " + str(nr) + " " + str(nq) + " " + str(np)
 
-def get_sequential_command(nr, nq, np):
-    return "./dphpc-doitgen-sequential-benchmark " + str(nr) + " " + str(nq) + " " + str(np)
+def get_sequential_command(processor_model, nr, nq, np):
+    return "./dphpc-doitgen-sequential-benchmark " + processor_model + " " + str(nr) + " " + str(nq) + " " + str(np)
 
 def get_rm_file_command(path):
     return f"rm {path}" + "\n"
@@ -110,7 +111,7 @@ def main():
     result = "#!/bin/bash \n" 
 
     result += "bsub -n 48 -W 24:00 " + get_proc_selection(proc_model) + " <<EOF " +'\n'
-    result += get_sequential_command(args.nr, args.nq, args.np) + "\n"
+    result += get_sequential_command(proc_model, args.nr, args.nq, args.np) + "\n"
 
     index = 0
     for bench_type in bench_types:
@@ -119,7 +120,7 @@ def main():
                 if (c == 0): # for the 0 cores
                     c = 1
                 output_path = outputs_locations + args.output + proc_model + "_" +str(index)
-                result += get_command(c, output_path, bench_type, c * args.nr, args.nq, args.np) + "\n"
+                result += get_command(c, output_path, bench_type, proc_model, c * args.nr, args.nq, args.np) + "\n"
                 result += get_rm_file_command(output_path)
                 index += 1
     result += "EOF\n"

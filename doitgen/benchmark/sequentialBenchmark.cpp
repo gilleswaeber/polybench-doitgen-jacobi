@@ -31,14 +31,19 @@ void init_array_seq(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4
 
 int main(int argc, char **argv) {
  
-    assert(argc == 4); //program name + 3 sizes
+    assert(argc == 5); //program name + 3 sizes
+
+	std::string processor_model = argv[1];
 
 	uint64_t nr = strtoull(argv[1], nullptr, 10);
 	uint64_t nq = strtoull(argv[2], nullptr, 10);
 	uint64_t np = strtoull(argv[3], nullptr, 10);
 
 	MPI_Init(nullptr, nullptr);
-    LSB_Init("sequential", 0);
+    LSB_Init((std::string("sequential_") + processor_model).c_str(), 0);
+
+	LSB_Set_Rparam_string("benchmark_type", "sequential");
+	LSB_Set_Rparam_string("processor_model", processor_model.c_str());
 
     double* a = 0;
 	double* c4 = 0;
