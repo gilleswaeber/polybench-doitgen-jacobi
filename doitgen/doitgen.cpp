@@ -626,56 +626,71 @@ void kernel_doitgen_mpi_clean(MPI_Win* shared_window, double** sum) {
 }
 
 
+///////////////////////////////////////////////// UTILS MPI ///////////////////////////////////
+
+/*this function takes C4 and transposes it inplace */
+void tranpose_C4(uint64_t np, double* c4) {
+
+	assert(c4 != nullptr);
+
+	for (uint64_t i = 0; i < np; i++) {
+		for (uint16_t j = i + 1; j < np; j++) {
+			double tmp = c4[i * np + j];
+			c4[i * np + j] = c4[j * np + i];
+			c4[j * np + i] = tmp;
+		}
+	}
+
+}
+
+void doitgen_kernel_mpi_init(uint64_t nr, uint64_t nq, uint64_t np, int* num_proc, int* rank, double** a, double** sum, double** c4, uint64_t* l, uint64_t* u) {
+	
+	MPI_Comm_size(MPI_COMM_WORLD, num_proc);
+	MPI_Comm_rank(MPI_COMM_WORLD, rank);
+
+	if (*rank == 0) {
+		std::cout << "num proc = " << *num_proc << " for size " << nr << "x" << nq << "x" << np << std::endl;
+	}
+
+	*a = (double*)calloc(nq * np, sizeof(double));
+	*sum = (double*)calloc(np, sizeof(double));
+	*c4 = (double*)calloc(np * np, sizeof(double));
+
+	assert(*a != nullptr);
+	assert(*sum != nullptr);
+	assert(*c4 != nullptr);
+
+	init_C4(np, *c4);
+	memset(*sum, 0, np);
+
+	uint64_t chunk_size = nr / *num_proc;
+	uint64_t leftover = nr % *num_proc; // we compute the imbalance in jobs
+	uint64_t normal = *num_proc - leftover; // the amount of processes that will not have an additional job
+	uint64_t imbalanced_start = normal * chunk_size; //start index of the increased jobs
+
+	if ((uint64_t)*rank < normal) {
+		*l = *rank * chunk_size;
+		*u = (*rank + 1) * chunk_size;
+	}
+	else { // imbalanced workload process
+		*l = (*rank - normal) * (chunk_size + 1) + imbalanced_start;
+		*u = (*rank - normal + 1) * (chunk_size + 1) + imbalanced_start;
+	}
+}
+
+//////////////////////////////////////////////////// MPI KERNELS ////////////////////////////////////////////
+
 //https://pages.tacc.utexas.edu/~eijkhout/pcse/html/mpi-io.html
 //https://cvw.cac.cornell.edu/parallelio/fileviewex
 void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
 
-	//MPI_Init(nullptr, nullptr);
-
-	// 0 - Init
-
 	int num_proc, rank;
-	MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
-	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-	if (rank == 0) {
-		std::cout << "num proc = " << num_proc << " for size " << nr << "x" << nq << "x" << np << std::endl;
-	}
-
 	double* a = 0;
 	double* sum = 0;
 	double* c4 = 0;
+	uint64_t l = 0, u = 0;
 
-	a = (double*)calloc(nq * np, sizeof(double));
-	sum = (double*)calloc(np, sizeof(double));
-	c4 = (double*)calloc(np * np, sizeof(double));
-
-	assert(a != nullptr);
-	assert(sum != nullptr);
-	assert(c4 != nullptr);
-
-	init_C4(np, c4);
-	//std::cout << print2D2(c4, np, np) << std::endl;
-	memset(sum, 0, np);
-
-	// 1 - split the job
-
-	uint64_t chunk_size = nr / num_proc;
-	uint64_t leftover = nr % num_proc; // we compute the imbalance in jobs
-	uint64_t normal = num_proc - leftover; // the amount of processes that will not have an additional job
-	uint64_t imbalanced_start = normal * chunk_size; //start index of the increased jobs
-
-	uint64_t l = 0;
-	uint64_t u = 0;
-
-	if ((uint64_t)rank < normal) {
-		l = rank * chunk_size;
-		u = (rank + 1) * chunk_size;
-	}
-	else { // imbalanced workload process
-		l = (rank - normal) * (chunk_size + 1) + imbalanced_start;
-		u = (rank - normal + 1) * (chunk_size + 1) + imbalanced_start;
-	}
+	doitgen_kernel_mpi_init(nr, nq, np, &num_proc, &rank, &a, &sum, &c4, &l, &u);
 
 	uint64_t r = 0, q = 0, p = 0, s = 0;
 	MPI_Offset offset; // should represent the size in bytes of the data
@@ -748,4 +763,150 @@ void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* ou
 
 	//MPI_Finalize();
 
+}
+
+//https://pages.tacc.utexas.edu/~eijkhout/pcse/html/mpi-io.html
+//https://cvw.cac.cornell.edu/parallelio/fileviewex
+void kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
+
+	//MPI_Init(nullptr, nullptr);
+
+	// 0 - Init
+
+	int num_proc, rank;
+	MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+	if (rank == 0) {
+		std::cout << "num proc = " << num_proc << " for size " << nr << "x" << nq << "x" << np << std::endl;
+	}
+
+	double* a = 0;
+
+	double* sum = 0;
+	double* c4 = 0;
+
+	a = (double*)calloc(nq * np, sizeof(double));
+	sum = (double*)calloc(np, sizeof(double));
+	c4 = (double*)calloc(np * np, sizeof(double));
+
+	assert(a != nullptr);
+	assert(sum != nullptr);
+
+	init_C4(np, c4);
+
+	memset(sum, 0, np);
+
+	// 1 - split the job
+
+	uint64_t chunk_size = nr / num_proc;
+	uint64_t leftover = nr % num_proc; // we compute the imbalance in jobs
+	uint64_t normal = num_proc - leftover; // the amount of processes that will not have an additional job
+	uint64_t imbalanced_start = normal * chunk_size; //start index of the increased jobs
+
+	uint64_t l = 0;
+	uint64_t u = 0;
+
+	if ((uint64_t)rank < normal) {
+		l = rank * chunk_size;
+		u = (rank + 1) * chunk_size;
+	}
+	else { // imbalanced workload process
+		l = (rank - normal) * (chunk_size + 1) + imbalanced_start;
+		u = (rank - normal + 1) * (chunk_size + 1) + imbalanced_start;
+	}
+
+	uint64_t r = 0, q = 0, p = 0, s = 0;
+	MPI_Offset offset; // should represent the size in bytes of the data
+
+	// 2 - each do its job
+
+	MPI_Offset disp = nq * np * sizeof(double) * l;
+	MPI_Offset end = nq * np * sizeof(double) * u;
+
+	MPI_File file;
+	MPI_Datatype arraytype;
+
+	MPI_Type_contiguous(end - disp, MPI_DOUBLE, &arraytype);
+	MPI_Type_commit(&arraytype);
+	MPI_File_open(MPI_COMM_WORLD, output_path, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
+
+	//offset = nq * np * sizeof(double) * l;
+	
+	MPI_File_set_view(file, disp, MPI_DOUBLE, arraytype, "native", MPI_INFO_NULL);
+
+	LSB_Res();
+	tranpose_C4(np, c4);
+	LSB_Rec(3);
+
+	for (r = l; r < u; r++) {
+
+		// - 2.1 init slice of A
+
+		LSB_Res();
+		init_A_slice(nq, np, a, r);
+		LSB_Rec(0);
+
+		LSB_Res();
+		// - 2.2 execute kernel on slice
+		for (q = 0; q < nq; q++) {
+
+			for (p = 0; p < np; p++) {
+				sum[p] = 0;
+				for (s = 0; s < np; s++) {
+					sum[p] += A_SLICE(q, s) * C4(p, s); //a[q * np + p] * c4[s * np + p];
+				}
+			}
+
+			for (p = 0; p < np; p++) {
+				A_SLICE(q, p) = sum[p];
+			}
+		}
+
+		LSB_Rec(1);
+
+		LSB_Res();
+		// 2.3 write A to the result file
+
+		offset = nq * np * sizeof(double) * r;
+		MPI_File_write(file, a, np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
+		
+		LSB_Rec(2);
+	}
+
+	MPI_File_close(&file);
+
+	//job finished we can exit
+
+	free(a);
+	free(sum);
+	free(c4);
+
+	MPI_Barrier(MPI_COMM_WORLD);
+
+	if (rank == 0) {
+		PROCESS_MESSAGE(rank, "exiting!");
+	}
+
+	//MPI_Finalize();
+
+}
+
+
+/*
+Finds a mpi benchmark by name
+*/
+bool find_benchmark_kernel_by_name(const std::string& benchmark_kernel_name, mpi_kernel_func* f) {
+	
+	bool found_kernel = false;
+
+	for (int i = 0; i < NUM_DOIGTEN_MPI_KERNELS; i++) {
+		const mpi_benchmark& b = mpi_benchmarks_data[i];
+		if (b.name == benchmark_kernel_name) {
+			found_kernel = true;
+			*f = b.func;
+			break;
+		}
+	}
+	return found_kernel;
 }

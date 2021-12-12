@@ -33,6 +33,13 @@ const static problem_size_t problem_sizes[] = {
 
 const static problem_size_t benchmark_size = {128, 512, 512};
 
+
+
+
+//https://cs61.seas.harvard.edu/wiki/images/0/0f/Lec14-Cache_measurement.pdf
+
+
+
 #define PROCESS_MESSAGE(RANK, MESSAGE) std::cout << "(" << (RANK) << ") " << (MESSAGE) << std::endl;
 #define PROCESS_MESSAGE_2(RANK, MESSAGE_1, MESSAGE_2) std::cout << "(" << (RANK) << ") " << (MESSAGE_1) << (MESSAGE_2) << std::endl;
 #define MASTER_MESSAGE_2(MESSAGE_1, MESSAGE_2) \
@@ -62,7 +69,30 @@ void init_C4(uint64_t np, double* c4);
 void init_A_slice(uint64_t nq, uint64_t np, double* a, uint64_t i);
 
 void delete_file_if_exists(const char* output_path);
+
+/////////////////////////////////////// MPI kernels /////////////////
 void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
+void kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
+
+//////////////////////////////////// MPI UTILS /////////////////////7
+
+typedef void (*mpi_kernel_func)(uint64_t nr, uint64_t nq, uint64_t np, const char *output_path);
+
+bool find_benchmark_kernel_by_name(const std::string& benchmark_kernel_name, mpi_kernel_func* f);
+
+struct mpi_benchmark {
+	std::string name;
+	mpi_kernel_func func;
+};
+
+#define NUM_DOIGTEN_MPI_KERNELS 2
+static const mpi_benchmark mpi_benchmarks_data[] = {
+	{ "basic", &kernel_doitgen_mpi_io },
+	{ "transpose", &kernel_doitgen_mpi_io_transpose }
+};
+
+//////////////////////////////////////////////////////////
+
 
 void kernel_doitgen_seq(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4, double* sum);
 void kernel_doitgen_polybench_parallel(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4, double* sum);

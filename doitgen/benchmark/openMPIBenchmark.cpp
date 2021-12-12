@@ -18,19 +18,6 @@
 //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 //benchmark here
 
-typedef void (*kernel_func)(uint64_t nr, uint64_t nq, uint64_t np, const char *output_path);
-
-struct Benchmark {
-	std::string name;
-	kernel_func func;
-};
-
-//https://cs61.seas.harvard.edu/wiki/images/0/0f/Lec14-Cache_measurement.pdf
-#define NUM_DOIGTEN_MPI_KERNELS 1
-static const Benchmark benchmarks[] = {
-	{ "basic", &kernel_doitgen_mpi_io }
-};
-
 const int RUN = 5;
 const char* output_file_path = "a.out";
 
@@ -45,18 +32,8 @@ int main(int argc, char **argv) {
 	char* output_path = argv[1];
 	std::string benchmark_name = argv[2];
 	
-	kernel_func selected_kernel;
-	bool found_kernel = false;
-
-	for (int i = 0; i < NUM_DOIGTEN_MPI_KERNELS; i++) {
-		const Benchmark& b = benchmarks[i];
-		if (b.name == benchmark_name) {
-			found_kernel = true;
-			selected_kernel = b.func;
-			break;
-		}
-	}
-
+	mpi_kernel_func selected_kernel;
+	bool found_kernel = find_benchmark_kernel_by_name(benchmark_name, &selected_kernel);
 	assert(found_kernel);
 
 	std::cout << "launching benchmark for " << benchmark_name << std::endl;

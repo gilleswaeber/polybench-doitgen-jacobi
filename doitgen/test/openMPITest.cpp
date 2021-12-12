@@ -73,23 +73,29 @@ int main(int argc, char **argv) {
 
 	//std::cout << argc << std::endl;
 
-	assert(argc == 5);
+	assert(argc == 6);
 
 	char* output_path = argv[1];
+	std::string benchmark_name = argv[2];
 
 	remove(output_path);
 
-	uint64_t nr = strtoull(argv[2], nullptr, 10);
-	uint64_t nq = strtoull(argv[3], nullptr, 10);
-	uint64_t np = strtoull(argv[4], nullptr, 10);
+	uint64_t nr = strtoull(argv[3], nullptr, 10);
+	uint64_t nq = strtoull(argv[4], nullptr, 10);
+	uint64_t np = strtoull(argv[5], nullptr, 10);
 
 	int num_proc, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-	LSB_Init((std::string("doitgen_") + std::to_string(num_proc)).c_str(), 0);
+	LSB_Init((std::string("doitgen_") + benchmark_name + std::string("_") + std::to_string(num_proc)).c_str(), 0);
 
-	kernel_doitgen_mpi_io(nr, nq, np, output_path);
+	mpi_kernel_func f;
+	bool found_kernel = find_benchmark_kernel_by_name(benchmark_name, &f);
+	assert(found_kernel);
+	assert(f);
+
+	f(nr, nq, np, output_path);
 	
 	//here we load the file and check its result if we are the master
 	if (rank == 0) {

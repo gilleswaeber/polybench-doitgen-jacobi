@@ -10,6 +10,7 @@ bench_types = [
 
 proc_model = "EPYC_7H12"
 
+outputs_locations = "/cluster/scratch/qguignard/"
 
 # This scripts generates a submission script for euler in order to run all the
 # benchmarks of doitgen mpi version
@@ -33,6 +34,9 @@ def get_command(num_cores, out_file, bench_type, nr, nq, np):
 
 def get_sequential_command(nr, nq, np):
     return "./dphpc-doitgen-sequential-benchmark " + str(nr) + " " + str(nq) + " " + str(np)
+
+def get_rm_file_command(path):
+    return f"rm {path}" + "\n"
 
 def parse_args():
 
@@ -103,8 +107,9 @@ def main():
     args = parse_args()
 
     cores = range(0, args.n + 1, 2)
-    result = "bsub -n 48 " + get_proc_selection(proc_model) + '\n'
+    result = "#!/bin/bash \n" 
 
+    result += "bsub -n 48 -W 24:00 " + get_proc_selection(proc_model) + " <<EOF " +'\n'
     result += get_sequential_command(args.nr, args.nq, args.np) + "\n"
 
     index = 0
@@ -113,8 +118,11 @@ def main():
             for i in range(args.runs):
                 if (c == 0): # for the 0 cores
                     c = 1
-                result += get_command(c, "/scratch/" + args.output + str(index), bench_type, c * args.nr, args.nq, args.np) + "\n"
+                output_path = outputs_locations + args.output + proc_model + "_" +str(index)
+                result += get_command(c, output_path, bench_type, c * args.nr, args.nq, args.np) + "\n"
+                result += get_rm_file_command(output_path)
                 index += 1
+    result += "EOF\n"
 
     print(result)
     try:
