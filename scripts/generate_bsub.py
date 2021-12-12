@@ -10,7 +10,7 @@ benchmarks_non_blocking = [
     "inverted_loop_avx2",
 ]
 
-benchmarks_blocking = ["blocking", "inverted_loop"]
+benchmarks_blocking = ["blocking", "inverted_loop_blocking"]
 
 NR = 512
 NQ = 512
