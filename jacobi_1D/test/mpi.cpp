@@ -54,7 +54,8 @@ int main() {
             if (rank == 0) unlink(temp_file);
             MPI_Barrier(MPI_COMM_WORLD);
             auto begin = std::chrono::high_resolution_clock::now();
-            jacobi_1d_imper_mpi(c.time_steps, c.n, {rank, i, c.sync_steps, temp_file, false});
+            //MpiParams(int rank, int num_proc, int ghost_cells, const char* output_file)
+            jacobi_1d_imper_mpi(c.time_steps, c.n, {rank, i, c.sync_steps, temp_file});
             auto end = std::chrono::high_resolution_clock::now();
             auto time_spent = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
 

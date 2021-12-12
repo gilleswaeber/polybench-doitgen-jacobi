@@ -10,9 +10,6 @@ module purge  # clear active modules
 module load new gcc/6.3.0 open_mpi/3.0.0 cmake/3.13.5 python/3.7.1
 set -x
 now=$(date +%m%d%H%M)
-
-#LSB_OUTPUT_FORMAT=accumulated
-#export LSB_OUTPUT_FORMAT
 '''
 script_footer = ''
 
@@ -28,17 +25,21 @@ def parse_args():
                         help='number of cores on the cluster /also processes',
                         default=48,
                         type=int)
+    parser.add_argument('--cores-step', dest='cores_step',
+                        help='steps to take when testing number of cores (default: 2)',
+                        default=2,
+                        type=int)
     parser.add_argument('--output',
                         help='name of the output',
                         default='-',
                         type=argparse.FileType('wt', encoding='utf-8'))
     parser.add_argument('--n',
                         help='base size of the array, multiplied by the number of cores',
-                        default=1_000_000,
+                        default=10_000_000,
                         type=int)
     parser.add_argument('--time-steps',
                         help='number of iterations',
-                        default=10_000,
+                        default=1_000,
                         type=int)
     parser.add_argument('--minutes',
                         help='time limit, in minutes',
@@ -67,8 +68,8 @@ def parse_args():
     return args
 
 
-def generate_jacobi_mpi_sub(*, runs, total_cores, output, n, time_steps, ghost_cells, do_cleanup: bool, do_final: bool,
-                            send_email: bool, minutes: int, dir: str = None):
+def generate_jacobi_mpi_sub(*, runs, total_cores, cores_step, output, n, time_steps, ghost_cells, do_cleanup: bool,
+                            do_final: bool, send_email: bool, minutes: int, dir: str = None):
     assert runs >= 1
     end_deps = []
     output_dir = "output/$now"
@@ -77,39 +78,29 @@ def generate_jacobi_mpi_sub(*, runs, total_cores, output, n, time_steps, ghost_c
         if dir is not None:
             f.write(f"""cd "{dir}"\n""")
         f.write(f"mkdir -p {output_dir}\n")
-        num_cores = [1] + list(range(2, total_cores + 1, 2))
+        f.write(f"chmod u+x mpi_time.sh\n")
+        num_cores = [1] + list(range(2, total_cores + 1, cores_step))
         job_base_name = f"jacobi1d_n{n}t{time_steps}g{ghost_cells}"
+        f.write(f"bsub -n {total_cores} -o {output_dir}'/{job_base_name}J' -J {job_base_name} -N <<EOF\n")
+        f.write(f"set -x\n")
         for cores in reversed(num_cores):
             job_name = f"{job_base_name}c{cores}"
-            f.write(f"job={job_name}\n")
-            job_log = f"{output_dir}/$job"
-            dest_base = f"$SCRATCH/$job'_r'"
-            dest = f"{dest_base}\$LSB_JOBINDEX"
-            time_cmd = f"mpi_time.sh {job_log}'r'\${{LSB_JOBINDEX}}t"
-            # job = f"LSB_OUTFILE=output/$now$job'_'\$LSB_JOBINDEX mpirun -np {cores} {time_cmd} {executable} {n} {time_steps} {ghost_cells} {dest}"
-            job = f"mpirun -np {cores} {time_cmd} {executable} {n} {time_steps} {ghost_cells} {dest}"
-            compute_sub = f"""bsub -n {cores} -W {minutes} -J $job'[1-{runs}]' -o {job_log} {job}"""
-            # https://scicomp.ethz.ch/wiki/Job_arrays
-            job_line = f"jobid=$({compute_sub} | awk '/is submitted/{{print substr($2, 2, length($2)-2);}}')\n"
-            f.write(job_line)
+            job_log = f"{output_dir}/{job_name}"
+            dest_base = f"$SCRATCH/${{now}}_{job_name}_r"
+            for i in range(runs):
+                dest = f"{dest_base}{i}"
+                time_cmd = f"mpi_time.sh {job_log}r{i}t"
+                job = f"mpirun -np {cores} {time_cmd} {executable} {n} {time_steps} {ghost_cells} {dest}\n"
+                f.write(job)
             if do_cleanup:
-                cleanup_job = f"rm {dest_base}\*"
-                cleanup_name = f"{job_name}X"
-                cleanup_sub = f"""bsub -W 1 -J {cleanup_name} -w "numended($jobid,*)" -o {job_log}'X' {cleanup_job}"""
-                cleanup_line = f"""test -n "$jobid" && {cleanup_sub} || echo "Failed to extract job id for $job"\n"""
-                end_deps.append(f"ended({cleanup_name})")
-                f.write(cleanup_line)
+                cleanup_job = f"rm {dest_base}*\n"
+                f.write(cleanup_job)
 
-        if do_cleanup and do_final:
-            final_job = f"{final_executable} {output_dir}"
-            final_cond = ' && '.join(end_deps)
-            final_name = f"{job_base_name}F"
-            final_log = f"output/$now/{job_base_name}F"
-            final_sub_flags = f"""-W 5 -J {final_name} -w "{final_cond}" -o {final_log}"""
-            if send_email:
-                final_sub_flags += " -N"
-            final_line = f"bsub {final_sub_flags} {final_job}\n"
-            f.write(final_line)
+        if do_final:
+            final_job = f"{final_executable} {output_dir}\n"
+            f.write(final_job)
+
+        f.write("EOF\n")
 
         f.write(script_footer)
 

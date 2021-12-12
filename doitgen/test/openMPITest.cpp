@@ -73,23 +73,41 @@ int main(int argc, char **argv) {
 
 	//std::cout << argc << std::endl;
 
-	assert(argc == 5);
+	assert(argc == 8);
 
 	char* output_path = argv[1];
+	std::string benchmark_name = argv[2];
+	std::string processor_model = argv[3];
 
 	remove(output_path);
 
-	uint64_t nr = strtoull(argv[2], nullptr, 10);
-	uint64_t nq = strtoull(argv[3], nullptr, 10);
-	uint64_t np = strtoull(argv[4], nullptr, 10);
+	uint64_t run_index =  strtoull(argv[4], nullptr, 10);
+
+	uint64_t nr = strtoull(argv[5], nullptr, 10);
+	uint64_t nq = strtoull(argv[6], nullptr, 10);
+	uint64_t np = strtoull(argv[7], nullptr, 10);
 
 	int num_proc, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-	LSB_Init((std::string("doitgen_") + std::to_string(num_proc)).c_str(), 0);
+	LSB_Init(get_benchmark_lsb_name(benchmark_name, processor_model, num_proc).c_str(), 0);
 
-	kernel_doitgen_mpi_io(nr, nq, np, output_path);
+	LSB_Set_Rparam_string("benchmark_name", benchmark_name.c_str());
+	LSB_Set_Rparam_string("processor_model", processor_model.c_str());
+
+	LSB_Set_Rparam_long("NR", nr);
+	LSB_Set_Rparam_long("NQ", nq);
+	LSB_Set_Rparam_long("NP", np);
+	LSB_Set_Rparam_long("num_processes", num_proc);
+	LSB_Set_Rparam_long("run_index", run_index);
+
+	mpi_kernel_func f;
+	bool found_kernel = find_benchmark_kernel_by_name(benchmark_name, &f);
+	assert(found_kernel);
+	assert(f);
+
+	f(nr, nq, np, output_path);
 	
 	//here we load the file and check its result if we are the master
 	if (rank == 0) {

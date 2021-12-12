@@ -4,4 +4,4 @@
 OUTPUT_FILE="$1$OMPI_COMM_WORLD_RANK"
 FORMAT="%Uuser %Ssystem %Eelapsed %PCPU (%Xavgtext+%Davgdata %Mmaxresident)k\n%Iinputs+%Ooutputs (%Fmajor+%Rminor)pagefaults %Wswaps\n"
 shift
-command time -f $FORMAT -o "$OUTPUT_FILE" "$@"
+command time -f "$FORMAT" -o "$OUTPUT_FILE" "$@"
