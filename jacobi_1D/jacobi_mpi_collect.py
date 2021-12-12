@@ -5,8 +5,9 @@ import pandas as pd
 from pathlib import Path
 
 NAME_PATTERN = re.compile(
-    r"^jacobi1d_n(?P<n>\d+)t(?P<time_steps>\d+)g(?P<ghost_cells>\d+)c(?P<cores>\d+)r(?P<run>\d+)t(?P<rank>\d+)$")
-NAME_GROUPS = ('n', 'time_steps', 'ghost_cells', 'cores', 'run', 'rank')
+    r"^jacobi1d_n(?P<n>\d+)t(?P<time_steps>\d+)g(?P<ghost_cells>\d+)c(?P<cores>\d+)r(?P<run>\d+)t(?P<rank>\d+)"
+    r"(v(?P<alternative>.+))?$")
+NAME_GROUPS = ('n', 'time_steps', 'ghost_cells', 'cores', 'run', 'rank', 'alternative')
 GNU_TIME_PATTERN = re.compile(r"""^
     (?P<user_time>[\d.]+)user\s
     (?P<system_time>[\d.]+)system\s
@@ -21,17 +22,15 @@ GNU_TIME_GROUPS = (
     'fs_in', 'fs_out', 'faults_maj', 'faults_min', 'swaps')
 NUMERIC_GROUPS = ['n', 'time_steps', 'ghost_cells', 'cores', 'run', 'rank', 'user_time', 'system_time', 'percent_cpu',
                   'text_kb', 'data_kb', 'mem_kb', 'fs_in', 'fs_out', 'faults_maj', 'faults_min', 'swaps']
-SORT_GROUPS = ['n', 'time_steps', 'ghost_cells', 'cores', 'run', 'rank']
+SORT_GROUPS = ['alternative', 'n', 'time_steps', 'ghost_cells', 'cores', 'run', 'rank']
 ALL_GROUPS = NAME_GROUPS + GNU_TIME_GROUPS
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Generate Euler script for jacobi-1d')
-    # training
     parser.add_argument('folder',
                         type=Path,
                         help='folder containing the files')
-
     args = parser.parse_args()
     return args
 
@@ -54,12 +53,14 @@ def collect_results(folder: Path, write_report=True):
     df.drop(columns=['elapsed_h', 'elapsed_m', 'elapsed_s'], inplace=True)
     df[NUMERIC_GROUPS] = df[NUMERIC_GROUPS].apply(pd.to_numeric)
     df.sort_values(SORT_GROUPS, inplace=True)
+    df.reset_index(inplace=True)
+    df['alternative'].fillna('base', inplace=True)
 
     # take the maximum time for each run
-    by_run = df.groupby(['n', 'time_steps', 'ghost_cells', 'cores', 'run'])['elapsed_time'] \
+    by_run = df.groupby(['alternative', 'n', 'time_steps', 'ghost_cells', 'cores', 'run'])['elapsed_time'] \
         .max().reset_index()
     # group the results for each test
-    by_test = by_run.groupby(['n', 'time_steps', 'ghost_cells', 'cores'])['elapsed_time'] \
+    by_test = by_run.groupby(['alternative', 'n', 'time_steps', 'ghost_cells', 'cores'])['elapsed_time'] \
         .aggregate(["min", "max", "mean", "std"]).reset_index()
 
     if write_report:
@@ -70,7 +71,7 @@ def collect_results(folder: Path, write_report=True):
         by_test.to_csv(summary_file)
         print('Summary written in ', summary_file, '\n')
 
-    print(by_test.to_string())
+        print(by_test.to_string())
 
     return df, by_test
 

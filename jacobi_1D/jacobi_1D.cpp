@@ -95,6 +95,7 @@ void jacobi_1d_imper_mpi(long time_steps, long n, MpiParams mpi) {
     MPI_File fh;
     if (mpi.rank >= mpi.num_proc) {  // no work to do, still need to sync with file operations
         if (MPI_File_open(MPI_COMM_WORLD, mpi.output_file, OPEN_MODE, MPI_INFO_NULL, &fh)) abort();
+        MPI_File_write_at_all(fh, 8 * n, nullptr, 0, MPI_DOUBLE, MPI_STATUS_IGNORE);
         if (MPI_File_close(&fh)) abort();
         return;
     }
@@ -143,9 +144,10 @@ void jacobi_1d_imper_mpi(long time_steps, long n, MpiParams mpi) {
 #ifdef WITH_LSB
         LSB_Res();
 #endif
-        const long lpad = (mpi.rank == 0 ? 1 : 1 + t % mpi.ghost_cells);
-        const long rpad = (mpi.rank == last_rank ? 1 : 1 + t % mpi.ghost_cells);
-        for (long i = lpad; i < padded_size - rpad; i++) {
+        const int tmod = t % mpi.ghost_cells;
+        const long left_skip = (mpi.rank == 0 ? 1 : 1 + tmod);
+        const long right_skip = (mpi.rank == last_rank ? 1 : 1 + tmod);
+        for (long i = left_skip; i < padded_size - right_skip; i++) {
             B_chunk[i] = 0.33333 * (A_chunk[i - 1] + A_chunk[i] + A_chunk[i + 1]);
         }
 
@@ -154,7 +156,7 @@ void jacobi_1d_imper_mpi(long time_steps, long n, MpiParams mpi) {
         LSB_Rec(0);
 #endif
 
-        if (t % mpi.ghost_cells == mpi.ghost_cells - 1) { // sync processes
+        if (tmod == mpi.ghost_cells - 1) { // sync processes
 #ifdef WITH_LSB
             LSB_Res();
 #endif
@@ -185,7 +187,7 @@ void jacobi_1d_imper_mpi(long time_steps, long n, MpiParams mpi) {
     LSB_Res();
 #endif
     if (MPI_File_open(MPI_COMM_WORLD, mpi.output_file, OPEN_MODE, MPI_INFO_NULL, &fh)) abort();
-    if (MPI_File_write_at(fh, true_start * 8, true_data, true_size, MPI_DOUBLE, MPI_STATUS_IGNORE)) abort();
+    if (MPI_File_write_at_all(fh, true_start * 8, true_data, true_size, MPI_DOUBLE, MPI_STATUS_IGNORE)) abort();
     if (MPI_File_close(&fh)) abort();
 #ifdef WITH_LSB
     LSB_Rec(2);
