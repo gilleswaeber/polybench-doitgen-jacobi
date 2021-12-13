@@ -89,7 +89,7 @@ def generate_jacobi_mpi_sub(*, runs: int, total_cores: int, cores_step: int, out
         job_base_name = f"jacobi1d_n{n}t{time_steps}"
         bsub_flags = f"-n {total_cores} -o {output_dir}'/{job_base_name}J' -J {job_base_name} -W {minutes}"
         if bsub_cpu is not None:
-            bsub_flags += f" -R \"select[model=={bsub_cpu}]\""
+            bsub_flags += f" -R 'select[model=={bsub_cpu}]'"
         if send_email:
             bsub_flags += " -N"
         f.write(f"bsub {bsub_flags} <<EOF\n")
