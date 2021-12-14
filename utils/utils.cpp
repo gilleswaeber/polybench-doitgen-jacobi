@@ -47,17 +47,31 @@ void flush_cache()
   double* flush = (double*) calloc (cs, sizeof(double));
   unsigned long long i;
   double tmp = 0.0;
-#ifdef _OPENMP
-#pragma omp parallel for
-#endif
   for (i = 0; i < cs; i++)
     tmp += flush[i];
   //This is to prevent compiler optimizations
   if (tmp > 10.0) {
 	  std::cout << "Fail !" << std::endl;
   }
-  assert (tmp <= 10.0);
   free ((void*)flush);
+}
+
+void flush_cache_openMP()
+{
+	#pragma omp parallel
+	{
+		unsigned long long cs = POLYBENCH_CACHE_SIZE_KB * 1024ULL / (unsigned long long)sizeof(double);
+		double* flush = (double*)calloc(cs, sizeof(double));
+		unsigned long long i;
+		double tmp = 0.0;
+		for (i = 0; i < cs; i++)
+			tmp += flush[i];
+		//This is to prevent compiler optimizations
+		if (tmp > 10.0) {
+			std::cout << "Fail !" << std::endl;
+		}
+		free((void*)flush);
+	}
 }
 
 extern void cleanup(void* ptr) {

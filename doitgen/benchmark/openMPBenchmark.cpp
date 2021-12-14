@@ -16,40 +16,44 @@ void transpose(double* src, double* dst, uint64_t N, uint64_t M) {
 }
 
 void do_polybench(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
-	double* a = new double[nr * nq * np];
-	double* c4 = new double[np * np];
-	double* sum = new double[nr * nq * np];
+	double* a = (double*)allocate_data(nr * nq * np, sizeof(double));
+	double* c4 = (double*)allocate_data(np * np, sizeof(double));
+	double* sum = (double*)allocate_data(np, sizeof(double));
 
 	init_array(nr, nq, np, a, c4);
+	
+	flush_cache();
 
 	LSB_Res();
 	kernel_doitgen_seq(nr, nq, np, a, c4, sum);
 	LSB_Rec(0);
 
-	delete[] a;
-	delete[] c4;
-	delete[] sum;
+	free(a);
+	free(c4);
+	free(sum);
 }
 
 void do_polybench_parallel(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
-	double* a = new double[nr * nq * np];
-	double* c4 = new double[np * np];
-	double* sum = new double[nr * nq * np];
+	double* a = (double*)allocate_data(nr * nq * np, sizeof(double));
+	double* c4 = (double*)allocate_data(np * np, sizeof(double));
+	double* sum = (double*)allocate_data(np, sizeof(double));
 
 	init_array(nr, nq, np, a, c4);
+
+	flush_cache_openMP();
 
 	LSB_Res();
 	kernel_doitgen_polybench_parallel(nr, nq, np, a, c4, sum);
 	LSB_Rec(0);
 
-	delete[] a;
-	delete[] c4;
-	delete[] sum;
+	free(a);
+	free(c4);
+	free(sum);
 }
 
 void do_polybench_parallel_local_sum(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
-	double* a = new double[nr * nq * np];
-	double* c4 = new double[np * np];
+	double* a = (double*)allocate_data(nr * nq * np, sizeof(double));
+	double* c4 = (double*)allocate_data(np * np, sizeof(double));
 
 	init_array(nr, nq, np, a, c4);
 
@@ -57,95 +61,103 @@ void do_polybench_parallel_local_sum(uint64_t nr, uint64_t nq, uint64_t np, uint
 	kernel_doitgen_polybench_parallel_local_sum(nr, nq, np, a, c4);
 	LSB_Rec(0);
 
-	delete[] a;
-	delete[] c4;
+	free(a);
+	free(c4);
 }
 
 void do_transpose(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
-	double* a_in = new double[nr * nq * np];
-	double* a_out = new double[nr * nq * np];
-	double* c4 = new double[np * np];
+	double* a_in = (double*)allocate_data(nr * nq * np, sizeof(double));
+	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
+	double* c4 = (double*)allocate_data(np * np, sizeof(double));
 
-	double* c4_transposed = new double[np * np];
+	double* c4_transposed = (double*)allocate_data(np * np, sizeof(double));
 
 	init_array(nr, nq, np, a_in, c4);
 	transpose(c4, c4_transposed, np, np);
+
+	flush_cache_openMP();
 
 	LSB_Res();
 	kernel_doitgen_transpose(nr, nq, np, a_in, a_out, c4);
 	LSB_Rec(0);
 
 
-	delete[] a_in;
-	delete[] a_out;
-	delete[] c4;
-	delete[] c4_transposed;
+	free(a_in);
+	free(a_out);
+	free(c4);
+	free(c4_transposed);
 }
 
 void do_blocking(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
-	double* a_in = new double[nr * nq * np];
-	double* a_out = new double[nr * nq * np];
-	double* c4 = new double[np * np];
+	double* a_in = (double*)allocate_data(nr * nq * np, sizeof(double));
+	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
+	double* c4 = (double*)allocate_data(np * np, sizeof(double));
 
 	init_array(nr, nq, np, a_in, c4);
+
+	flush_cache_openMP();
 
 	LSB_Res();
 	kernel_doitgen_blocking(nr, nq, np, a_in, a_out, c4, blocking_window);
 	LSB_Rec(0);
 
-	delete[] a_in;
-	delete[] a_out;
-	delete[] c4;
+	free(a_in);
+	free(a_out);
+	free(c4);
 }
 
 void do_inverted_loop(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
-	double* a_in = new double[nr * nq * np];
-	double* a_out = new double[nr * nq * np];
-	double* c4 = new double[np * np];
+	double* a_in = (double*)allocate_data(nr * nq * np, sizeof(double));
+	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
+	double* c4 = (double*)allocate_data(np * np, sizeof(double));
 
 	init_array(nr, nq, np, a_in, c4);
+
+	flush_cache_openMP();
 
 	LSB_Res();
 	kernel_doitgen_inverted_loop(nr, nq, np, a_in, a_out, c4);
 	LSB_Rec(0);
 
-	delete[] a_in;
-	delete[] a_out;
-	delete[] c4;
+	free(a_in);
+	free(a_out);
+	free(c4);
 }
 
 void do_inverted_loop_blocking(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
-	double* a_in = new double[nr * nq * np];
-	double* a_out = new double[nr * nq * np];
-	double* c4 = new double[np * np];
+	double* a_in = (double*)allocate_data(nr * nq * np, sizeof(double));
+	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
+	double* c4 = (double*)allocate_data(np * np, sizeof(double));
 
 	init_array(nr, nq, np, a_in, c4);
+
+	flush_cache_openMP();
 
 	LSB_Res();
 	kernel_doitgen_inverted_loop_blocking(nr, nq, np, a_in, a_out, c4, blocking_window);
 	LSB_Rec(0);
 
-	delete[] a_in;
-	delete[] a_out;
-	delete[] c4;
+	free(a_in);
+	free(a_out);
+	free(c4);
 }
 
 void do_inverted_loop_avx2(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
-	double* a_in = new double[nr * nq * np];
-	double* a_out = new double[nr * nq * np];
-	double* c4 = new double[np * np];
+	double* a_in = (double*)allocate_data(nr * nq * np, sizeof(double));
+	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
+	double* c4 = (double*)allocate_data(np * np, sizeof(double));
 
 	init_array(nr, nq, np, a_in, c4);
 
-	flush_cache();
+	flush_cache_openMP();
 
 	LSB_Res();
 	kernel_doitgen_inverted_loop_avx2(nr, nq, np, a_in, a_out, c4);
 	LSB_Rec(0);
 
-	delete[] a_in;
-	delete[] a_out;
-	delete[] c4;
+	free(a_in);
+	free(a_out);
+	free(c4);
 }
 
 typedef void (*benchmark_func)(uint64_t, uint64_t, uint64_t, uint64_t);
