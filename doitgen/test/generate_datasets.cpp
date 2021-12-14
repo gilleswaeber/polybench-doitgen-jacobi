@@ -16,7 +16,7 @@ int main(void)
         std::cout << "  " << pb_size.nr << " " << pb_size.nq << " " << pb_size.np << std::endl;
 
         double* a 	= (double*) allocate_data(pb_size.nr * pb_size.nq * pb_size.np, sizeof(double));
-	    double* sum = (double*) allocate_data(pb_size.nr * pb_size.nq * pb_size.np, sizeof(double));
+	    double* sum = (double*) allocate_data(pb_size.np, sizeof(double));
 	    double* c4 	= (double*) allocate_data(pb_size.np * pb_size.np, sizeof(double));
         
         init_array(pb_size.nr, pb_size.nq, pb_size.np, a, c4);
