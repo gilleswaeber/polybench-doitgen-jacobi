@@ -67,48 +67,24 @@ bool compare_results(uint64_t nr, uint64_t nq, uint64_t np, double* expected, do
 	return result;
 }
 
+
 int main(int argc, char **argv) {
 
-	MPI_Init(nullptr, nullptr);
-
-	//std::cout << argc << std::endl;
-
-	assert(argc == 8);
-
 	char* output_path = argv[1];
-	std::string benchmark_name = argv[2];
-	std::string processor_model = argv[3];
+	uint64_t nr;
+	uint64_t nq;
+	uint64_t np;
+	int rank;
+	mpi_kernel_func selected_kernel;
 
-	remove(output_path);
+	mpi_lsb_benchmark_startup(argv, argc, &nr, &nq, &np, &output_path, &selected_kernel);
 
-	uint64_t run_index =  strtoull(argv[4], nullptr, 10);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-	uint64_t nr = strtoull(argv[5], nullptr, 10);
-	uint64_t nq = strtoull(argv[6], nullptr, 10);
-	uint64_t np = strtoull(argv[7], nullptr, 10);
+	MPI_Barrier(MPI_COMM_WORLD);
+	selected_kernel(nr, nq, np, output_path);
+	MPI_Barrier(MPI_COMM_WORLD);
 
-	int num_proc, rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-	LSB_Init(get_benchmark_lsb_name(benchmark_name, processor_model, num_proc).c_str(), 0);
-
-	LSB_Set_Rparam_string("benchmark_name", benchmark_name.c_str());
-	LSB_Set_Rparam_string("processor_model", processor_model.c_str());
-
-	LSB_Set_Rparam_long("NR", nr);
-	LSB_Set_Rparam_long("NQ", nq);
-	LSB_Set_Rparam_long("NP", np);
-	LSB_Set_Rparam_long("num_processes", num_proc);
-	LSB_Set_Rparam_long("run_index", run_index);
-
-	mpi_kernel_func f;
-	bool found_kernel = find_benchmark_kernel_by_name(benchmark_name, &f);
-	assert(found_kernel);
-	assert(f);
-
-	f(nr, nq, np, output_path);
-	
 	//here we load the file and check its result if we are the master
 	if (rank == 0) {
 
@@ -137,8 +113,7 @@ int main(int argc, char **argv) {
 
 	}
 
-	LSB_Finalize();
-	MPI_Finalize();
+	mpi_lsb_benchmark_finalize();
 }
 
 /**
