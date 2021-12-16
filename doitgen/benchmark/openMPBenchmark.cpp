@@ -222,6 +222,7 @@ int main(int argc, char** argv) {
 
 
 	LSB_Set_Rparam_long("threads", threads);
+	
 	LSB_Set_Rparam_long("blocking_size", blocking_window);
 
 

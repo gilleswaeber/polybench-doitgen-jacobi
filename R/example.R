@@ -2,7 +2,9 @@ library(ggplot2)
 library(dplyr)
 
 
-setwd("D:\\ETH_Work\\Semester_1\\DPHPC\\Project\\R")
+setwd("/home/quentin/Desktop/dphpc-project/R")
+
+#setwd("D:\\ETH_Work\\Semester_1\\DPHPC\\Project\\R")
 
 source("utils.R")
 source("stats.R")
@@ -10,7 +12,7 @@ source("stats.R")
 #source("lsbpp.R")
 
 #Load data
-data.bh_study <-  ReadAllFilesInDir.Aggregate(dir.path="data_laptop/", col=c("NR", "NQ", "NP", "num_processes", "run_index", "benchmark_type", "processor_model", "id", "time", "overhead"))
+data.bh_study <-  ReadAllFilesInDir.Aggregate(dir.path="data2/", col=c("NR", "NQ", "NP", "num_processes", "run_index", "benchmark_type", "processor_model", "id", "time", "overhead"))
 
 
 init_data <- subset(data.bh_study, id == 0 & benchmark_type != "sequential")
@@ -22,41 +24,35 @@ write_data <- subset(data.bh_study, id == 2)
 
 
 init_summary <- CalculateDataSummary(data=init_data, measurevar="time", groupvars=c("NR", "NQ", "NP", "num_processes", "id", "benchmark_type"), conf.interval=.95, quantile.interval=.95)
-
-
 kernel_summary <- CalculateDataSummary(data=kernel_data, measurevar="time", groupvars=c("NR", "NQ", "NP", "num_processes", "id"), conf.interval=.95, quantile.interval=.95)
 
+write.table(init_summary, file = "summary_init.txt", sep = "\t", quote = FALSE, row.names = F)
+m <- read.table("summary_init.txt", 
+           header = TRUE)
 
 ggplot(data=init_summary, aes(x = num_processes, y = median/1000, ymin=CI.NNorm.high/1000, ymax=CI.NNorm.low/1000)) +
   scale_y_continuous(name="Time (ms)") +
-  scale_x_continuous(name="Threads", breaks=init_summary$num_processes) +
+  scale_x_continuous(name="processes", breaks=init_summary$num_processes) +
   geom_point() +
   geom_line(aes(col=benchmark_type), size=1.5) +
   geom_errorbar()
 
-
-
-
-
 ggplot(data=write_data, aes(x = factor(num_processes), y = time/1000)) +
   scale_y_continuous(name="Time (ms)", trans="log10") +
   facet_wrap(~benchmark_type) +
-  geom_violin()
-  #geom_point(aes(col=benchmark_type), size=1.5)
+  geom_violin() + labs(title="IO runtime of a single A slice for each process", y="time [ms]", x="processes")
 
 #test <- aggregate(NR ~ NQ ~ NP ~ num_processes ~ run_index ~ benchmark_type + time, data=data#.bh_study, FUN=sum)
 
 data_group <- data.bh_study %>% group_by(NR, NQ, NP, num_processes, run_index, benchmark_type)
-
-result_data <-data_group %>% summarise(total = sum(time, na.rm = TRUE))
-
+result_data <- data_group %>% dplyr::summarise(total = sum(time, na.rm=TRUE))
 
 total_summary <- CalculateDataSummary(data=result_data, measurevar="total", groupvars=c("NR", "NQ", "NP", "num_processes", "benchmark_type"), conf.interval=.95, quantile.interval=.95)
 
 
 ggplot(data=total_summary, aes(x = num_processes, y = median/1000, ymin=CI.NNorm.high/1000, ymax=CI.NNorm.low/1000)) +
-  scale_y_continuous(name="Time (ms)") +
-  scale_x_continuous(name="Threads", breaks=init_summary$num_processes) +
+  scale_y_continuous(name="time [ms]") +
+  scale_x_continuous(name="processes", breaks=init_summary$num_processes) +
   geom_point() +
   geom_line(aes(col=benchmark_type), size=1.5) +
   geom_errorbar()
