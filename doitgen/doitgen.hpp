@@ -76,9 +76,12 @@ void kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, cons
 
 //////////////////////////////////// MPI UTILS /////////////////////7
 
-std::string get_benchmark_lsb_name(const std::string& benchmark_name, const std::string& processor_model, int num_processors);
-
 typedef void (*mpi_kernel_func)(uint64_t nr, uint64_t nq, uint64_t np, const char *output_path);
+
+void mpi_lsb_benchmark_startup(char **argv, int argc, uint64_t* nr, uint64_t* nq, uint64_t* np, char** output_path, mpi_kernel_func* selected_kernel); 
+void mpi_lsb_benchmark_finalize();
+
+std::string get_benchmark_lsb_name(const std::string& benchmark_name, const std::string& processor_model, int num_processors);
 
 bool find_benchmark_kernel_by_name(const std::string& benchmark_kernel_name, mpi_kernel_func* f);
 

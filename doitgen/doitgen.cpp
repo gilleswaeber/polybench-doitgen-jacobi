@@ -11,6 +11,17 @@
 #include <string>
 #include <immintrin.h>
 #include <liblsb.h>
+#include <ctime>
+#include <ratio>
+#include <chrono>
+#include <vector>
+#include <algorithm>
+#include <fstream>
+#include <filesystem>
+#include <filesystem>
+#include <iostream>
+#include <stdio.h>
+#include <errno.h>
 
 /*
 * For every pair of index r, q we access  3 * 256 doubles on the large data set.
@@ -615,6 +626,58 @@ void kernel_doitgen_mpi_clean(MPI_Win* shared_window, double** sum) {
 
 ///////////////////////////////////////////////// UTILS MPI ///////////////////////////////////
 
+
+void mpi_lsb_benchmark_startup(char **argv, int argc, uint64_t* nr, uint64_t* nq, uint64_t* np, char** output_path, mpi_kernel_func* selected_kernel) {
+	
+	MPI_Init(nullptr, nullptr);
+
+	assert(argc == 8);
+
+	*output_path = argv[1];
+	std::string benchmark_name = argv[2];
+	std::string processor_model = argv[3];
+	
+	//mpi_kernel_func selected_kernel;
+	bool found_kernel = find_benchmark_kernel_by_name(benchmark_name, selected_kernel);
+	assert(found_kernel);
+
+	std::cout << "launching benchmark for " << benchmark_name << std::endl;
+
+	remove(*output_path);
+
+	uint64_t run_index =  strtoull(argv[4], nullptr, 10);
+
+	*nr = strtoull(argv[5], nullptr, 10);
+	*nq = strtoull(argv[6], nullptr, 10);
+	*np = strtoull(argv[7], nullptr, 10);
+
+	int num_proc, rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+	LSB_Init(get_benchmark_lsb_name(benchmark_name, processor_model, num_proc).c_str(), 0);
+
+	LSB_Set_Rparam_long("NR", *nr);
+	LSB_Set_Rparam_long("NQ", *nq);
+	LSB_Set_Rparam_long("NP", *np);
+	LSB_Set_Rparam_long("num_processes", num_proc);
+	LSB_Set_Rparam_long("run_index", run_index);
+
+	LSB_Set_Rparam_string("benchmark_type", benchmark_name.c_str());
+	LSB_Set_Rparam_string("processor_model", processor_model.c_str());
+
+	if (rank == 0) {
+		std::cout << "starting benchmark without file" << nr << "x" << nq << "x" << np << std::endl;
+		std::cout << "num process = " << num_proc << std::endl;
+	}
+
+}
+
+void mpi_lsb_benchmark_finalize() {
+	LSB_Finalize();
+	MPI_Finalize();
+}
+
 /*this function takes C4 and transposes it inplace */
 void tranpose_C4(uint64_t np, double* c4) {
 
@@ -669,8 +732,6 @@ void mpi_io_init_file(uint64_t nq, uint64_t np, const char* output_path, MPI_Fil
 
 	assert(file != nullptr);
 
-	//std::cout << "init file" << std::endl;
-
 	MPI_Datatype arraytype;
 
 	MPI_Offset disp = nq * np * sizeof(double) * l;
@@ -679,14 +740,11 @@ void mpi_io_init_file(uint64_t nq, uint64_t np, const char* output_path, MPI_Fil
 	MPI_Type_contiguous(end - disp, MPI_DOUBLE, &arraytype);
 	MPI_Type_commit(&arraytype);
 	MPI_File_open(MPI_COMM_WORLD, output_path, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, file);
-
-	//offset = nq * np * sizeof(double) * l;
 	
 	MPI_File_set_view(*file, disp, MPI_DOUBLE, arraytype, "native", MPI_INFO_NULL);
 
 	MPI_Barrier(MPI_COMM_WORLD);
 
-	//std::cout << "exiting init file" << std::endl;
 }
 
 void mpi_clean_up(MPI_File* file, double* a, double* sum, double* c4) {
@@ -715,6 +773,96 @@ std::string get_benchmark_lsb_name(const std::string& benchmark_name, const std:
 	return result;
 }
 
+void mpi_write_overall(std::chrono::high_resolution_clock::time_point& start) {
+	
+	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+	
+	//convert both to microseconds
+	auto start_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+	auto end_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch());
+	uint64_t elapsed =  end_microseconds.count() - start_microseconds.count();
+
+	int num_proc;
+	int rank;
+	MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+	if (rank == 0) {
+		
+		std::vector<uint64_t> overalls (num_proc, 0);
+		overalls[rank] = elapsed;
+
+		//get all other threads measurement
+		for (int i = 1; i < num_proc; i++) {
+			
+			uint64_t other = 0;
+
+			MPI_Recv(
+    			&other,
+    			1,
+    			MPI_UNSIGNED_LONG,
+    			i,
+    			0,
+   				MPI_COMM_WORLD,
+				MPI_STATUS_IGNORE
+			);
+
+			overalls[i] = other;
+
+		}
+		
+		std::sort(overalls.begin(), overalls.end());
+
+		uint64_t min = overalls[0];
+		uint64_t max = overalls[num_proc - 1];
+		uint64_t median;
+
+		if (num_proc % 2 == 1) {
+			median = overalls[num_proc / 2];
+		} else {
+			median = (overalls[(num_proc / 2) - 1] + overalls[num_proc / 2]) / 2;
+		}
+
+		std::cout << "min=" << min << " median=" << median << " max=" << max << std::endl;
+
+		std::string line = "";
+		line += std::to_string(num_proc) + "\t" + std::to_string(min) + "\t" + std::to_string(median) + "\t" + std::to_string(max) + "\n"; 
+		///home/quentin/Desktop/dphpc-project/build/doitgen/test/
+		
+		char* overall_output = "overall.csv";
+
+		FILE *fp = nullptr; //= fopen(overall_output, "r");
+
+        if (access(overall_output, R_OK | W_OK) == 0) {
+			fp = fopen(overall_output, "w");
+			std::string header = "num_processes\tmin\tmedian\tmax\n";
+			fputs(header.c_str(), fp);
+			fclose(fp);
+		}
+		
+		fp = fopen(overall_output, "w");
+		fputs(line.c_str(), fp);
+		fclose(fp);
+
+	} else {
+
+		MPI_Send(
+    		&elapsed,
+    		1,
+    		MPI_UNSIGNED_LONG,
+    		0,
+    		0,
+   			MPI_COMM_WORLD
+		);
+
+	}
+
+	MPI_Barrier(MPI_COMM_WORLD);
+
+	MASTER_MESSAGE("Written overall!");
+
+}
+
 //////////////////////////////////////////////////// MPI KERNELS ////////////////////////////////////////////
 
 //https://pages.tacc.utexas.edu/~eijkhout/pcse/html/mpi-io.html
@@ -732,6 +880,8 @@ void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* ou
 	uint64_t r = 0, q = 0, p = 0, s = 0;
 	MPI_File file;
 	mpi_io_init_file(nq, np, output_path, &file, l, u);
+
+	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
 	for (r = l; r < u; r++) {
 
@@ -768,6 +918,8 @@ void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* ou
 		
 		LSB_Rec(2);
 	}
+
+	mpi_write_overall(start);
 
 	mpi_clean_up(&file, a, sum, c4);
 
@@ -824,23 +976,7 @@ void kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, cons
 		LSB_Rec(2);
 	}
 
-	/*
-	MPI_File_close(&file);
-
-	//job finished we can exit
-
-	free(a);
-	free(sum);
-	free(c4);
-
-	MPI_Barrier(MPI_COMM_WORLD);
-
-	if (rank == 0) {
-		PROCESS_MESSAGE(rank, "exiting!");
-	}*/
-
 	mpi_clean_up(&file, a, sum, c4);
-	//MPI_Finalize();
 
 }
 
