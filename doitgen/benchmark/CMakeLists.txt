@@ -28,12 +28,19 @@ set(
     "sequentialBenchmark.cpp"
 )
 
+set(
+    BSUB_BENCHMARK_SRC
+    "bsubBenchmark.cpp"
+)
+
 add_executable(dphpc-doitgen-openmp-benchmark ${DOITGEN_OPENMP_BENCHMARK_SRC})
 add_executable(dphpc-doitgen-mpi-benchmark ${DOITGEN_OPENMPI_BENCHMARK_SRC})
+add_executable(dphpc-bsub-benchmark ${BSUB_BENCHMARK_SRC})
 #add_executable(dphpc-doitgen-openmp-blocking-benchmark ${DOITGEN_OPENMP_BLOCKING_BENCHMARK_SRC})
 
 target_link_libraries(dphpc-doitgen-mpi-benchmark PUBLIC dphpc_lib_utils dphpc_lib ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
 target_link_libraries(dphpc-doitgen-openmp-benchmark PUBLIC dphpc_lib_utils dphpc_lib ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
+target_link_libraries(dphpc-bsub-benchmark PUBLIC dphpc_lib_utils dphpc_lib ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
 #target_link_libraries(dphpc-doitgen-openmp-blocking-benchmark PUBLIC dphpc_lib_utils dphpc_lib ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
 
 add_executable(dphpc-doitgen-sequential-benchmark ${DOITGEN_SEQUENTIAL_BENCHMARK_SRC})
