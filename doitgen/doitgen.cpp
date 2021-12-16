@@ -11,9 +11,6 @@
 #include <string>
 #include <immintrin.h>
 #include <liblsb.h>
-#include <ctime>
-#include <ratio>
-#include <chrono>
 #include <vector>
 #include <algorithm>
 #include <fstream>
@@ -626,6 +623,14 @@ void kernel_doitgen_mpi_clean(MPI_Win* shared_window, double** sum) {
 
 ///////////////////////////////////////////////// UTILS MPI ///////////////////////////////////
 
+std::string get_overall_file_name(char** argv, uint64_t num_processor) {
+	std::string benchmark_name = argv[2];
+	std::string processor_model = argv[3];
+	uint64_t run_index =  strtoull(argv[4], nullptr, 10);
+	
+	std::string result = std::string("lsb.") + get_benchmark_lsb_name(benchmark_name, processor_model, num_processor) + std::string("_") + std::to_string(run_index) + std::string("_overall.r0");
+	return result;
+}
 
 void mpi_lsb_benchmark_startup(char **argv, int argc, uint64_t* nr, uint64_t* nq, uint64_t* np, char** output_path, mpi_kernel_func* selected_kernel) {
 	
@@ -767,20 +772,21 @@ void mpi_clean_up(MPI_File* file, double* a, double* sum, double* c4) {
 	}
 }
 
+
+uint64_t get_elapsed_us(std::chrono::high_resolution_clock::time_point& start, std::chrono::high_resolution_clock::time_point& end) {
+	auto start_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+	auto end_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch());
+	return end_microseconds.count() - start_microseconds.count();
+}
+
 std::string get_benchmark_lsb_name(const std::string& benchmark_name, const std::string& processor_model, int num_processors) {
 	std::string result = "";
 	result += std::string("doitgen_") + benchmark_name + std::string("_") + processor_model + std::string("_") + std::to_string(num_processors);
 	return result;
 }
 
-void mpi_write_overall(std::chrono::high_resolution_clock::time_point& start) {
-	
-	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-	
-	//convert both to microseconds
-	auto start_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
-	auto end_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch());
-	uint64_t elapsed =  end_microseconds.count() - start_microseconds.count();
+
+void mpi_write_overall(const std::string& file_name, const std::string& benchmark_name, uint64_t run_index, uint64_t elapsed) {
 
 	int num_proc;
 	int rank;
@@ -826,21 +832,10 @@ void mpi_write_overall(std::chrono::high_resolution_clock::time_point& start) {
 		std::cout << "min=" << min << " median=" << median << " max=" << max << std::endl;
 
 		std::string line = "";
-		line += std::to_string(num_proc) + "\t" + std::to_string(min) + "\t" + std::to_string(median) + "\t" + std::to_string(max) + "\n"; 
-		///home/quentin/Desktop/dphpc-project/build/doitgen/test/
-		
-		char* overall_output = "overall.csv";
-
-		FILE *fp = nullptr; //= fopen(overall_output, "r");
-
-        if (access(overall_output, R_OK | W_OK) == 0) {
-			fp = fopen(overall_output, "w");
-			std::string header = "num_processes\tmin\tmedian\tmax\n";
-			fputs(header.c_str(), fp);
-			fclose(fp);
-		}
-		
-		fp = fopen(overall_output, "w");
+		line += benchmark_name + "\t" + std::to_string(num_proc) + "\t" + std::to_string(run_index) + "\t" + std::to_string(min) + "\t" + std::to_string(median) + "\t" + std::to_string(max) + "\n"; 
+		std::string header = "benchmark_type\tnum_processes\trun_index\tmin\tmedian\tmax\n";
+		FILE* fp = fopen(file_name.c_str(), "w");
+		fputs(header.c_str(), fp);
 		fputs(line.c_str(), fp);
 		fclose(fp);
 
@@ -867,7 +862,7 @@ void mpi_write_overall(std::chrono::high_resolution_clock::time_point& start) {
 
 //https://pages.tacc.utexas.edu/~eijkhout/pcse/html/mpi-io.html
 //https://cvw.cac.cornell.edu/parallelio/fileviewex
-void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
+uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
 
 	int num_proc, rank;
 	double* a = 0;
@@ -918,16 +913,18 @@ void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* ou
 		
 		LSB_Rec(2);
 	}
-
-	mpi_write_overall(start);
+	
+	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+	uint64_t elapsed = get_elapsed_us(start, end);
 
 	mpi_clean_up(&file, a, sum, c4);
-
+	
+	return elapsed;
 }
 
 //https://pages.tacc.utexas.edu/~eijkhout/pcse/html/mpi-io.html
 //https://cvw.cac.cornell.edu/parallelio/fileviewex
-void kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
+uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
 
 	int num_proc, rank;
 	double* a = 0;
@@ -940,6 +937,8 @@ void kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, cons
 	uint64_t r = 0, q = 0, p = 0, s = 0;
 	MPI_File file;
 	mpi_io_init_file(nq, np, output_path, &file, l, u);
+	
+	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
 	LSB_Res();
 	tranpose_C4(np, c4);
@@ -976,8 +975,11 @@ void kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, cons
 		LSB_Rec(2);
 	}
 
-	mpi_clean_up(&file, a, sum, c4);
+	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+	uint64_t elapsed = get_elapsed_us(start, end);
 
+	mpi_clean_up(&file, a, sum, c4);
+	return elapsed;
 }
 
 

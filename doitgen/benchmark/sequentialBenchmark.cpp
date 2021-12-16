@@ -68,6 +68,7 @@ int main(int argc, char **argv) {
 
 	uint64_t r, q, p, s;
 
+	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 	//kernel doigten polybench 4.0
 	for (r = 0; r < nr; r++) {
 		
@@ -90,6 +91,11 @@ int main(int argc, char **argv) {
 		LSB_Rec(0);
 
 	}
+
+	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+	uint64_t elapsed = get_elapsed_us(start, end);
+
+	mpi_write_overall(get_overall_file_name(argv, 0), "sequential", run_index, elapsed);
 
 	free(a);
 	free(c4);
