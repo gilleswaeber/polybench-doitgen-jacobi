@@ -89,29 +89,23 @@ void kernel_doitgen_seq(uint64_t nr, uint64_t nq, uint64_t np,
 ) {
 	uint64_t r, q, p, s;
 
-#pragma scop
-	for (r = 0; r < nr; r++)
-		for (q = 0; q < nq; q++)
-		{
-			for (p = 0; p < np; p++)
-			{
-				//sum[r][q][p] = 0;
-				SUM(r, q, p) = 0;
+	for (r = 0; r < nr; r++) {
+
+		for (q = 0; q < nq; q++) {
+
+			for (p = 0; p < np; p++) {
+				sum[p] = 0;
 				for (s = 0; s < np; s++) {
-					//sum[r][q][p] = sum[r][q][p] + A[r][q][s] * C4[s][p];
-					SUM(r, q, p) = SUM(r, q, p) + A(r, q, s) * C4(s, p);
+					sum[p] += A(r, q, s) * C4(s, p);
 				}
 			}
-			/*
-			* Are we sure this is correct ? I think the boundary condition for the
-			* loop variable p should be _PB_NP since the last dimension of sum and
-			* A has size np. Maybe this is just how the program should work.
-			*/
+
 			for (p = 0; p < np; p++) {
-				A(r, q, p) = SUM(r, q, p);
-				//A[r][q][p] = sum[r][q][p];
+				A(r, q, p) = sum[p];
 			}
 		}
+
+	}
 #pragma endscop
 }
 
@@ -121,30 +115,23 @@ void kernel_doitgen_polybench_parallel(uint64_t nr, uint64_t nq, uint64_t np,
 	double* sum
 ) {
 
-#pragma omp parallel for
+	#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
+
 		for (uint64_t q = 0; q < nq; q++) {
 
-
-
-			/*
-			* This is the dot product bewtween the row A[r][q] and the column C4[p]
-			*/
 			for (uint64_t p = 0; p < np; p++) {
-				SUM(r, q, p) = 0.0;
+				sum[p] = 0;
 				for (uint64_t s = 0; s < np; s++) {
-					//This needs the old values of A
-					//cur_sum = cur_sum + A[r][q][s] * C4[s][p];
-					SUM(r, q, p) = SUM(r, q, p) + A(r, q, s) * C4(s, p);
+					sum[p] += A(r, q, s) * C4(s, p);
 				}
 			}
 
 			for (uint64_t p = 0; p < np; p++) {
-				//A[r][q][p] = new_sum[omp_get_thread_num() * np + p];
-				A(r, q, p) = SUM(r, q, p);
+				A(r, q, p) = sum[p];
 			}
-
 		}
+
 	}
 }
 

@@ -5,7 +5,7 @@ cmake_policy(SET CMP0074 NEW)
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -march=native")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -mavx2 -mfma")
 
 
 include(CTest)

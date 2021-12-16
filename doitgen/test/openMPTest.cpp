@@ -67,7 +67,7 @@ START_TEST(test_doitgen)
 	loadFile("doitgen_dataset_512_512_512", nr * nq * np, a_test);
 
 	double* a_in 	= (double*) allocate_data(nr * nq * np, sizeof(double));
-	double* sum = (double*) allocate_data(nr * nq * np, sizeof(double));
+	//double* sum = (double*) allocate_data(nr * nq * np, sizeof(double));
 	double* c4 	= (double*) allocate_data(np * np, sizeof(double));
 	//double* c4_transposed = (double*)allocate_data(np * np, sizeof(double));
 
@@ -79,12 +79,10 @@ START_TEST(test_doitgen)
 	memset(a_out, 0.0, nr * nq * np);
 	//transpose(c4, c4_transposed, np, np);
 
-	flush_cache();
+	flush_cache_openMP();
 
 	auto t1 = std::chrono::high_resolution_clock::now();
-	//kernel_doitgen_bikj(nr, nq, np, a_in, a_out, c4, 32);
-	//kernel_doitgen_no_blocking_avx2(nr, nq, np, a_in, a_out, c4, sum);
-	//kernel_doitgen_bikj_prime(nr, nq, np, a_in, a_out, c4, 64);
+	kernel_doitgen_inverted_loop_avx2(nr, nq, np, a_in, a_out, c4);
 	auto t2 = std::chrono::high_resolution_clock::now();
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
@@ -97,7 +95,6 @@ START_TEST(test_doitgen)
 	cleanup(a_in);
 	cleanup(a_out);
 	cleanup(c4);
-	cleanup(sum);
 
 }
 END_TEST

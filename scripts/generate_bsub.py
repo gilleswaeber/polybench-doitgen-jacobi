@@ -1,5 +1,6 @@
 RUNS = 10
 threads = [1, 2, 4, 8, 16, 32, 48]
+
 benchmarks_seq = ["polybench"]
 
 benchmarks_non_blocking = [
@@ -45,8 +46,6 @@ result += (
 
 
 def main():
-    result_non_blocking = ""
-    result_blocking = ""
     result_total = ""
     for i in range(len(benchmarks_seq)):
         for j in range(RUNS):
@@ -108,9 +107,44 @@ def main():
     script_file.write(result_total)
     script_file.close()
 
-    """script_file = open("bsub_openMP_blocking.sh", "w")
-    script_file.write(result_blocking)
-    script_file.close()"""
+    result_scaling = ""
+    for k in range(RUNS):
+        result_scaling += (
+            "../dphpc-doitgen-openmp-benchmark "
+            + "inverted_loop"
+            + " "
+            + str(128)
+            + " "
+            + str(NQ)
+            + " "
+            + str(NP)
+            + " "
+            + str(1)
+            + " "
+            + str(k)
+            + "\n"
+        )
+    for i in range(2, 50, 2):
+        for k in range(RUNS):
+            result_scaling += (
+                "../dphpc-doitgen-openmp-benchmark "
+                + "inverted_loop"
+                + " "
+                + str(128 * i)
+                + " "
+                + str(NQ)
+                + " "
+                + str(NP)
+                + " "
+                + str(i)
+                + " "
+                + str(k)
+                + "\n"
+            )
+
+    script_file = open("bsub_openMP_scaling.sh", "w")
+    script_file.write(result_scaling)
+    script_file.close()
 
 
 if __name__ == "__main__":
