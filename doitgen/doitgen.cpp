@@ -666,8 +666,8 @@ void mpi_lsb_benchmark_startup(char **argv, int argc, uint64_t* nr, uint64_t* nq
 	LSB_Set_Rparam_long("num_processes", num_proc);
 	LSB_Set_Rparam_long("run_index", run_index);
 
-	LSB_Set_Rparam_string("benchmark_type", benchmark_name.c_str());
-	LSB_Set_Rparam_string("processor_model", processor_model.c_str());
+	LSB_Set_Rparam_string("benchmark_type", argv[2]);
+	LSB_Set_Rparam_string("processor_model", argv[3]);
 
 	if (rank == 0) {
 		std::cout << "starting benchmark without file" << nr << "x" << nq << "x" << np << std::endl;
