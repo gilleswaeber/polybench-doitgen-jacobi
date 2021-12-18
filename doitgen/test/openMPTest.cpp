@@ -67,34 +67,34 @@ START_TEST(test_doitgen)
 	loadFile("doitgen_dataset_512_512_512", nr * nq * np, a_test);
 
 	double* a_in 	= (double*) allocate_data(nr * nq * np, sizeof(double));
-	//double* sum = (double*) allocate_data(nr * nq * np, sizeof(double));
+	double* sum = (double*) allocate_data(omp_get_max_threads() * np, sizeof(double));
 	double* c4 	= (double*) allocate_data(np * np, sizeof(double));
-	//double* c4_transposed = (double*)allocate_data(np * np, sizeof(double));
+	double* c4_transposed = (double*)allocate_data(np * np, sizeof(double));
 
-	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
+	//double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
 
 	init_array(nr, nq, np, a_in, c4);
 	//copy_array(a_in, a_out, nr, nq, np);
 
-	memset(a_out, 0.0, nr * nq * np);
-	//transpose(c4, c4_transposed, np, np);
-
+	memset(sum, 0, omp_get_max_threads() * np * sizeof(double));
+	transpose(c4, c4_transposed, np, np);
+	
 	flush_cache_openMP();
-
 	auto t1 = std::chrono::high_resolution_clock::now();
-	kernel_doitgen_inverted_loop_avx2(nr, nq, np, a_in, a_out, c4);
+	kernel_doitgen_transpose_local_sum(nr, nq, np, a_in, sum, c4_transposed);
 	auto t2 = std::chrono::high_resolution_clock::now();
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
 	std::cout << "Parallel time : " << ms_int.count() << std::endl;
 
-	bool result = compare_results(nr, nq, np, a_out, a_test);
+	bool result = compare_results(nr, nq, np, a_in, a_test);
 	ck_assert_msg(result, "results must match!");
 
 	cleanup(a_test);
 	cleanup(a_in);
-	cleanup(a_out);
+	cleanup(sum);
 	cleanup(c4);
+	cleanup(c4_transposed);
 
 }
 END_TEST

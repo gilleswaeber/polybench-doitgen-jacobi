@@ -112,6 +112,12 @@ void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,
 	double* c4
 );
 
+void kernel_doitgen_transpose_local_sum(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* sum,
+	double* c4
+);
+
 void kernel_doitgen_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_in,
 	double* a_out,
@@ -131,6 +137,12 @@ void kernel_doitgen_inverted_loop_blocking(uint64_t nr, uint64_t nq, uint64_t np
 void kernel_doitgen_inverted_loop_avx2(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_in,
 	double* a_out,
+	double* c4
+);
+
+void kernel_doitgen_inverted_loop_avx2_local_sum(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* sum,
 	double* c4
 );
 
