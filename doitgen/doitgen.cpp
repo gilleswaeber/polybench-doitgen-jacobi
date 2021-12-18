@@ -783,6 +783,21 @@ std::string get_benchmark_lsb_name(const std::string& benchmark_name, const std:
 	return result;
 }
 
+void flush_cache_epyc()
+{
+	//taken from polybench
+  unsigned long long cs = 256000000 / (unsigned long long)sizeof(double);
+  double* flush = (double*) calloc (cs, sizeof(double));
+  unsigned long long i;
+  double tmp = 0.0;
+  for (i = 0; i < cs; i++)
+    tmp += flush[i];
+  //This is to prevent compiler optimizations
+  if (tmp > 10.0) {
+	  std::cout << "Fail !" << std::endl;
+  }
+  free ((void*)flush);
+}
 
 void mpi_write_overall(const std::string& file_name, const std::string& benchmark_name, uint64_t run_index, uint64_t elapsed) {
 
@@ -874,6 +889,9 @@ uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char
 	MPI_File file;
 	mpi_io_init_file(nq, np, output_path, &file, l, u);
 
+	flush_cache_epyc();
+	MPI_Barrier(MPI_COMM_WORLD);
+	
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
 	for (r = l; r < u; r++) {
@@ -936,6 +954,9 @@ uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, 
 	MPI_File file;
 	mpi_io_init_file(nq, np, output_path, &file, l, u);
 	
+	flush_cache_epyc();
+	MPI_Barrier(MPI_COMM_WORLD);
+
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
 	LSB_Res();

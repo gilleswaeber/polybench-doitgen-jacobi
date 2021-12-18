@@ -27,6 +27,22 @@ void init_array_seq(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4
 	}
 }
 
+void flush_cache_sequential()
+{
+	//taken from polybench
+  unsigned long long cs = 256000000 / (unsigned long long)sizeof(double);
+  double* flush = (double*) calloc (cs, sizeof(double));
+  unsigned long long i;
+  double tmp = 0.0;
+  for (i = 0; i < cs; i++)
+    tmp += flush[i];
+  //This is to prevent compiler optimizations
+  if (tmp > 10.0) {
+	  std::cout << "Fail !" << std::endl;
+  }
+  free ((void*)flush);
+}
+
 //./dphpc-doitgen-sequential-benchmark 128 512 512 (for example)
 
 int main(int argc, char **argv) {
@@ -67,6 +83,8 @@ int main(int argc, char **argv) {
 	init_array_seq(nr, nq, np, a, c4);
 
 	uint64_t r, q, p, s;
+
+	flush_cache_sequential();
 
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 	//kernel doigten polybench 4.0
