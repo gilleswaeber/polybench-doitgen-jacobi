@@ -10,7 +10,7 @@ bench_types = [
     'transpose'
 ]
 
-proc_model = "XeonGold_6150" # "XeonE3_1585Lv5" #"XeonE3_1585Lv5" #XeonE3_1585Lv5 #EPYC_7H12
+proc_model = "EPYC_7H12" # "XeonE3_1585Lv5" #"XeonE3_1585Lv5" #XeonE3_1585Lv5 #EPYC_7H12
 
 #cluster_outputs_locations = "/cluster/scratch/qguignard/"
 

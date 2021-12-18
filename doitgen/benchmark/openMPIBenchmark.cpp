@@ -33,10 +33,13 @@ int main(int argc, char **argv) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 	MPI_Barrier(MPI_COMM_WORLD);
-	selected_kernel(nr, nq, np, output_path);
+	uint64_t elapsed = selected_kernel(nr, nq, np, output_path);
 	MPI_Barrier(MPI_COMM_WORLD);
 
 	MASTER_MESSAGE("finished execution");
+	uint64_t run_index =  strtoull(argv[4], nullptr, 10);
+	std::string benchmark_name = argv[2];
 
+	mpi_write_overall(get_overall_file_name(argv, num_proc), benchmark_name, run_index, elapsed);
 	mpi_lsb_benchmark_finalize();
 }

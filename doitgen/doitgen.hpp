@@ -4,6 +4,9 @@
 #include <mpi.h>
 
 #include <string>
+#include <ctime>
+#include <ratio>
+#include <chrono>
 
 struct problem_size_t {
 	uint64_t nr;
@@ -71,12 +74,16 @@ void init_A_slice(uint64_t nq, uint64_t np, double* a, uint64_t i);
 void delete_file_if_exists(const char* output_path);
 
 /////////////////////////////////////// MPI kernels /////////////////
-void kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
-void kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
+uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
+uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
 
 //////////////////////////////////// MPI UTILS /////////////////////7
 
-typedef void (*mpi_kernel_func)(uint64_t nr, uint64_t nq, uint64_t np, const char *output_path);
+std::string get_overall_file_name(char** argv, uint64_t num_processor);
+
+uint64_t get_elapsed_us(std::chrono::high_resolution_clock::time_point& start, std::chrono::high_resolution_clock::time_point& end);
+
+typedef uint64_t (*mpi_kernel_func)(uint64_t nr, uint64_t nq, uint64_t np, const char *output_path);
 
 void mpi_lsb_benchmark_startup(char **argv, int argc, uint64_t* nr, uint64_t* nq, uint64_t* np, char** output_path, mpi_kernel_func* selected_kernel); 
 void mpi_lsb_benchmark_finalize();
@@ -89,6 +96,8 @@ struct mpi_benchmark {
 	std::string name;
 	mpi_kernel_func func;
 };
+
+void mpi_write_overall(const std::string& file_name, const std::string& benchmark_name, uint64_t run_index, uint64_t elapsed);
 
 #define NUM_DOIGTEN_MPI_KERNELS 2
 static const mpi_benchmark mpi_benchmarks_data[] = {

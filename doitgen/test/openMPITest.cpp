@@ -25,6 +25,7 @@
  * Shared memory with MPI : https://pages.tacc.utexas.edu/~eijkhout/pcse/html/mpi-shared.html
  */
 
+
 std::string get_dataset_path(uint64_t nr, uint64_t nq, uint64_t np) {
 	std::string result = TEST_DIRECTORY_PATH"/doitgen_dataset_";
 	result += std::to_string(nr); result += "_";
@@ -32,7 +33,6 @@ std::string get_dataset_path(uint64_t nr, uint64_t nq, uint64_t np) {
 	result += std::to_string(np);
 	return result;
 }
-
 
 void print_state(int world_rank, double* a, double* c4, double* sum) {
 	std::cout << "----------------------------------------------" << std::endl;
@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 	MPI_Barrier(MPI_COMM_WORLD);
-	selected_kernel(nr, nq, np, output_path);
+	uint64_t elapsed = selected_kernel(nr, nq, np, output_path);
 	MPI_Barrier(MPI_COMM_WORLD);
 
 	//here we load the file and check its result if we are the master
@@ -113,6 +113,10 @@ int main(int argc, char **argv) {
 
 	}
 
+	uint64_t run_index =  strtoull(argv[4], nullptr, 10);
+	std::string benchmark_name = argv[2];
+
+	mpi_write_overall(get_overall_file_name(argv, num_processor), benchmark_name, run_index, elapsed);
 	mpi_lsb_benchmark_finalize();
 }
 
