@@ -41,8 +41,6 @@ void* allocate_data(unsigned long long int n, int elt_size)
   return ret;
 }
 
-#pragma GCC push_options
-#pragma GCC optimize("O0")
 void flush_cache()
 {
   unsigned long long cs = POLYBENCH_CACHE_SIZE_KB * 1024ULL / (unsigned long long)sizeof(double);
@@ -57,7 +55,6 @@ void flush_cache()
   }
   free ((void*)flush);
 }
-#pragma GCC pop_options
 
 void flush_cache_openMP()
 {
