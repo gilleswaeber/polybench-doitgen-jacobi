@@ -1,0 +1,10 @@
+bsub -n 1 -R "select[model==EPYC_7H12]" ../dphpc-bsub-benchmark 
+bsub -n 1 -R "select[model==EPYC_7H12]" ../dphpc-bsub-benchmark 
+bsub -n 1 -R "select[model==EPYC_7H12]" ../dphpc-bsub-benchmark 
+bsub -n 1 -R "select[model==EPYC_7H12]" ../dphpc-bsub-benchmark 
+bsub -n 1 -R "select[model==EPYC_7H12]" ../dphpc-bsub-benchmark 
+bsub -n 1 -R "select[model==EPYC_7H12]" ../dphpc-bsub-benchmark 
+bsub -n 1 -R "select[model==EPYC_7H12]" ../dphpc-bsub-benchmark 
+bsub -n 1 -R "select[model==EPYC_7H12]" ../dphpc-bsub-benchmark 
+bsub -n 1 -R "select[model==EPYC_7H12]" ../dphpc-bsub-benchmark 
+bsub -n 1 -R "select[model==EPYC_7H12]" ../dphpc-bsub-benchmark 

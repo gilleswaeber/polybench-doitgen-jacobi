@@ -112,7 +112,8 @@ void kernel_doitgen_seq(uint64_t nr, uint64_t nq, uint64_t np, double* a, double
 void kernel_doitgen_polybench_parallel(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4, double* sum);
 void kernel_doitgen_polybench_parallel_local_sum(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a,
-	double* c4
+	double* c4,
+	double* sum
 );
 
 void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,

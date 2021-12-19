@@ -54,13 +54,16 @@ void do_polybench_parallel(uint64_t nr, uint64_t nq, uint64_t np, uint64_t block
 void do_polybench_parallel_local_sum(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
 	double* a = (double*)allocate_data(nr * nq * np, sizeof(double));
 	double* c4 = (double*)allocate_data(np * np, sizeof(double));
+	uint64_t sum_size = omp_get_max_threads() * np;
+	double* sum = (double*)allocate_data(sum_size, sizeof(double));
 
 	init_array(nr, nq, np, a, c4);
+	memset(sum, 0, sum_size * sizeof(double));
 
-	flush_cache();
+	flush_cache_openMP();
 
 	LSB_Res();
-	kernel_doitgen_polybench_parallel_local_sum(nr, nq, np, a, c4);
+	kernel_doitgen_polybench_parallel_local_sum(nr, nq, np, a, c4, sum);
 	LSB_Rec(0);
 
 	free(a);
@@ -228,7 +231,9 @@ static const Benchmark benchmarks[] = {
 	{"blocking", &do_blocking},
 	{"inverted_loop", &do_inverted_loop},
 	{"inverted_loop_blocking", &do_inverted_loop_blocking},
-	{"inverted_loop_avx2", &do_inverted_loop_avx2}
+	{"inverted_loop_avx2", &do_inverted_loop_avx2},
+	{"inverted_loop_avx2_local_sum", &do_inverted_loop_avx2_local_sum},
+	{"transpose_local_sum", &do_transpose_local_sum}
 };
 
 static const uint64_t benchmarks_size = sizeof(benchmarks) / sizeof(benchmarks[0]);
