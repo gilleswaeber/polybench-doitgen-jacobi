@@ -69,7 +69,7 @@ START_TEST(test_doitgen)
 	double* a_in 	= (double*) allocate_data(nr * nq * np, sizeof(double));
 	double* sum = (double*) allocate_data(omp_get_max_threads() * np, sizeof(double));
 	double* c4 	= (double*) allocate_data(np * np, sizeof(double));
-	double* c4_transposed = (double*)allocate_data(np * np, sizeof(double));
+	//double* c4_transposed = (double*)allocate_data(np * np, sizeof(double));
 
 	//double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
 
@@ -77,11 +77,11 @@ START_TEST(test_doitgen)
 	//copy_array(a_in, a_out, nr, nq, np);
 
 	memset(sum, 0, omp_get_max_threads() * np * sizeof(double));
-	transpose(c4, c4_transposed, np, np);
+	//transpose(c4, c4_transposed, np, np);
 	
 	flush_cache_openMP();
 	auto t1 = std::chrono::high_resolution_clock::now();
-	kernel_doitgen_transpose_local_sum(nr, nq, np, a_in, sum, c4_transposed);
+	kernel_doitgen_polybench_parallel_local_sum(nr, nq, np, a_in, c4, sum);
 	auto t2 = std::chrono::high_resolution_clock::now();
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
@@ -94,7 +94,7 @@ START_TEST(test_doitgen)
 	cleanup(a_in);
 	cleanup(sum);
 	cleanup(c4);
-	cleanup(c4_transposed);
+	//cleanup(c4_transposed);
 
 }
 END_TEST

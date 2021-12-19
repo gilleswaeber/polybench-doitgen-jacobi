@@ -163,7 +163,7 @@ void kernel_doitgen_polybench_parallel_local_sum(uint64_t nr, uint64_t nq, uint6
 				}
 			}
 			memcpy(&(A(r, q, 0)), &(sum[omp_get_thread_num() * np]), np * sizeof(double));
-			memset(&(sum[omp_get_max_threads() * np]), 0, np * sizeof(double));
+			memset(&(sum[omp_get_thread_num() * np]), 0, np * sizeof(double));
 		}
 	}
 }
