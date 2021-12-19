@@ -143,10 +143,9 @@ void kernel_doitgen_polybench_parallel(uint64_t nr, uint64_t nq, uint64_t np,
 
 void kernel_doitgen_polybench_parallel_local_sum(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a,
-	double* c4
+	double* c4,
+	double* sum
 ) {
-	int nb_threads = omp_get_max_threads();
-	double* sum = new double[nb_threads * np];
 	#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 		for (uint64_t q = 0; q < nq; q++) {
@@ -157,23 +156,16 @@ void kernel_doitgen_polybench_parallel_local_sum(uint64_t nr, uint64_t nq, uint6
 			* This is the dot product bewtween the row A[r][q] and the column C4[p]
 			*/
 			for (uint64_t p = 0; p < np; p++) {
-				double cur_sum = 0.0;
 				for (uint64_t s = 0; s < np; s++) {
 					//This needs the old values of A
 					//cur_sum = cur_sum + A[r][q][s] * C4[s][p];
-					cur_sum = cur_sum + A(r, q, s) * C4(s, p);
+					sum[omp_get_thread_num() * np + p] += A(r, q, s) * C4(s, p);
 				}
-				sum[omp_get_thread_num() * np + p] = cur_sum;
 			}
-
-			for (uint64_t p = 0; p < np; p++) {
-				//A[r][q][p] = new_sum[omp_get_thread_num() * np + p];
-				A(r, q, p) = sum[omp_get_thread_num() * np + p];
-			}
-
+			memcpy(&(A(r, q, 0)), &(sum[omp_get_thread_num() * np]), np * sizeof(double));
+			memset(&(sum[omp_get_thread_num() * np]), 0, np * sizeof(double));
 		}
 	}
-	delete[] sum;
 }
 
 void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,
@@ -189,6 +181,25 @@ void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,
 					A_OUT(r, q, p) += A_IN(r, q, s) * C4(p, s);
 				}
 			}
+		}
+	}
+}
+
+void kernel_doitgen_transpose_local_sum(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* sum,
+	double* c4
+) {
+#pragma omp parallel for
+	for (uint64_t r = 0; r < nr; r++) {
+		for (uint64_t q = 0; q < nq; q++) {
+			for (uint64_t p = 0; p < np; p++) {
+				for (uint64_t s = 0; s < np; s++) {
+					sum[omp_get_thread_num() * np + p] += A_IN(r, q, s) * C4(p, s);
+				}
+			}
+			memcpy(&(A_IN(r, q, 0)), &(sum[omp_get_thread_num() * np]), np * sizeof(double));
+			memset(&(sum[omp_get_thread_num() * np]), 0, np * sizeof(double));
 		}
 	}
 }
@@ -287,6 +298,34 @@ void kernel_doitgen_inverted_loop_avx2(uint64_t nr, uint64_t nq, uint64_t np,
 
 }
 
+void kernel_doitgen_inverted_loop_avx2_local_sum(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* sum,
+	double* c4
+) {
+
+#pragma omp parallel for
+	for (uint64_t r = 0; r < nr; r++) {
+
+		for (uint64_t i = 0; i < nq; i++) {
+			for (uint64_t k = 0; k < np; k++) {
+				__m256d a_in_val = _mm256_set1_pd(A_IN(r, i, k));
+				for (uint64_t j = 0; j < np; j += 4) {
+					__m256d a_out_val = _mm256_load_pd(&(SUM(omp_get_thread_num(), i, j)));
+					__m256d c4_val = _mm256_load_pd(&(C4(k, j)));
+
+					__m256d res = _mm256_fmadd_pd(a_in_val, c4_val, a_out_val);
+
+					_mm256_store_pd(&(SUM(omp_get_thread_num(), i, j)), res);
+				}
+			}
+		}
+
+		memcpy(&A_IN(r, 0, 0), &SUM(omp_get_thread_num(), 0, 0), nq * np * sizeof(double));
+		memset(&SUM(omp_get_thread_num(), 0, 0), 0, nq * np * sizeof(double));
+	}
+
+}
 
 
 
