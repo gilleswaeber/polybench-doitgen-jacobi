@@ -873,6 +873,144 @@ void mpi_write_overall(const std::string& file_name, const std::string& benchmar
 
 //////////////////////////////////////////////////// MPI KERNELS ////////////////////////////////////////////
 
+
+uint64_t kernel_doitgen_mpi_write_1(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
+	
+	int num_proc, rank;
+	double* a = 0;
+	double* sum = 0;
+	double* c4 = 0;
+	uint64_t l = 0, u = 0;
+
+	doitgen_kernel_mpi_init(nr, nq, np, &num_proc, &rank, &a, &sum, &c4, &l, &u);
+	
+	MPI_Offset offset;
+	MPI_File file;
+	MPI_File_open(MPI_COMM_WORLD, output_path, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
+
+
+	flush_cache_epyc();
+
+
+	MPI_Barrier(MPI_COMM_WORLD);
+	
+	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+
+	
+	for (uint64_t i = l; i < u; i++) {
+		LSB_Res();
+		offset = nq * np * sizeof(double) * i;
+		MPI_File_write_at(file, offset, a, nq * np, MPI_DOUBLE, MPI_STATUS_IGNORE);
+		LSB_Rec(0);
+	}
+	
+
+	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+	uint64_t elapsed = get_elapsed_us(start, end);
+
+	mpi_clean_up(&file, a, sum, c4);
+	return elapsed;
+}
+
+uint64_t kernel_doitgen_mpi_write_2(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
+	
+	int num_proc, rank;
+	double* a = 0;
+	double* sum = 0;
+	double* c4 = 0;
+	uint64_t l = 0, u = 0;
+
+	doitgen_kernel_mpi_init(nr, nq, np, &num_proc, &rank, &a, &sum, &c4, &l, &u);
+	MPI_Offset offset;
+	MPI_File file;
+	MPI_File_open(MPI_COMM_WORLD, output_path, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
+
+	flush_cache_epyc();
+	MPI_Barrier(MPI_COMM_WORLD);
+	
+	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+
+	
+	for (uint64_t i = l; i < u; i++) {
+		LSB_Res();
+		offset = nq * np * sizeof(double) * i;
+		MPI_File_write_at_all(file, offset, a, nq * np, MPI_DOUBLE, MPI_STATUS_IGNORE);
+		LSB_Rec(0);
+	}
+	
+
+	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+	uint64_t elapsed = get_elapsed_us(start, end);
+
+	mpi_clean_up(&file, a, sum, c4);
+	return elapsed;
+}
+
+
+uint64_t kernel_doitgen_mpi_write_3(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
+	
+	int num_proc, rank;
+	double* a = 0;
+	double* sum = 0;
+	double* c4 = 0;
+	uint64_t l = 0, u = 0;
+
+	doitgen_kernel_mpi_init(nr, nq, np, &num_proc, &rank, &a, &sum, &c4, &l, &u);
+
+	MPI_File file;
+	mpi_io_init_file(nq, np, output_path, &file, l, u);
+
+	flush_cache_epyc();
+	MPI_Barrier(MPI_COMM_WORLD);
+	
+	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+
+	for (uint64_t i = l; i < u; i++) {
+		LSB_Res();
+		MPI_File_write(file, a, np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
+		LSB_Rec(0);
+	}
+	
+
+	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+	uint64_t elapsed = get_elapsed_us(start, end);
+
+	mpi_clean_up(&file, a, sum, c4);
+	return elapsed;
+}
+
+uint64_t kernel_doitgen_mpi_write_4(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
+	
+	int num_proc, rank;
+	double* a = 0;
+	double* sum = 0;
+	double* c4 = 0;
+	uint64_t l = 0, u = 0;
+
+	doitgen_kernel_mpi_init(nr, nq, np, &num_proc, &rank, &a, &sum, &c4, &l, &u);
+
+	MPI_File file;
+	mpi_io_init_file(nq, np, output_path, &file, l, u);
+
+	flush_cache_epyc();
+	MPI_Barrier(MPI_COMM_WORLD);
+	
+	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+
+	for (uint64_t i = l; i < u; i++) {
+		LSB_Res();
+		MPI_File_write_all(file, a, np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
+		LSB_Rec(0);
+	}
+	
+
+	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+	uint64_t elapsed = get_elapsed_us(start, end);
+
+	mpi_clean_up(&file, a, sum, c4);
+	return elapsed;
+}
+
 //https://pages.tacc.utexas.edu/~eijkhout/pcse/html/mpi-io.html
 //https://cvw.cac.cornell.edu/parallelio/fileviewex
 uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
