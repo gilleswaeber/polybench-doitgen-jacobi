@@ -166,7 +166,7 @@ void do_inverted_loop_local_sum(uint64_t nr, uint64_t nq, uint64_t np, uint64_t 
 	flush_cache_openMP();
 
 	LSB_Res();
-	kernel_doitgen_inverted_loop(nr, nq, np, a_in, sum, c4);
+	kernel_doitgen_inverted_loop_local_sum(nr, nq, np, a_in, sum, c4);
 	LSB_Rec(0);
 
 	free(a_in);
