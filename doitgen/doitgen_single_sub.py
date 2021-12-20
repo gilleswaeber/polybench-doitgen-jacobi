@@ -7,12 +7,20 @@ from typing_extensions import runtime
 #'basic',
 #'transpose'
 
+
+bench_types = [
+    'basic',
+    'transpose'
+]
+
+"""
 bench_types = [
     'write_1',
     'write_2',
     'write_3',
     'write_4'
 ]
+"""
 
 proc_model = "EPYC_7H12" # "XeonE3_1585Lv5" #"XeonE3_1585Lv5" #XeonE3_1585Lv5 #EPYC_7H12
 
