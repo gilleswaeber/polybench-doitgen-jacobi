@@ -77,7 +77,12 @@ void delete_file_if_exists(const char* output_path);
 uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
 uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
 
-//////////////////////////////////// MPI UTILS /////////////////////7
+uint64_t kernel_doitgen_mpi_write_1(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
+uint64_t kernel_doitgen_mpi_write_2(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
+uint64_t kernel_doitgen_mpi_write_3(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
+uint64_t kernel_doitgen_mpi_write_4(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
+
+//////////////////////////////////// MPI UTILS /////////////////////
 
 std::string get_overall_file_name(char** argv, uint64_t num_processor);
 
@@ -99,10 +104,17 @@ struct mpi_benchmark {
 
 void mpi_write_overall(const std::string& file_name, const std::string& benchmark_name, uint64_t run_index, uint64_t elapsed);
 
-#define NUM_DOIGTEN_MPI_KERNELS 2
+#define NUM_DOIGTEN_MPI_KERNELS 6
 static const mpi_benchmark mpi_benchmarks_data[] = {
+
 	{ "basic", &kernel_doitgen_mpi_io },
-	{ "transpose", &kernel_doitgen_mpi_io_transpose }
+	{ "transpose", &kernel_doitgen_mpi_io_transpose },
+
+	{ "write_1", &kernel_doitgen_mpi_write_1 },
+	{ "write_2", &kernel_doitgen_mpi_write_2 },
+	{ "write_3", &kernel_doitgen_mpi_write_3 },
+	{ "write_4", &kernel_doitgen_mpi_write_4 }
+
 };
 
 //////////////////////////////////////////////////////////
