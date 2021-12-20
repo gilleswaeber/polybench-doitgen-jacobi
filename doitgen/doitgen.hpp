@@ -141,6 +141,12 @@ void kernel_doitgen_inverted_loop(uint64_t nr, uint64_t nq, uint64_t np,
 	double* c4
 );
 
+void kernel_doitgen_inverted_loop_local_sum(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a,
+	double* sum,
+	double* c4
+);
+
 void kernel_doitgen_inverted_loop_blocking(uint64_t nr, uint64_t nq, uint64_t np, double* a_in,
 	double* a_out, double* c4, uint64_t blocking_size);
 

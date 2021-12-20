@@ -248,6 +248,28 @@ void kernel_doitgen_inverted_loop(uint64_t nr, uint64_t nq, uint64_t np,
 	}
 }
 
+void kernel_doitgen_inverted_loop_local_sum(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a,
+	double* sum,
+	double* c4
+) {
+
+#pragma omp parallel for
+	for (uint64_t r = 0; r < nr; r++) {
+
+		for (uint64_t i = 0; i < nq; i++) {
+			for (uint64_t k = 0; k < np; k++) {
+				for (uint64_t j = 0; j < np; j++) {
+					SUM(omp_get_thread_num(), i, j) += A(r, i, k) * C4(k, j);
+				}
+			}
+		}
+
+		memcpy(&A(r, 0, 0), &SUM(omp_get_thread_num(), 0, 0), nq * np * sizeof(double));
+		memset(&SUM(omp_get_thread_num(), 0, 0), 0, nq * np * sizeof(double));
+	}
+}
+
 void kernel_doitgen_inverted_loop_blocking(uint64_t nr, uint64_t nq, uint64_t np, double* a_in,
 	double* a_out, double* c4, uint64_t blocking_size) {
 

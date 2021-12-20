@@ -29,13 +29,11 @@ threads_scaling = [
     48,
 ]
 
-benchmarks = ["inverted_loop_avx2_local_sum", "transpose_local_sum"]
+# benchmarks = ["inverted_loop_avx2_local_sum", "transpose_local_sum"]
 
-benchmark_scaling = [
-    "polybench_parallel_local_sum",
-    "transpose_local_sum",
-    "inverted_loop_avx2_local_sum",
-]
+benchmarks = ["inverted_loop_local_sum"]
+
+benchmark_scaling = ["inverted_loop_avx2", "inverted_loop", "inverted_loop_local_sum"]
 
 NR = 512
 NQ = 512
