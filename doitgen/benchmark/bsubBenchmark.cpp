@@ -45,7 +45,7 @@ void benchmark_seq() {
 		int64_t* a = (int64_t*)malloc(cur_size * sizeof(int64_t));
 		fill_a_rand(a, cur_size);
 		flush_cache_512();
-		LSB_Set_Rparam_long("TABLE_SIZE", cur_size);
+		LSB_Set_Rparam_long("table_size", cur_size);
 		LSB_Res();
 		for (uint64_t r = 0; r < iter; ++r) {
 			for (uint64_t i = 0; i < cur_size; ++i) {
@@ -77,7 +77,7 @@ void benchmark_rand() {
 		fill_a_rand(a, cur_size);
 		flush_cache_512();
 
-		LSB_Set_Rparam_long("TABLE_SIZE", cur_size);
+		LSB_Set_Rparam_long("table_size", cur_size);
 		LSB_Res();
 		for (uint64_t r = 0; r < iter; ++r) {
 			for (uint64_t i = 0; i < cur_size; ++i) {
@@ -95,16 +95,20 @@ void benchmark_rand() {
 }
 
 int main(int argc, char** argv) {
-	if (argc < 3) return -1;
+	if (argc < 4) return -1;
 
 	uint64_t id = strtoull(argv[1], NULL, 0);
 	const std::string benchmark_type = argv[2];
+	const std::string sub_type = argv[3];
 
 	const std::string benchmark_name = "bsub_benchmark_" + benchmark_type + "_" + std::to_string(id);
 
 	MPI::Init();
 	LSB_Init(benchmark_name.c_str(), 0);
-	LSB_Set_Rparam_string("BENCHMARK_NAME", benchmark_type.c_str());
+
+	LSB_Set_Rparam_string("benchmark_name", benchmark_type.c_str());
+	LSB_Set_Rparam_string("submission_type", benchmark_type.c_str());
+
 	if (benchmark_type == "sequential") {
 		std::cout << "benchmark sequential" << std::endl;
 		benchmark_seq();

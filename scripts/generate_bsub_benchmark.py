@@ -5,7 +5,7 @@ def generate_individual(bench_name):
 
     result_individual = ""
     for i in range(RUNS):
-        result_individual += f"./dphpc-bsub-benchmark {i} {bench_name}\n"
+        result_individual += f"./dphpc-bsub-benchmark {i} {bench_name} batched\n"
     
     return result_individual
 
@@ -13,7 +13,7 @@ def generate_batch(bench_name):
     result_total = ""
     for i in range(RUNS):
         result_total += (
-            f'bsub -n 1 -W 4:00 -R "select[model==EPYC_7H12]" -R "rusage[mem=4096]" ./dphpc-bsub-benchmark {i} {bench_name}\n'
+            f'bsub -n 1 -W 4:00 -R "select[model==EPYC_7H12]" -R "rusage[mem=4096]" ./dphpc-bsub-benchmark {i} {bench_name} single\n'
         )
 
     return result_total
