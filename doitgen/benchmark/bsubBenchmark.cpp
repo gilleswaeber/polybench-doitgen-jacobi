@@ -107,7 +107,7 @@ int main(int argc, char** argv) {
 	LSB_Init(benchmark_name.c_str(), 0);
 
 	LSB_Set_Rparam_string("benchmark_name", benchmark_type.c_str());
-	LSB_Set_Rparam_string("submission_type", benchmark_type.c_str());
+	LSB_Set_Rparam_string("submission_type", sub_type.c_str());
 
 	if (benchmark_type == "sequential") {
 		std::cout << "benchmark sequential" << std::endl;
