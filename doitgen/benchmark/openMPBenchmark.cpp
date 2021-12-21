@@ -36,7 +36,9 @@ void do_polybench(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_windo
 void do_polybench_parallel(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
 	double* a = (double*)allocate_data(nr * nq * np, sizeof(double));
 	double* c4 = (double*)allocate_data(np * np, sizeof(double));
-	double* sum = (double*)allocate_data(np, sizeof(double));
+	double* sum = (double*)allocate_data(np * omp_get_max_threads(), sizeof(double));
+
+	memset(sum, 0, np * omp_get_max_threads() * sizeof(double));
 
 	init_array(nr, nq, np, a, c4);
 
@@ -73,6 +75,7 @@ void do_polybench_parallel_local_sum(uint64_t nr, uint64_t nq, uint64_t np, uint
 void do_transpose(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
 	double* a_in = (double*)allocate_data(nr * nq * np, sizeof(double));
 	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
+	memset(a_out, 0, nr * nq * np * sizeof(double));
 	double* c4 = (double*)allocate_data(np * np, sizeof(double));
 
 	double* c4_transposed = (double*)allocate_data(np * np, sizeof(double));
@@ -83,7 +86,7 @@ void do_transpose(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_windo
 	flush_cache_openMP();
 
 	LSB_Res();
-	kernel_doitgen_transpose(nr, nq, np, a_in, a_out, c4);
+	kernel_doitgen_transpose(nr, nq, np, a_in, a_out, c4_transposed);
 	LSB_Rec(0);
 
 
@@ -108,7 +111,7 @@ void do_transpose_local_sum(uint64_t nr, uint64_t nq, uint64_t np, uint64_t bloc
 	flush_cache_openMP();
 
 	LSB_Res();
-	kernel_doitgen_transpose_local_sum(nr, nq, np, a_in, sum, c4);
+	kernel_doitgen_transpose_local_sum(nr, nq, np, a_in, sum, c4_transposed);
 	LSB_Rec(0);
 
 
@@ -121,6 +124,7 @@ void do_transpose_local_sum(uint64_t nr, uint64_t nq, uint64_t np, uint64_t bloc
 void do_blocking(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
 	double* a_in = (double*)allocate_data(nr * nq * np, sizeof(double));
 	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
+	memset(a_out, 0, nr * nq * np * sizeof(double));
 	double* c4 = (double*)allocate_data(np * np, sizeof(double));
 
 	init_array(nr, nq, np, a_in, c4);
@@ -139,6 +143,7 @@ void do_blocking(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window
 void do_inverted_loop(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
 	double* a_in = (double*)allocate_data(nr * nq * np, sizeof(double));
 	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
+	memset(a_out, 0, nr * nq * np * sizeof(double));
 	double* c4 = (double*)allocate_data(np * np, sizeof(double));
 
 	init_array(nr, nq, np, a_in, c4);
@@ -177,6 +182,7 @@ void do_inverted_loop_local_sum(uint64_t nr, uint64_t nq, uint64_t np, uint64_t 
 void do_inverted_loop_blocking(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
 	double* a_in = (double*)allocate_data(nr * nq * np, sizeof(double));
 	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
+	memset(a_out, 0, nr * nq * np * sizeof(double));
 	double* c4 = (double*)allocate_data(np * np, sizeof(double));
 
 	init_array(nr, nq, np, a_in, c4);
@@ -195,6 +201,7 @@ void do_inverted_loop_blocking(uint64_t nr, uint64_t nq, uint64_t np, uint64_t b
 void do_inverted_loop_avx2(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
 	double* a_in = (double*)allocate_data(nr * nq * np, sizeof(double));
 	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
+	memset(a_out, 0, nr * nq * np * sizeof(double));
 	double* c4 = (double*)allocate_data(np * np, sizeof(double));
 
 	init_array(nr, nq, np, a_in, c4);

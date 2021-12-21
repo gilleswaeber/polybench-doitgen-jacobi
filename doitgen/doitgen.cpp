@@ -127,14 +127,14 @@ void kernel_doitgen_polybench_parallel(uint64_t nr, uint64_t nq, uint64_t np,
 		for (uint64_t q = 0; q < nq; q++) {
 
 			for (uint64_t p = 0; p < np; p++) {
-				sum[p] = 0;
+				sum[omp_get_thread_num() * np + p] = 0;
 				for (uint64_t s = 0; s < np; s++) {
-					sum[p] += A(r, q, s) * C4(s, p);
+					sum[omp_get_thread_num() * np + p] += A(r, q, s) * C4(s, p);
 				}
 			}
 
 			for (uint64_t p = 0; p < np; p++) {
-				A(r, q, p) = sum[p];
+				A(r, q, p) = sum[omp_get_thread_num() * np + p];
 			}
 		}
 
@@ -219,7 +219,7 @@ void kernel_doitgen_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 					for (uint64_t qq = q; qq < q + blocking_window; ++qq) {
 						for (uint64_t pp = p; pp < p + blocking_window; ++pp) {
 							for (uint64_t kk = k; kk < k + blocking_window; ++kk) {
-								A_OUT(r, q, pp) += A_IN(r, q, kk) * C4(kk, pp);
+								A_OUT(r, qq, pp) += A_IN(r, qq, kk) * C4(kk, pp);
 							}
 						}
 					}

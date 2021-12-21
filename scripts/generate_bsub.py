@@ -4,7 +4,6 @@ threads = [1, 2, 4, 8, 16, 32, 48]
 benchmarks_seq = ["polybench"]
 
 benchmarks_non_blocking = [
-    "polybench_parallel",
     "polybench_parallel_local_sum",
     "transpose",
     "inverted_loop",
