@@ -82,6 +82,7 @@ uint64_t kernel_doitgen_mpi_write_2(uint64_t nr, uint64_t nq, uint64_t np, const
 uint64_t kernel_doitgen_mpi_write_3(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
 uint64_t kernel_doitgen_mpi_write_4(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
 
+
 //////////////////////////////////// MPI UTILS /////////////////////
 
 std::string get_overall_file_name(char** argv, uint64_t num_processor);

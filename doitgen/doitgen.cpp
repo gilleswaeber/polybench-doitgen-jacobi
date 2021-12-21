@@ -1072,6 +1072,7 @@ uint64_t kernel_doitgen_mpi_write_4(uint64_t nr, uint64_t nq, uint64_t np, const
 	return elapsed;
 }
 
+
 //https://pages.tacc.utexas.edu/~eijkhout/pcse/html/mpi-io.html
 //https://cvw.cac.cornell.edu/parallelio/fileviewex
 uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
