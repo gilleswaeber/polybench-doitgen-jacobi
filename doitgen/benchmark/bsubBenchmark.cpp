@@ -101,7 +101,7 @@ int main(int argc, char** argv) {
 	const std::string benchmark_type = argv[2];
 	const std::string sub_type = argv[3];
 
-	const std::string benchmark_name = "bsub_benchmark_" + benchmark_type + "_" + std::to_string(id);
+	const std::string benchmark_name = "bsub_benchmark_" + benchmark_type + "_" + sub_type + "_" +  std::to_string(id);
 
 	MPI::Init();
 	LSB_Init(benchmark_name.c_str(), 0);
