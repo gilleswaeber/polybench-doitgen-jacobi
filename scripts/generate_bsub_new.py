@@ -30,12 +30,9 @@ threads_scaling = [
 ]
 
 benchmarks = [
-    "polybench_parallel_local_sum",
     "transpose",
     "inverted_loop",
-    "inverted_loop_local_sum",
     "inverted_loop_avx2",
-    "inverted_loop_avx2_local_sum",
     "transpose_local_sum",
 ]
 
@@ -44,9 +41,6 @@ benchmarks_blocking = ["inverted_loop_blocking"]
 benchmarks_scaling = [
     "inverted_loop",
     "inverted_loop_avx2",
-    "inverted_loop_avx2_local_sum",
-    "inverted_loop_local_sum",
-    "polybench_parallel_local_sum",
     "transpose_local_sum",
 ]
 
