@@ -71,24 +71,24 @@ START_TEST(test_doitgen)
 	double* c4 	= (double*) allocate_data(np * np, sizeof(double));
 	//double* c4_transposed = (double*)allocate_data(np * np, sizeof(double));
 
-	//double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
+	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
 
 	init_array(nr, nq, np, a_in, c4);
 	//copy_array(a_in, a_out, nr, nq, np);
 
 	memset(sum, 0, np * omp_get_max_threads() * sizeof(double));
 	//transpose(c4, c4_transposed, np, np);
-	//memset(a_out, 0, nr * np * nq * sizeof(double));
+	memset(a_out, 0, nr * np * nq * sizeof(double));
 	
 	flush_cache_openMP();
 	auto t1 = std::chrono::high_resolution_clock::now();
-	kernel_doitgen_inverted_loop_local_sum_1D(nr, nq, np, a_in, sum, c4);
+	kernel_doitgen_inverted_loop_avx2(nr, nq, np, a_in, a_out, c4);
 	auto t2 = std::chrono::high_resolution_clock::now();
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
 	std::cout << "Parallel time : " << ms_int.count() << std::endl;
 
-	bool result = compare_results(nr, nq, np, a_in, a_test);
+	bool result = compare_results(nr, nq, np, a_out, a_test);
 	ck_assert_msg(result, "results must match!");
 
 	cleanup(a_test);
@@ -96,7 +96,7 @@ START_TEST(test_doitgen)
 	cleanup(sum);
 	cleanup(c4);
 	//cleanup(c4_transposed);
-	//cleanup(a_out);
+	cleanup(a_out);
 
 }
 END_TEST
