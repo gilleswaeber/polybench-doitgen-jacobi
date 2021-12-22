@@ -8,26 +8,18 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
 set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
 
-
-set(
-    JACOBI_TEST_SRC
-    "main.cpp"
-)
-
-target_include_directories(dphpc_lib
-        PUBLIC "../../"
-        )
+target_include_directories(dphpc_lib PUBLIC "../../")
 
 find_library(SUBUNIT_LIB subunit)
 
-add_executable(jacobi-check "check_output.cpp")
-target_link_libraries(jacobi-check PUBLIC dphpc_lib check m rt pthread)
+add_executable(jacobi1d-check "check1d.cpp")
+add_executable(jacobi1d-mpi-test "mpi.cpp")
+add_executable(jacobi2d-mpi-test "mpi2d.cpp")
+target_link_libraries(jacobi1d-check PUBLIC dphpc_lib check m rt pthread)
+target_link_libraries(jacobi1d-mpi-test PUBLIC dphpc_lib dphpc_lib_utils)
+target_link_libraries(jacobi2d-mpi-test PUBLIC dphpc_lib dphpc_lib_utils)
 
 if(SUBUNIT_LIB)
-    add_executable(dphpc-jacobi-test ${JACOBI_TEST_SRC})
-    add_executable(dphpc-jacobi-mpi-test "mpi.cpp")
+    add_executable(dphpc-jacobi-test "main.cpp")
     target_link_libraries(dphpc-jacobi-test PUBLIC dphpc_lib dphpc_lib_utils check m rt pthread subunit)
-    target_link_libraries(dphpc-jacobi-mpi-test PUBLIC dphpc_lib dphpc_lib_utils check m rt pthread)
 endif()
-
-

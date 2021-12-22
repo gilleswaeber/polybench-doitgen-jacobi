@@ -1,5 +1,4 @@
 #include <iostream>
-#include <check.h>
 #include <ctime>
 #include <vector>
 #include <utils/utils.hpp>
@@ -7,6 +6,7 @@
 #include <mpi.h>
 
 #include "jacobi_1D.hpp"
+#include "jacobi1d_mpi.hpp"
 
 struct Case {
     int n;

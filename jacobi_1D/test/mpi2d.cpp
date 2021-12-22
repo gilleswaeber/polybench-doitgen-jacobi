@@ -6,8 +6,8 @@
 #include <chrono>
 #include <unistd.h>
 
-#include "jacobi_1D.hpp"
-#include "jacobi1d_mpi.hpp"
+#include "jacobi2d.hpp"
+#include "jacobi2d_mpi.hpp"
 
 struct Case {
     int n;
@@ -17,16 +17,10 @@ struct Case {
 
 int main() {
     std::vector<Case> cases = {
-            {1'000, 100, 1},
-            {10'000, 200, 1},
-            {10'000, 200, 8},
-            {10'000, 200, 32},
-            {100'000, 500, 1},
-            {100'000, 500, 8},
-            {100'000, 500, 32},
-            {500'000, 1'000, 1},
-            {500'000, 1'000, 8},
-            {500'000, 1'000, 32},
+            {100, 100, 1},
+            {1'000, 200, 1},
+            {1'000, 200, 8},
+            {1'000, 200, 32},
     };
 	MPI_Init(nullptr, nullptr);
 
@@ -39,12 +33,12 @@ int main() {
     for (const auto & c : cases) {
         if (rank == 0) std::cout << "Testing with n=" << c.n << ", time_steps=" << c.time_steps << ", sync_steps=" << c.sync_steps << "\n";
 
-        std::vector<double> A_seq(c.n);
+        Array2dR A_seq(c.n, c.n);
         if (rank == 0) {
-            init_1d_array(c.n, A_seq.data());
+            init_2d_array(c.n, A_seq);
             flush_cache();
             auto begin = std::chrono::high_resolution_clock::now();
-            kernel_jacobi_1d_imper(c.time_steps, c.n, A_seq.data());
+            jacobi_2d_reference(c.time_steps, c.n, A_seq);
             auto end = std::chrono::high_resolution_clock::now();
             auto time_spent = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
             std::cout << "  Sequential time : " << time_spent << "ms" << std::endl;
@@ -56,15 +50,15 @@ int main() {
             MPI_Barrier(MPI_COMM_WORLD);
             auto begin = std::chrono::high_resolution_clock::now();
             //MpiParams(int rank, int num_proc, int ghost_cells, const char* output_file)
-            jacobi_1d_imper_mpi(c.time_steps, c.n, {rank, i, c.sync_steps, temp_file});
+            jacobi_2d_mpi(c.time_steps, c.n, {rank, i, c.sync_steps, temp_file});
             auto end = std::chrono::high_resolution_clock::now();
             auto time_spent = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
 
             if (rank == 0) {
-                std::vector<double> A_mpi(c.n);
-                read_results_file(c.n, temp_file, A_mpi.data());
+                Array2dR A_mpi(c.n, c.n);
+                A_mpi.readFile(temp_file);
                 std::cout << "  Compare with reference implementation\n";
-                if (!compare_results(c.n, A_seq.data(), A_mpi.data())) {
+                if (!A_seq.compareTo(A_mpi)) {
                     std::cout << "  ! INVALID RESULTS !\n";
                 };
                 std::cout << "  MPI with " << i << " processes : " << time_spent << "ms" << std::endl;

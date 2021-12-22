@@ -1,8 +1,10 @@
 build/
 cmake_*/
+cmake-*/
 .vs/
 .idea/
 CMakePresets.json
+/1*
 
 lsb.*.r*
 

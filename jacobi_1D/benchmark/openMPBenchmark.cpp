@@ -31,7 +31,7 @@ int main() {
     LSB_Set_Rparam_int("threads", threads[0]);
 
     for (uint64_t i = 0; i < RUNS; ++i) {
-        init_array(n, A.data());
+        init_1d_array(n, A.data());
 
         LSB_Res();
         kernel_jacobi_1d_imper(time_steps, n, A.data());
@@ -45,7 +45,7 @@ int main() {
         LSB_Set_Rparam_int("threads", threads[i]);
 
         for (uint64_t j = 0; j < RUNS; ++j) {
-            init_array(n, A_par.data());
+            init_1d_array(n, A_par.data());
 
             LSB_Res();
             kernel_jacobi_1d_imper_par(time_steps, n, A_par.data());
@@ -60,7 +60,7 @@ int main() {
         LSB_Set_Rparam_int("threads", threads[i]);
 
         for (uint64_t j = 0; j < RUNS; ++j) {
-            init_array(n, A_barrier.data());
+            init_1d_array(n, A_barrier.data());
 
             LSB_Res();
             kernel_jacobi_1d_imper_barrier(time_steps, n, A_barrier.data());

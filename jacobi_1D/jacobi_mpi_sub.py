@@ -1,6 +1,8 @@
 import argparse
 from typing import List, TextIO
 
+import sys
+
 EXECUTABLE = './build/jacobi_1D/benchmark/dphpc-jacobi-mpi-benchmark'
 final_executable = 'python ./jacobi_1D/jacobi_mpi_collect.py'
 script_header = '''#!/bin/bash
@@ -8,9 +10,14 @@ script_header = '''#!/bin/bash
 set -euo pipefail
 
 module purge  # clear active modules
-module load new gcc/6.3.0 open_mpi/3.0.0 cmake/3.13.5 python/3.7.1
+#module load new gcc/6.3.0 open_mpi/3.0.0 cmake/3.13.5 python/3.7.1  # old stack
+module load gcc/9.3.0 openmpi/4.0.2 python/3.6.5 cmake/3.20.3
 set -x
-now=$(date +%m%d%H%M)
+now=$(date +%m%d%H%M%S)
+'''
+lsb_setup = '''
+LSB_OUTPUT_FORMAT=efficient
+export LSB_OUTPUT_FORMAT
 '''
 script_footer = ''
 
@@ -36,7 +43,7 @@ def parse_args():
                         type=argparse.FileType('wt', encoding='utf-8'))
     parser.add_argument('--n',
                         help='base size of the array, multiplied by the number of cores',
-                        default=10_000_000,
+                        default=1_000_000,
                         type=int)
     parser.add_argument('--time-steps',
                         help='number of iterations',
@@ -68,24 +75,31 @@ def parse_args():
     parser.add_argument('--alt',
                         help='use an alternative version of the executable',
                         dest='alternative')
+    parser.add_argument('--lsb',
+                        help='add environment variables and commands for libLSB',
+                        action='store_true',
+                        dest='with_lsb')
     parser.add_argument('--bsub-cpu')
     args = parser.parse_args()
     return args
 
 
 def generate_jacobi_mpi_sub(*, runs: int, total_cores: int, cores_step: int, output: TextIO, n: int, time_steps: int,
-                            ghost_cells: List[int], do_cleanup: bool, do_final: bool, send_email: bool, minutes: int,
-                            cd: str = None, alternative: str = None, bsub_cpu: str = None):
+                            ghost_cells: List[int], do_cleanup: bool, do_final: bool, send_email: bool, with_lsb: bool,
+                            minutes: int, cd: str = None, alternative: str = None, bsub_cpu: str = None):
     assert runs >= 1
     output_dir = "output/$now"
     executable = EXECUTABLE if alternative is None else f"{EXECUTABLE}-{alternative}"
     with output as f:
         f.write(script_header)
+        f.write(f"echo 'Script arguments: {' '.join(sys.argv[1:])}'\n")
+        if with_lsb:
+            f.write(lsb_setup)
         if cd is not None:
             f.write(f"""cd "{cd}"\n""")
         f.write(f"mkdir -p {output_dir}\n")
         f.write(f"chmod u+x mpi_time.sh\n")
-        num_cores = [1] + list(range(2, total_cores + 1, cores_step))
+        num_cores = [1] + list(range(cores_step, total_cores + 1, cores_step))
         job_base_name = f"jacobi1d_n{n}t{time_steps}"
         bsub_flags = f"-n {total_cores} -o {output_dir}'/{job_base_name}J' -J {job_base_name} -W {minutes}"
         if bsub_cpu is not None:
@@ -94,21 +108,21 @@ def generate_jacobi_mpi_sub(*, runs: int, total_cores: int, cores_step: int, out
             bsub_flags += " -N"
         f.write(f"bsub {bsub_flags} <<EOF\n")
         f.write(f"set -x\n")
-        for cores in reversed(num_cores):
-            for g in ghost_cells:
-                job_name = f"{job_base_name}g{g}c{cores}"
-                if alternative is not None:
-                    job_name += f"v{alternative}"
-                job_log = f"{output_dir}/{job_name}"
-                dest_base = f"$SCRATCH/${{now}}_{job_name}_r"
-                for i in range(runs):
-                    dest = f"{dest_base}{i}"
+        for i in range(runs):  # runs in the outer loop to improve stability
+            for cores in reversed(num_cores):
+                for g in ghost_cells:
+                    job_name = f"{job_base_name}g{g}c{cores}"
+                    if alternative is not None:
+                        job_name += f"v{alternative}"
+                    job_log = f"{output_dir}/{job_name}"
+                    dest = f"$SCRATCH/${{now}}_{job_name}_r{i}"
                     time_cmd = f"mpi_time.sh {job_log}r{i}t"
                     job = f"mpirun -np {cores} {time_cmd} {executable} {n} {time_steps} {g} {dest}\n"
                     f.write(job)
-                if do_cleanup:
-                    cleanup_job = f"rm {dest_base}*\n"
-                    f.write(cleanup_job)
+                    if do_cleanup:
+                        f.write(f"rm {dest}\n")
+            if with_lsb:
+                f.write(f"mv -t {output_dir} lsb.*\n")
 
         if do_final:
             final_job = f"{final_executable} {output_dir}\n"
