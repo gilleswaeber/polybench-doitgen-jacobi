@@ -39,9 +39,8 @@ benchmarks = [
 benchmarks_blocking = ["inverted_loop_blocking"]
 
 benchmarks_scaling = [
-    "inverted_loop",
-    "inverted_loop_avx2",
-    "transpose_local_sum",
+    "inverted_loop_local_sum_1D",
+    "inverted_loop_avx2_local_sum_1D",
 ]
 
 benchmarks_local_sum_1D = [
