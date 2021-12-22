@@ -44,6 +44,11 @@ benchmarks_scaling = [
     "transpose_local_sum",
 ]
 
+benchmarks_local_sum_1D = [
+    "inverted_loop_local_sum_1D",
+    "inverted_loop_avx2_local_sum_1D",
+]
+
 NR = 512
 NQ = 512
 NP = 512
@@ -112,6 +117,26 @@ def main():
                     + str(k)
                     + "\n"
                 )
+
+    result_1D = ""
+    for i in range(len(benchmarks_local_sum_1D)):
+        for j in range(len(threads)):
+            for k in range(RUNS):
+                result_1D += (
+                    "../dphpc-doitgen-openmp-benchmark "
+                    + benchmarks_local_sum_1D[i]
+                    + " "
+                    + str(NR)
+                    + " "
+                    + str(NQ)
+                    + " "
+                    + str(NP)
+                    + " "
+                    + str(threads[j])
+                    + " "
+                    + str(k)
+                    + "\n"
+                )
     script_file = open("bsub_classic.sh", "w")
     script_file.write(result_clasic)
     script_file.close()
@@ -122,6 +147,10 @@ def main():
 
     script_file = open("bsub_scaling.sh", "w")
     script_file.write(result_scaling)
+    script_file.close()
+
+    script_file = open("bsub_1D.sh", "w")
+    script_file.write(result_1D)
     script_file.close()
 
 
