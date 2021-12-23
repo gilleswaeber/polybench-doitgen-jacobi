@@ -18,9 +18,8 @@ struct Case {
 int main() {
     std::vector<Case> cases = {
             {100, 100, 1},
-            {1'000, 200, 1},
-            {1'000, 200, 8},
-            {1'000, 200, 32},
+            {200, 200, 1},
+            {1'000, 300, 1},
     };
 	MPI_Init(nullptr, nullptr);
 

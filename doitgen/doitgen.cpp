@@ -320,7 +320,7 @@ void kernel_doitgen_inverted_loop_avx2(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_out,
 	double* c4
 ) {
-
+#if false
 	#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 
@@ -338,7 +338,7 @@ void kernel_doitgen_inverted_loop_avx2(uint64_t nr, uint64_t nq, uint64_t np,
 			}
 		}
 	}
-
+#endif
 }
 
 void kernel_doitgen_inverted_loop_avx2_local_sum(uint64_t nr, uint64_t nq, uint64_t np,
@@ -346,7 +346,7 @@ void kernel_doitgen_inverted_loop_avx2_local_sum(uint64_t nr, uint64_t nq, uint6
 	double* sum,
 	double* c4
 ) {
-
+#if false
 #pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 
@@ -366,7 +366,7 @@ void kernel_doitgen_inverted_loop_avx2_local_sum(uint64_t nr, uint64_t nq, uint6
 		memcpy(&A_IN(r, 0, 0), &SUM(omp_get_thread_num(), 0, 0), nq * np * sizeof(double));
 		memset(&SUM(omp_get_thread_num(), 0, 0), 0, nq * np * sizeof(double));
 	}
-
+#endif
 }
 
 void kernel_doitgen_inverted_loop_avx2_local_sum_1D(uint64_t nr, uint64_t nq, uint64_t np,
@@ -374,7 +374,7 @@ void kernel_doitgen_inverted_loop_avx2_local_sum_1D(uint64_t nr, uint64_t nq, ui
 	double* sum,
 	double* c4
 ) {
-
+#if false
 #pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 
@@ -394,7 +394,7 @@ void kernel_doitgen_inverted_loop_avx2_local_sum_1D(uint64_t nr, uint64_t nq, ui
 			memset(&(sum[omp_get_thread_num() * np]), 0, np * sizeof(double));
 		}
 	}
-
+#endif
 }
 
 

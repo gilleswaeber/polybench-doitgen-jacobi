@@ -3,6 +3,7 @@
 #include <vector>
 #include <ostream>
 #include <fstream>
+#include <cassert>
 #include "jacobi_1D.hpp"
 
 struct Array2dR {
@@ -11,6 +12,7 @@ struct Array2dR {
     Array2dR(int rows, int cols) : rows{rows}, cols{cols}, data(rows * cols) {}
     inline double& operator()(int row, int col) { return at(row, col); }
     inline const double& operator()(int row, int col) const { return at(row, col); }
+    inline double* row(int r) { return data.data() + r * cols; }
 
     void readFile(const char* filePath) const {
         std::ifstream fs{filePath, std::ios::binary | std::ios::in | std::ios::ate};  // ate: seek to end
@@ -51,22 +53,22 @@ struct Array2dR {
         return errors == 0;
     }
 private:
-    inline const double& at(int row, int col) const { return data[row * rows + col]; }
-    inline double& at(int row, int col) { return data[row * rows + col]; }
+    inline const double& at(int row, int col) const { return data[row * cols + col]; }
+    inline double& at(int row, int col) { return data[row * cols + col]; }
     std::vector<double> data;
 };
 
 void init_2d_array(int n, Array2dR &A) {
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            A(i, j) = ((double) i * (j + 2) + 2) / n;
+    for (int r = 0; r < n; r++) {
+        for (int c = 0; c < n; c++) {
+            A(r, c) = ((double) r * (c + 2) + 2) / n;
         }
     }
 }
 void init_2d_array(int n, int firstRow, int firstCol, int rows, int cols, Array2dR &A) {
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
-            A(i, j) = ((double) (firstRow + i) * ((firstCol + j) + 2) + 2) / n;
+    for (int r = 0; r < rows; ++r) {
+        for (int c = 0; c < cols; ++c) {
+            A(r, c) = ((double) (firstRow + r) * ((firstCol + c) + 2) + 2) / n;
         }
     }
 }

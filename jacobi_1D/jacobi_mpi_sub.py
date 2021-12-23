@@ -1,4 +1,5 @@
 import argparse
+import math
 from typing import List, TextIO
 
 import sys
@@ -20,6 +21,8 @@ LSB_OUTPUT_FORMAT=efficient
 export LSB_OUTPUT_FORMAT
 '''
 script_footer = ''
+# SCRATCH_DIR = '$SCRATCH'
+SCRATCH_DIR = r'\$TMPDIR'
 
 
 def parse_args():
@@ -90,23 +93,35 @@ def generate_jacobi_mpi_sub(*, runs: int, total_cores: int, cores_step: int, out
     assert runs >= 1
     output_dir = "output/$now"
     executable = EXECUTABLE if alternative is None else f"{EXECUTABLE}-{alternative}"
+    is_2d = (alternative is not None and '2d' in alternative)
     with output as f:
         f.write(script_header)
-        f.write(f"echo 'Script arguments: {' '.join(sys.argv[1:])}'\n")
         if with_lsb:
             f.write(lsb_setup)
         if cd is not None:
             f.write(f"""cd "{cd}"\n""")
         f.write(f"mkdir -p {output_dir}\n")
         f.write(f"chmod u+x mpi_time.sh\n")
-        num_cores = [1] + list(range(cores_step, total_cores + 1, cores_step))
+        if is_2d:
+            num_cores = [i ** 2 for i in range(1, int(math.sqrt(total_cores)) + 1)]
+            total_cores = num_cores[-1]
+        else:
+            num_cores = [1] + list(range(cores_step, total_cores + 1, cores_step))
         job_base_name = f"jacobi1d_n{n}t{time_steps}"
         bsub_flags = f"-n {total_cores} -o {output_dir}'/{job_base_name}J' -J {job_base_name} -W {minutes}"
+        # reserved scratch disk space in MB, multiplied by the number of cores
+        if is_2d:
+            bsub_flags += f" -R 'rusage[scratch={8 * n * n // 1_000_000 + 10}]'"
+        else:
+            bsub_flags += f" -R 'rusage[scratch={8 * n // 1_000_000 + 10}]'"
         if bsub_cpu is not None:
             bsub_flags += f" -R 'select[model=={bsub_cpu}]'"
         if send_email:
             bsub_flags += " -N"
         f.write(f"bsub {bsub_flags} <<EOF\n")
+        f.write(f"echo 'Script arguments: {' '.join(sys.argv[1:])}'\n")
+        if is_2d:
+            f.write(f"echo 'Jacobi2D detected'\n")
         f.write(f"set -x\n")
         for i in range(runs):  # runs in the outer loop to improve stability
             for cores in reversed(num_cores):
@@ -115,7 +130,7 @@ def generate_jacobi_mpi_sub(*, runs: int, total_cores: int, cores_step: int, out
                     if alternative is not None:
                         job_name += f"v{alternative}"
                     job_log = f"{output_dir}/{job_name}"
-                    dest = f"$SCRATCH/${{now}}_{job_name}_r{i}"
+                    dest = f"{SCRATCH_DIR}/${{now}}_{job_name}_r{i}"
                     time_cmd = f"mpi_time.sh {job_log}r{i}t"
                     job = f"mpirun -np {cores} {time_cmd} {executable} {n} {time_steps} {g} {dest}\n"
                     f.write(job)
