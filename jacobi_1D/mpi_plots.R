@@ -45,7 +45,7 @@ rank_data_compute <- CalculateDataSummary(data=rank_data, measurevar="compute_ti
 
 ggplot(data=ghost_runs_data, aes(x=cores, y=median/1000, group=ghost_cells, color=factor(ghost_cells), linetype=factor(ghost_cells))) +
   scale_color_hue() +
-  scale_y_continuous("time [ms]") +
+  scale_y_continuous("time [ms]", limits = c(0, NA)) +
   scale_x_continuous(name="cores", breaks=ghost_runs_data$cores) +
   geom_point() +
   geom_line() +
@@ -53,7 +53,7 @@ ggplot(data=ghost_runs_data, aes(x=cores, y=median/1000, group=ghost_cells, colo
 
 ggplot(data=runs_data, aes(x=cores, y = median/1000, ymin=CI.NNorm.high/1000, ymax=CI.NNorm.low/1000)) +
   #geom_hline(yintercept=overall_data_summary[26, "median"], linetype="dashed", color = "red") +
-  scale_y_continuous(name="time [ms]") +
+  scale_y_continuous(name="time [ms]", limits = c(0, NA)) +
   scale_x_continuous(name="processes", breaks=runs_data$cores) +
   geom_point() +
   geom_line(aes(color="total"), size=1.5) +
@@ -69,7 +69,7 @@ ggplot(data=rank_data_compute, aes(x=rank, y=median/1e6, fill=factor(rank %% 8))
 
 ggplot(data=runs2d_data, aes(x=cores, y = median/1000, ymin=CI.NNorm.high/1000, ymax=CI.NNorm.low/1000)) +
   #geom_hline(yintercept=overall_data_summary[26, "median"], linetype="dashed", color = "red") +
-  scale_y_continuous(name="time [ms]") +
+  scale_y_continuous(name="time [ms]", limits = c(0, NA)) +
   scale_x_continuous(name="processes", breaks=runs2d_data$cores) +
   geom_point() +
   geom_line(aes(color="total"), size=1.5) +
