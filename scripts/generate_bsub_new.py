@@ -33,14 +33,26 @@ benchmarks = [
     "transpose",
     "inverted_loop",
     "inverted_loop_avx2",
+    "inverted_loop_local_sum",
     "transpose_local_sum",
+    "polybench_parallel_local_sum",
+    "inverted_loop_local_sum_1D",
+    "inverted_loop_avx2_local_sum_1D",
+    "inverted_loop_avx2_local_sum"
 ]
 
 benchmarks_blocking = ["inverted_loop_blocking"]
 
 benchmarks_scaling = [
+    "transpose",
+    "inverted_loop",
+    "inverted_loop_avx2",
+    "inverted_loop_local_sum",
+    "transpose_local_sum",
+    "polybench_parallel_local_sum",
     "inverted_loop_local_sum_1D",
     "inverted_loop_avx2_local_sum_1D",
+    "inverted_loop_avx2_local_sum"
 ]
 
 benchmarks_local_sum_1D = [
@@ -148,9 +160,9 @@ def main():
     script_file.write(result_scaling)
     script_file.close()
 
-    script_file = open("bsub_1D.sh", "w")
+    """script_file = open("bsub_1D.sh", "w")
     script_file.write(result_1D)
-    script_file.close()
+    script_file.close()"""
 
 
 if __name__ == "__main__":
