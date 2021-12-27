@@ -48,9 +48,11 @@ bool compare_results(uint64_t nr, uint64_t nq, uint64_t np, double* expected, do
 		for (uint64_t q = 0; q < nq; ++q) {
 			for (uint64_t p = 0; p < np; ++p) {
 				//bool test = std::abs(A[r][q][p] - A_par[r][q][p]) < std::numeric_limits<double>::epsilon();
-				bool test = std::abs(ARR_3D(expected, nr, nq, np, r, q, p) - ARR_3D(actual, nr, nq, np, r, q, p)) < std::numeric_limits<double>::epsilon();
-				if (!test) {
-					//std::cout << "ERR : exp = " << ARR_3D(a, nr, nq, np, r, q, p) << ", got = " << ARR_3D(a_par, nr, nq, np, r, q, p) << std::endl;
+				double sub_result = std::abs(ARR_3D(expected, nr, nq, np, r, q, p) - ARR_3D(actual, nr, nq, np, r, q, p));
+				bool test = sub_result < 0.000001; //std::numeric_limits<double>::epsilon();
+				if (test == false) {
+					//std::cout << "ERR : exp = " << ARR_3D(expected, nr, nq, np, r, q, p) << ", got = " << ARR_3D(actual, nr, nq, np, r, q, p) << " gives " << sub_result << std::endl;
+					//std::cout << "epsilon = " << std::numeric_limits<double>::epsilon() << std::endl;
 					result = false;
 				}
 			}
@@ -58,9 +60,9 @@ bool compare_results(uint64_t nr, uint64_t nq, uint64_t np, double* expected, do
 	}
 
 	if (result == false) {
-		std::cout << "expected:" << std::endl;
+		std::cout << "expected: " << std::endl;
 		std::cout << print_array3D(expected, nr, nq, np) << std::endl;
-		std::cout << "actual:" << std::endl;
+		std::cout << "actual: " << std::endl;
 		std::cout << print_array3D(actual, nr, nq, np) << std::endl;
 	}
 

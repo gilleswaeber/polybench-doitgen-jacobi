@@ -20,14 +20,16 @@ struct problem_instance_t {
 };
 
 const static uint64_t num_processor = 8;
-const static uint64_t PROBLEM_SIZE_N = 5;
+const static uint64_t PROBLEM_SIZE_N = 7;
 
 const static problem_size_t problem_sizes[] = {
 	{1, 10, 10},
 	{10, 10, 10},
 	{32, 32, 32},
 	{64, 64, 64},
+	{10, 5, 5},
 	{64, 128, 128},
+	{256, 512, 512}
 	//{512, 512, 512}
 	//{256, 256, 256},
 	//{257, 257, 257}//,

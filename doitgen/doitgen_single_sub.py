@@ -128,7 +128,7 @@ def main():
 
     args = parse_args()
 
-    cores = range(0, args.n + 1, 8)
+    cores = range(0, args.n + 1, 2)
     result = "#!/bin/bash \n" 
 
     if (args.is_home == 0):

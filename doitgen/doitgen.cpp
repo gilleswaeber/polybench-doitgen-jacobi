@@ -1182,14 +1182,29 @@ uint64_t kernel_doitgen_mpi_write_4(uint64_t nr, uint64_t nq, uint64_t np, const
 	return elapsed;
 }
 
+#define ARR_3D_UTILS(ARRAY, X_DIM, Y_DIM, Z_DIM, X, Y, Z) \
+	(ARRAY[ ((Z_DIM) * (Y_DIM) * (X)) + ((Z_DIM) * (Y)) + (Z) ])
 
-
+std::string print_array3D2(double* arr, uint64_t nr, uint64_t nq, uint64_t np) {
+	std::string result = "";
+	result += "################### 3D array bellow ######################\n";
+	for (uint64_t i = 0; i < nr; i++) {
+		for (uint64_t j = 0; j < nq; j++) {
+			for (uint64_t k = 0; k < np; k++) {
+				result += std::to_string(ARR_3D_UTILS(arr, nr, nq, np, i, j, k)) + " ";
+			}
+			result += "\n";
+		}
+		result += "-------------------------------------\n";
+	}
+	return result;
+}
 
 //https://pages.tacc.utexas.edu/~eijkhout/pcse/html/mpi-io.html
 //https://cvw.cac.cornell.edu/parallelio/fileviewex
 uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
 
-	const uint64_t slices_per_batch = 1;
+	const uint64_t slices_per_batch = 64;
 	int num_proc, rank;
 	double* a = 0;
 	double* sum = 0;
@@ -1213,31 +1228,36 @@ uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char
 
 		LSB_Res();
 		init_A_slice_batch(nq, np, a, r, r + slices_per_batch);
+		//std::cout << print_array3D2(a, slices_per_batch, nq, np) << std::endl;
 		LSB_Rec(0);
 
-		LSB_Res();
+		
 
-		for (uint64_t rb = r; rb < r + slices_per_batch; rb ++) {
-
+		for (uint64_t rb = 0; rb < slices_per_batch; rb++) {
+			
+			LSB_Res();
 			// - 2.2 batch eexecute kernel on slice
 			for (q = 0; q < nq; q++) {
 
 				for (p = 0; p < np; p++) {
 					sum[p] = 0;
 					for (s = 0; s < np; s++) {
-						sum[p] += ARR_3D(a, slices_per_batch, nq, np, rb - r, q, p) * C4(s, p);
+						sum[p] += ARR_3D(a, slices_per_batch, nq, np, rb, q, s) * C4(s, p);
+						//ARR_3D(a, i_upper - i_lower, nq, np, i - i_lower, j, k)
 						//sum[p] += A_SLICE(q, s) * C4(s, p); //a[q * np + p] * c4[s * np + p];
 					}
 				}
 
 				for (p = 0; p < np; p++) {
-					ARR_3D(a, slices_per_batch, nq, np, rb - r, q, p) = sum[p];
+					ARR_3D(a, slices_per_batch, nq, np, rb, q, p) = sum[p];
 					//A_SLICE(q, p) = sum[p];
 				}
 			}
 
+			LSB_Rec(1);
+
 		}
-		LSB_Rec(1);
+		
 
 		LSB_Res();
 		// 2.3 write A to the result file
@@ -1261,13 +1281,14 @@ uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char
 //https://cvw.cac.cornell.edu/parallelio/fileviewex
 uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
 
+	const uint64_t slices_per_batch = 64;
 	int num_proc, rank;
 	double* a = 0;
 	double* sum = 0;
 	double* c4 = 0;
 	uint64_t l = 0, u = 0;
 
-	doitgen_kernel_mpi_init(nr, nq, np, &num_proc, &rank, &a, &sum, &c4, &l, &u);
+	doitgen_kernel_mpi_init(nr, nq, np, &num_proc, &rank, &a, &sum, &c4, &l, &u, slices_per_batch);
 
 	uint64_t r = 0, q = 0, p = 0, s = 0;
 	MPI_File file;
@@ -1282,6 +1303,7 @@ uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, 
 	tranpose_C4(np, c4);
 	LSB_Rec(0);
 
+/*
 	for (r = l; r < u; r++) {
 
 		// - 2.1 init slice of A
@@ -1310,6 +1332,53 @@ uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, 
 
 		LSB_Res();
 		MPI_File_write(file, a, np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
+		LSB_Rec(2);
+	}*/
+
+	for (r = l; r < u; r += slices_per_batch) {
+
+		// - 2.1 init slice of A
+
+		LSB_Res();
+		init_A_slice_batch(nq, np, a, r, r + slices_per_batch);
+		//std::cout << print_array3D2(a, slices_per_batch, nq, np) << std::endl;
+		LSB_Rec(0);
+
+		
+
+		for (uint64_t rb = 0; rb < slices_per_batch; rb++) {
+			
+			LSB_Res();
+			// - 2.2 batch eexecute kernel on slice
+			for (q = 0; q < nq; q++) {
+
+				for (p = 0; p < np; p++) {
+					sum[p] = 0;
+					for (s = 0; s < np; s++) {
+						sum[p] += ARR_3D(a, slices_per_batch, nq, np, rb, q, s) * C4(p, s);
+						//ARR_3D(a, i_upper - i_lower, nq, np, i - i_lower, j, k)
+						//sum[p] += A_SLICE(q, s) * C4(s, p); //a[q * np + p] * c4[s * np + p];
+					}
+				}
+
+				for (p = 0; p < np; p++) {
+					ARR_3D(a, slices_per_batch, nq, np, rb, q, p) = sum[p];
+					//A_SLICE(q, p) = sum[p];
+				}
+			}
+
+			LSB_Rec(1);
+
+		}
+		
+
+		LSB_Res();
+		// 2.3 write A to the result file
+
+		//offset = nq * np * sizeof(double) * r;
+		MPI_File_write(file, a, slices_per_batch * np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
+		//MPI_File_write_at_all(file, offset, a, nq * np, MPI_DOUBLE, MPI_STATUS_IGNORE);
+		
 		LSB_Rec(2);
 	}
 

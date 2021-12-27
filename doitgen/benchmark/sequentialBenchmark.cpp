@@ -45,6 +45,24 @@ void flush_cache_sequential()
 
 //./dphpc-doitgen-sequential-benchmark 128 512 512 (for example)
 
+#define ARR_3D_UTILS(ARRAY, X_DIM, Y_DIM, Z_DIM, X, Y, Z) \
+	(ARRAY[ ((Z_DIM) * (Y_DIM) * (X)) + ((Z_DIM) * (Y)) + (Z) ])
+
+std::string print_array3D3(double* arr, uint64_t nr, uint64_t nq, uint64_t np) {
+	std::string result = "";
+	result += "################### 3D array bellow ######################\n";
+	for (uint64_t i = 0; i < nr; i++) {
+		for (uint64_t j = 0; j < nq; j++) {
+			for (uint64_t k = 0; k < np; k++) {
+				result += std::to_string(ARR_3D_UTILS(arr, nr, nq, np, i, j, k)) + " ";
+			}
+			result += "\n";
+		}
+		result += "-------------------------------------\n";
+	}
+	return result;
+}
+
 int main(int argc, char **argv) {
  
     assert(argc == 6); //program name + 3 sizes
@@ -81,6 +99,7 @@ int main(int argc, char **argv) {
 	memset(c4, 0, np * np);
 
 	init_array_seq(nr, nq, np, a, c4);
+	std::cout << print_array3D3(a, nr, nq, np) << std::endl;
 
 	uint64_t r, q, p, s;
 
