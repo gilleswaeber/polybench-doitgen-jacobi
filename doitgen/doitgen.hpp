@@ -23,11 +23,12 @@ const static uint64_t num_processor = 8;
 const static uint64_t PROBLEM_SIZE_N = 5;
 
 const static problem_size_t problem_sizes[] = {
+	{1, 10, 10},
 	{10, 10, 10},
 	{32, 32, 32},
 	{64, 64, 64},
 	{64, 128, 128},
-	{512, 512, 512}
+	//{512, 512, 512}
 	//{256, 256, 256},
 	//{257, 257, 257}//,
 	//{128, 512, 512},
@@ -76,6 +77,9 @@ void delete_file_if_exists(const char* output_path);
 /////////////////////////////////////// MPI kernels /////////////////
 uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
 uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
+
+uint64_t kernel_doitgen_mpi_io_batch(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
+uint64_t kernel_doitgen_mpi_io_transpose_batch(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
 
 uint64_t kernel_doitgen_mpi_write_1(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);
 uint64_t kernel_doitgen_mpi_write_2(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path);

@@ -12,7 +12,7 @@ struct Case {
     int n;
     int time_steps;
 };
-
+/*
 START_TEST(test_jacobi)
 {
     std::vector<Case> cases = {
@@ -96,7 +96,6 @@ Suite* jacobi_suite(void)
 
 	s = suite_create("Jacobi");
 
-	/* Core test case */
 	tc_core = tcase_create("Core");
 
 	tcase_add_test(tc_core, test_jacobi);
@@ -123,3 +122,6 @@ int main()
     MPI_Finalize();
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
+*/
+
+int main() { return 1; }

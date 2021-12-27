@@ -66,6 +66,32 @@ void init_A_slice(uint64_t nq, uint64_t np, double* a, uint64_t i) {
 
 }
 
+/**
+ * @brief 
+ * 
+ * 
+ * @param nq 
+ * @param np 
+ * @param a 
+ * @param i_lower inclusive
+ * @param i_upper exclusive
+ */
+void init_A_slice_batch(uint64_t nq, uint64_t np, double* a, uint64_t i_lower, uint64_t i_upper) {
+
+	uint64_t j, k;
+
+	for (uint64_t i = i_lower; i < i_upper; i++) {
+		for (j = 0; j < nq; j++) {
+			for (k = 0; k < np; k++) {
+				double result = ((double)i * j + k) / np;
+				//A_SLICE(j, k) = result;
+				ARR_3D(a, i_upper - i_lower, nq, np, i - i_lower, j, k) = result;
+			}
+		}
+	}
+
+}
+
 /* Array initialization. */
 void init_array(uint64_t nr, uint64_t nq, uint64_t np, double* a, double* c4)
 {
@@ -840,6 +866,42 @@ void doitgen_kernel_mpi_init(uint64_t nr, uint64_t nq, uint64_t np, int* num_pro
 	}
 }
 
+void doitgen_kernel_mpi_init(uint64_t nr, uint64_t nq, uint64_t np, int* num_proc, int* rank, double** a, double** sum, double** c4, uint64_t* l, uint64_t* u, uint64_t a_slices_per_batch) {
+	
+	MPI_Comm_size(MPI_COMM_WORLD, num_proc);
+	MPI_Comm_rank(MPI_COMM_WORLD, rank);
+
+	if (*rank == 0) {
+		std::cout << "num proc = " << *num_proc << " for size " << nr << "x" << nq << "x" << np << std::endl;
+	}
+
+	*a = (double*)calloc(a_slices_per_batch * nq * np, sizeof(double));
+	*sum = (double*)calloc(np, sizeof(double));
+	*c4 = (double*)calloc(np * np, sizeof(double));
+
+	assert(*a != nullptr);
+	assert(*sum != nullptr);
+	assert(*c4 != nullptr);
+
+	init_C4(np, *c4);
+	memset(*sum, 0, np);
+
+	uint64_t chunk_size = nr / *num_proc;
+	uint64_t leftover = nr % *num_proc; // we compute the imbalance in jobs
+	uint64_t normal = *num_proc - leftover; // the amount of processes that will not have an additional job
+	uint64_t imbalanced_start = normal * chunk_size; //start index of the increased jobs
+
+	if ((uint64_t)*rank < normal) {
+		*l = *rank * chunk_size;
+		*u = (*rank + 1) * chunk_size;
+	}
+	else { // imbalanced workload process
+		*l = (*rank - normal) * (chunk_size + 1) + imbalanced_start;
+		*u = (*rank - normal + 1) * (chunk_size + 1) + imbalanced_start;
+	}
+}
+
+
 void mpi_io_init_file(uint64_t nq, uint64_t np, const char* output_path, MPI_File* file, uint64_t l, uint64_t u) {
 
 	assert(file != nullptr);
@@ -1121,17 +1183,20 @@ uint64_t kernel_doitgen_mpi_write_4(uint64_t nr, uint64_t nq, uint64_t np, const
 }
 
 
+
+
 //https://pages.tacc.utexas.edu/~eijkhout/pcse/html/mpi-io.html
 //https://cvw.cac.cornell.edu/parallelio/fileviewex
 uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
 
+	const uint64_t slices_per_batch = 1;
 	int num_proc, rank;
 	double* a = 0;
 	double* sum = 0;
 	double* c4 = 0;
 	uint64_t l = 0, u = 0;
 
-	doitgen_kernel_mpi_init(nr, nq, np, &num_proc, &rank, &a, &sum, &c4, &l, &u);
+	doitgen_kernel_mpi_init(nr, nq, np, &num_proc, &rank, &a, &sum, &c4, &l, &u, slices_per_batch);
 
 	uint64_t r = 0, q = 0, p = 0, s = 0;
 	MPI_File file;
@@ -1142,37 +1207,43 @@ uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char
 	
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
-	for (r = l; r < u; r++) {
+	for (r = l; r < u; r += slices_per_batch) {
 
 		// - 2.1 init slice of A
 
 		LSB_Res();
-		init_A_slice(nq, np, a, r);
+		init_A_slice_batch(nq, np, a, r, r + slices_per_batch);
 		LSB_Rec(0);
 
 		LSB_Res();
-		// - 2.2 execute kernel on slice
-		for (q = 0; q < nq; q++) {
 
-			for (p = 0; p < np; p++) {
-				sum[p] = 0;
-				for (s = 0; s < np; s++) {
-					sum[p] += A_SLICE(q, s) * C4(s, p); //a[q * np + p] * c4[s * np + p];
+		for (uint64_t rb = r; rb < r + slices_per_batch; rb ++) {
+
+			// - 2.2 batch eexecute kernel on slice
+			for (q = 0; q < nq; q++) {
+
+				for (p = 0; p < np; p++) {
+					sum[p] = 0;
+					for (s = 0; s < np; s++) {
+						sum[p] += ARR_3D(a, slices_per_batch, nq, np, rb - r, q, p) * C4(s, p);
+						//sum[p] += A_SLICE(q, s) * C4(s, p); //a[q * np + p] * c4[s * np + p];
+					}
+				}
+
+				for (p = 0; p < np; p++) {
+					ARR_3D(a, slices_per_batch, nq, np, rb - r, q, p) = sum[p];
+					//A_SLICE(q, p) = sum[p];
 				}
 			}
 
-			for (p = 0; p < np; p++) {
-				A_SLICE(q, p) = sum[p];
-			}
 		}
-
 		LSB_Rec(1);
 
 		LSB_Res();
 		// 2.3 write A to the result file
 
 		//offset = nq * np * sizeof(double) * r;
-		MPI_File_write(file, a, np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
+		MPI_File_write(file, a, slices_per_batch * np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
 		//MPI_File_write_at_all(file, offset, a, nq * np, MPI_DOUBLE, MPI_STATUS_IGNORE);
 		
 		LSB_Rec(2);
