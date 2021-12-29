@@ -29,6 +29,8 @@ threads_scaling = [
     48,
 ]
 
+matrix_scale = [512, 1024, 2048, 3072, 4096]
+
 benchmarks = [
     "transpose",
     "inverted_loop",
@@ -53,6 +55,11 @@ benchmarks_scaling = [
     "inverted_loop_local_sum_1D",
     "inverted_loop_avx2_local_sum_1D",
     "inverted_loop_avx2_local_sum"
+]
+
+benchmarks_matrix_scale = ["inverted_loop_avx2",
+"inverted_loop_avx2_local_sum",
+"inverted_loop_avx2_local_sum_1D"
 ]
 
 benchmarks_local_sum_1D = [
@@ -148,8 +155,33 @@ def main():
                     + str(k)
                     + "\n"
                 )
+    result_matrix_scale = ""
+    for i in range(len(benchmarks_matrix_scale)):
+        for j in range(len(threads)):
+            for k in range(len(matrix_scale)):
+                for l in range(RUNS):
+                    result_matrix_scale += (
+                        "../dphpc-doitgen-openmp-benchmark "
+                        + benchmarks_matrix_scale[i]
+                        + " "
+                        + str(256)
+                        + " "
+                        + str(matrix_scale[k])
+                        + " "
+                        + str(matrix_scale[k])
+                        + " "
+                        + str(threads[j])
+                        + " "
+                        + str(l)
+                        + "\n"
+                    )
+
     script_file = open("bsub_classic.sh", "w")
     script_file.write(result_clasic)
+    script_file.close()
+
+    script_file = open("bsub_matrix_scale.sh", "w")
+    script_file.write(result_matrix_scale)
     script_file.close()
 
     script_file = open("bsub_blocking.sh", "w")

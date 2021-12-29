@@ -10,7 +10,7 @@
 #include "utils.hpp"
 #include "serializer.hpp"
 
-#define THREAD_NUM 16
+#define THREAD_NUM 8
 
 /*
 * After thinking a bit about it, I'm in favor of dropping everything
