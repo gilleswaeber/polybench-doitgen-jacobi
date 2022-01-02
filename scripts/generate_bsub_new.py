@@ -31,7 +31,7 @@ threads_scaling = [
     48,
 ]
 
-matrix_scale = [512, 1024, 1536, 2048]
+matrix_scale = [2048]
 
 benchmarks = [
     "transpose",
