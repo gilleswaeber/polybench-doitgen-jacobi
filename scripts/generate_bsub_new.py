@@ -1,6 +1,8 @@
 RUNS = 10
 threads = [1, 2, 4, 8, 16, 32, 48]
 
+threads_matrix = [8, 16, 32, 48]
+
 threads_scaling = [
     1,
     2,
@@ -29,7 +31,7 @@ threads_scaling = [
     48,
 ]
 
-matrix_scale = [512, 1024, 2048, 3072, 4096]
+matrix_scale = [512, 1024, 1536, 2048]
 
 benchmarks = [
     "transpose",
@@ -58,8 +60,7 @@ benchmarks_scaling = [
 ]
 
 benchmarks_matrix_scale = ["inverted_loop_avx2",
-"inverted_loop_avx2_local_sum",
-"inverted_loop_avx2_local_sum_1D"
+"inverted_loop_avx2_local_sum"
 ]
 
 benchmarks_local_sum_1D = [
