@@ -31,7 +31,9 @@ threads_scaling = [
     48,
 ]
 
-matrix_scale = [2048]
+matrix_scale = [512, 1024, 1536, 2048]
+
+blocking_scale = [2048]
 
 benchmarks = [
     "transpose",
@@ -99,24 +101,25 @@ def main():
     for i in range(len(benchmarks_blocking)):
         for j in range(len(threads)):
             for k in range(len(windows)):
-                for l in range(RUNS):
-                    result_blocking += (
-                        "../dphpc-doitgen-openmp-benchmark "
-                        + benchmarks_blocking[i]
-                        + " "
-                        + str(NR)
-                        + " "
-                        + str(NQ)
-                        + " "
-                        + str(NP)
-                        + " "
-                        + str(threads[j])
-                        + " "
-                        + str(l)
-                        + " "
-                        + str(windows[k])
-                        + "\n"
-                    )
+                for l in range(len(blocking_scale)):
+                    for m in range(RUNS):
+                        result_blocking += (
+                            "../dphpc-doitgen-openmp-benchmark "
+                            + benchmarks_blocking[i]
+                            + " "
+                            + str(256)
+                            + " "
+                            + str(blocking_scale[l])
+                            + " "
+                            + str(blocking_scale[l])
+                            + " "
+                            + str(threads[j])
+                            + " "
+                            + str(m)
+                            + " "
+                            + str(windows[k])
+                            + "\n"
+                        )
     result_scaling = ""
     for i in range(len(benchmarks_scaling)):
         for j in range(len(threads_scaling)):
