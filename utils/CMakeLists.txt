@@ -1,4 +1,4 @@
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -mavx2 -mfma -g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -mavx2 -mfma")
 set(
     SRC 
     "serializer.cpp"
