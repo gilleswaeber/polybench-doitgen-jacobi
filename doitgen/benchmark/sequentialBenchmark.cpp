@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
 	memset(c4, 0, np * np);
 
 	init_array_seq(nr, nq, np, a, c4);
-	std::cout << print_array3D3(a, nr, nq, np) << std::endl;
+	//std::cout << print_array3D3(a, nr, nq, np) << std::endl;
 
 	uint64_t r, q, p, s;
 
