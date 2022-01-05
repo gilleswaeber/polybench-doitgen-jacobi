@@ -71,8 +71,9 @@ benchmarks_local_sum_1D = [
 ]
 
 benchmarks_optimized = [
-    "inverted_loop_avx2_blocking",
     "inverted_loop_avx2",
+    "inverted_loop_avx2_local_sum_1D",
+    "inverted_loop_avx2_local_sum"
 ]
 
 NR = 512
@@ -186,26 +187,46 @@ def main():
                     )
 
     result_optimized = ""
+    
+    for k in range(len(windows)):
+        for m in range(RUNS):
+            result_optimized += (
+                "../dphpc-doitgen-openmp-benchmark "
+                + "inverted_loop_avx2_blocking"
+                + " "
+                + str(NR)
+                + " "
+                + str(2048)
+                + " "
+                + str(2048)
+                + " "
+                + str(48)
+                + " "
+                + str(m)
+                + " "
+                + str(windows[k])
+                + "\n"
+            )
+
     for i in range(len(benchmarks_optimized)):
-            for k in range(len(windows)):
-                    for m in range(RUNS):
-                        result_optimized += (
-                            "../dphpc-doitgen-openmp-benchmark "
-                            + benchmarks_optimized[i]
-                            + " "
-                            + str(NR)
-                            + " "
-                            + str(2048)
-                            + " "
-                            + str(2048)
-                            + " "
-                            + str(48)
-                            + " "
-                            + str(m)
-                            + " "
-                            + str(windows[k])
-                            + "\n"
-                        )
+        for m in range(RUNS):
+            result_optimized += (
+                "../dphpc-doitgen-openmp-benchmark "
+                + benchmarks_optimized[i]
+                + " "
+                + str(NR)
+                + " "
+                + str(2048)
+                + " "
+                + str(2048)
+                + " "
+                + str(48)
+                + " "
+                + str(m)
+                + " "
+                + str(windows[k])
+                + "\n"
+            )
 
     script_file = open("bsub_optimized.sh", "w")
     script_file.write(result_optimized)
