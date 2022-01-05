@@ -70,11 +70,16 @@ benchmarks_local_sum_1D = [
     "inverted_loop_avx2_local_sum_1D",
 ]
 
+benchmarks_optimized = [
+    "inverted_loop_avx2_blocking",
+    "inverted_loop_avx2",
+]
+
 NR = 512
 NQ = 512
 NP = 512
 
-windows = [8, 16, 32, 64, 128, 256, 512]
+windows = [8, 16, 32, 64, 128, 256, 512, 1024]
 
 
 def main():
@@ -179,6 +184,32 @@ def main():
                         + str(l)
                         + "\n"
                     )
+
+    result_optimized = ""
+    for i in range(len(benchmarks_optimized)):
+            for k in range(len(windows)):
+                    for m in range(RUNS):
+                        result_optimized += (
+                            "../dphpc-doitgen-openmp-benchmark "
+                            + benchmarks_optimized[i]
+                            + " "
+                            + str(NR)
+                            + " "
+                            + str(2048)
+                            + " "
+                            + str(2048)
+                            + " "
+                            + str(48)
+                            + " "
+                            + str(m)
+                            + " "
+                            + str(windows[k])
+                            + "\n"
+                        )
+
+    script_file = open("bsub_optimized.sh", "w")
+    script_file.write(result_optimized)
+    script_file.close()
 
     script_file = open("bsub_classic.sh", "w")
     script_file.write(result_clasic)

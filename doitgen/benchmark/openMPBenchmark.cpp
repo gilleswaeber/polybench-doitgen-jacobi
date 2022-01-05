@@ -226,10 +226,29 @@ void do_inverted_loop_avx2(uint64_t nr, uint64_t nq, uint64_t np, uint64_t block
 
 	init_array(nr, nq, np, a_in, c4);
 
-	flush_cache_openMP();
+	flush_cache_big();
 
 	LSB_Res();
 	kernel_doitgen_inverted_loop_avx2(nr, nq, np, a_in, a_out, c4);
+	LSB_Rec(0);
+
+	free(a_in);
+	free(a_out);
+	free(c4);
+}
+
+void do_inverted_loop_avx2_blocking(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_window) {
+	double* a_in = (double*)allocate_data(nr * nq * np, sizeof(double));
+	double* a_out = (double*)allocate_data(nr * nq * np, sizeof(double));
+	memset(a_out, 0, nr * nq * np * sizeof(double));
+	double* c4 = (double*)allocate_data(np * np, sizeof(double));
+
+	init_array(nr, nq, np, a_in, c4);
+
+	flush_cache_big();
+
+	LSB_Res();
+	kernel_doitgen_inverted_loop_avx2_blocking(nr, nq, np, a_in, a_out, c4, blocking_window);
 	LSB_Rec(0);
 
 	free(a_in);
@@ -301,6 +320,7 @@ static const Benchmark benchmarks[] = {
 	{"inverted_loop_local_sum_1D", &do_inverted_loop_local_sum_1D},
 	{"inverted_loop_blocking", &do_inverted_loop_blocking},
 	{"inverted_loop_avx2", &do_inverted_loop_avx2},
+	{"inverted_loop_avx2_blocking", &do_inverted_loop_avx2_blocking},
 	{"inverted_loop_avx2_local_sum", &do_inverted_loop_avx2_local_sum},
 	{"inverted_loop_avx2_local_sum_1D", &do_inverted_loop_avx2_local_sum_1D},
 	{"transpose_local_sum", &do_transpose_local_sum}

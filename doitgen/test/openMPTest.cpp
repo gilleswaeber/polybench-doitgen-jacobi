@@ -67,7 +67,7 @@ START_TEST(test_doitgen)
 	loadFile("doitgen_dataset_512_512_512", nr * nq * np, a_test);
 
 	double* a_in 	= (double*) allocate_data(nr * nq * np, sizeof(double));
-	double* sum = (double*) allocate_data(np * omp_get_max_threads(), sizeof(double));
+	//double* sum = (double*) allocate_data(np * omp_get_max_threads(), sizeof(double));
 	double* c4 	= (double*) allocate_data(np * np, sizeof(double));
 	//double* c4_transposed = (double*)allocate_data(np * np, sizeof(double));
 
@@ -76,13 +76,13 @@ START_TEST(test_doitgen)
 	init_array(nr, nq, np, a_in, c4);
 	//copy_array(a_in, a_out, nr, nq, np);
 
-	memset(sum, 0, np * omp_get_max_threads() * sizeof(double));
+	//memset(sum, 0, np * omp_get_max_threads() * sizeof(double));
 	//transpose(c4, c4_transposed, np, np);
-	memset(a_out, 0, nr * np * nq * sizeof(double));
+	memset(a_out, 0.0, nr * np * nq * sizeof(double));
 	
 	flush_cache_openMP();
 	auto t1 = std::chrono::high_resolution_clock::now();
-	kernel_doitgen_inverted_loop_avx2(nr, nq, np, a_in, a_out, c4);
+	kernel_doitgen_inverted_loop_avx2_blocking(nr, nq, np, a_in, a_out, c4, 256);
 	auto t2 = std::chrono::high_resolution_clock::now();
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
@@ -93,7 +93,7 @@ START_TEST(test_doitgen)
 
 	cleanup(a_test);
 	cleanup(a_in);
-	cleanup(sum);
+	//cleanup(sum);
 	cleanup(c4);
 	//cleanup(c4_transposed);
 	cleanup(a_out);

@@ -67,12 +67,12 @@ void init_A_slice(uint64_t nq, uint64_t np, double* a, uint64_t i) {
 }
 
 /**
- * @brief 
- * 
- * 
- * @param nq 
- * @param np 
- * @param a 
+ * @brief
+ *
+ *
+ * @param nq
+ * @param np
+ * @param a
  * @param i_lower inclusive
  * @param i_upper exclusive
  */
@@ -147,7 +147,7 @@ void kernel_doitgen_polybench_parallel(uint64_t nr, uint64_t nq, uint64_t np,
 	double* sum
 ) {
 
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 
 		for (uint64_t q = 0; q < nq; q++) {
@@ -172,7 +172,7 @@ void kernel_doitgen_polybench_parallel_local_sum(uint64_t nr, uint64_t nq, uint6
 	double* c4,
 	double* sum
 ) {
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 		for (uint64_t q = 0; q < nq; q++) {
 
@@ -199,7 +199,7 @@ void kernel_doitgen_transpose(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_out,
 	double* c4
 ) {
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 		for (uint64_t q = 0; q < nq; q++) {
 			for (uint64_t p = 0; p < np; p++) {
@@ -237,7 +237,7 @@ void kernel_doitgen_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	uint64_t blocking_window
 ) {
 
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; ++r) {
 		for (uint64_t q = 0; q < nq; q += blocking_window) {
 			for (uint64_t p = 0; p < np; p += blocking_window) {
@@ -261,7 +261,7 @@ void kernel_doitgen_inverted_loop(uint64_t nr, uint64_t nq, uint64_t np,
 	double* c4
 ) {
 
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 
 		for (uint64_t q = 0; q < nq; q++) {
@@ -346,7 +346,7 @@ void kernel_doitgen_inverted_loop_avx2(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_out,
 	double* c4
 ) {
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 
 		for (uint64_t q = 0; q < nq; q++) {
@@ -363,6 +363,49 @@ void kernel_doitgen_inverted_loop_avx2(uint64_t nr, uint64_t nq, uint64_t np,
 			}
 		}
 	}
+}
+
+void kernel_doitgen_inverted_loop_avx2_blocking(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* a_out,
+	double* c4,
+	uint64_t blocking_size
+) {
+#pragma omp parallel for
+	for (uint64_t r = 0; r < nr; r++) {
+
+		for (uint64_t q = 0; q < nq; q += blocking_size) {
+			for (uint64_t k = 0; k < np; k += blocking_size) {
+				for (uint64_t p = 0; p < np; p += blocking_size) {
+					for (uint64_t qq = q; qq < q + blocking_size; qq++) {
+						for (uint64_t kk = k; kk < k + blocking_size; kk++) {
+							__m256d a_in_val = _mm256_set1_pd(A_IN(r, qq, kk));
+							for (uint64_t pp = p; pp < p + blocking_size; pp += 4) {
+								__m256d a_out_val = _mm256_load_pd(&(A_OUT(r, qq, pp)));
+								__m256d c4_val = _mm256_load_pd(&(C4(kk, pp)));
+
+								__m256d res = _mm256_fmadd_pd(a_in_val, c4_val, a_out_val);
+
+								_mm256_store_pd(&(A_OUT(r, qq, pp)), res);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/*
+	* __m256d a_in_val = _mm256_set1_pd(A_IN(r, q, k));
+				for (uint64_t p = 0; p < np; p += 4) {
+					__m256d a_out_val = _mm256_load_pd(&(A_OUT(r, q, p)));
+					__m256d c4_val = _mm256_load_pd(&(C4(k, p)));
+
+					__m256d res = _mm256_fmadd_pd(a_in_val, c4_val, a_out_val);
+
+					_mm256_store_pd(&(A_OUT(r, q, p)), res);
+				}
+	*/
 }
 
 void kernel_doitgen_inverted_loop_avx2_local_sum(uint64_t nr, uint64_t nq, uint64_t np,
@@ -513,7 +556,7 @@ void kernel_doitgen_bikj_block_mapping(uint64_t nr, uint64_t nq, uint64_t np, do
 void kernel_doitgen_bikj_prime(uint64_t nr, uint64_t nq, uint64_t np, double* a_in,
 	double* a_out, double* c4, uint64_t blocking_size) {
 
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (uint64_t r = 0; r < nr; r++) {
 
 		for (uint64_t i = 0; i < nq; i += blocking_size) {
@@ -753,14 +796,14 @@ void kernel_doitgen_mpi_clean(MPI_Win* shared_window, double** sum) {
 std::string get_overall_file_name(char** argv, uint64_t num_processor) {
 	std::string benchmark_name = argv[2];
 	std::string processor_model = argv[3];
-	uint64_t run_index =  strtoull(argv[4], nullptr, 10);
-	
+	uint64_t run_index = strtoull(argv[4], nullptr, 10);
+
 	std::string result = std::string("lsb.") + get_benchmark_lsb_name(benchmark_name, processor_model, num_processor) + std::string("_") + std::to_string(run_index) + std::string("_overall.r0");
 	return result;
 }
 
-void mpi_lsb_benchmark_startup(char **argv, int argc, uint64_t* nr, uint64_t* nq, uint64_t* np, char** output_path, mpi_kernel_func* selected_kernel) {
-	
+void mpi_lsb_benchmark_startup(char** argv, int argc, uint64_t* nr, uint64_t* nq, uint64_t* np, char** output_path, mpi_kernel_func* selected_kernel) {
+
 	MPI_Init(nullptr, nullptr);
 
 	assert(argc == 8);
@@ -768,7 +811,7 @@ void mpi_lsb_benchmark_startup(char **argv, int argc, uint64_t* nr, uint64_t* nq
 	*output_path = argv[1];
 	std::string benchmark_name = argv[2];
 	std::string processor_model = argv[3];
-	
+
 	//mpi_kernel_func selected_kernel;
 	bool found_kernel = find_benchmark_kernel_by_name(benchmark_name, selected_kernel);
 	assert(found_kernel);
@@ -777,15 +820,15 @@ void mpi_lsb_benchmark_startup(char **argv, int argc, uint64_t* nr, uint64_t* nq
 
 	remove(*output_path);
 
-	uint64_t run_index =  strtoull(argv[4], nullptr, 10);
+	uint64_t run_index = strtoull(argv[4], nullptr, 10);
 
 	*nr = strtoull(argv[5], nullptr, 10);
 	*nq = strtoull(argv[6], nullptr, 10);
 	*np = strtoull(argv[7], nullptr, 10);
 
 	int num_proc, rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 	LSB_Init(get_benchmark_lsb_name(benchmark_name, processor_model, num_proc).c_str(), 0);
 
@@ -826,7 +869,7 @@ void tranpose_C4(uint64_t np, double* c4) {
 }
 
 void doitgen_kernel_mpi_init(uint64_t nr, uint64_t nq, uint64_t np, int* num_proc, int* rank, double** a, double** sum, double** c4, uint64_t* l, uint64_t* u) {
-	
+
 	MPI_Comm_size(MPI_COMM_WORLD, num_proc);
 	MPI_Comm_rank(MPI_COMM_WORLD, rank);
 
@@ -861,7 +904,7 @@ void doitgen_kernel_mpi_init(uint64_t nr, uint64_t nq, uint64_t np, int* num_pro
 }
 
 void doitgen_kernel_mpi_init(uint64_t nr, uint64_t nq, uint64_t np, int* num_proc, int* rank, double** a, double** sum, double** c4, uint64_t* l, uint64_t* u, uint64_t a_slices_per_batch) {
-	
+
 	MPI_Comm_size(MPI_COMM_WORLD, num_proc);
 	MPI_Comm_rank(MPI_COMM_WORLD, rank);
 
@@ -908,7 +951,7 @@ void mpi_io_init_file(uint64_t nq, uint64_t np, const char* output_path, MPI_Fil
 	MPI_Type_contiguous(end - disp, MPI_DOUBLE, &arraytype);
 	MPI_Type_commit(&arraytype);
 	MPI_File_open(MPI_COMM_WORLD, output_path, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, file);
-	
+
 	MPI_File_set_view(*file, disp, MPI_DOUBLE, arraytype, "native", MPI_INFO_NULL);
 
 	MPI_Barrier(MPI_COMM_WORLD);
@@ -916,7 +959,7 @@ void mpi_io_init_file(uint64_t nq, uint64_t np, const char* output_path, MPI_Fil
 }
 
 void mpi_clean_up(MPI_File* file, double* a, double* sum, double* c4) {
-	
+
 	int rank;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
@@ -951,17 +994,17 @@ std::string get_benchmark_lsb_name(const std::string& benchmark_name, const std:
 void flush_cache_epyc()
 {
 	//taken from polybench
-  unsigned long long cs = 256000000 / (unsigned long long)sizeof(double);
-  double* flush = (double*) calloc (cs, sizeof(double));
-  unsigned long long i;
-  double tmp = 0.0;
-  for (i = 0; i < cs; i++)
-    tmp += flush[i];
-  //This is to prevent compiler optimizations
-  if (tmp > 10.0) {
-	  std::cout << "Fail !" << std::endl;
-  }
-  free ((void*)flush);
+	unsigned long long cs = 256000000 / (unsigned long long)sizeof(double);
+	double* flush = (double*)calloc(cs, sizeof(double));
+	unsigned long long i;
+	double tmp = 0.0;
+	for (i = 0; i < cs; i++)
+		tmp += flush[i];
+	//This is to prevent compiler optimizations
+	if (tmp > 10.0) {
+		std::cout << "Fail !" << std::endl;
+	}
+	free((void*)flush);
 }
 
 void mpi_write_overall(const std::string& file_name, const std::string& benchmark_name, uint64_t run_index, uint64_t elapsed) {
@@ -972,29 +1015,29 @@ void mpi_write_overall(const std::string& file_name, const std::string& benchmar
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 	if (rank == 0) {
-		
-		std::vector<uint64_t> overalls (num_proc, 0);
+
+		std::vector<uint64_t> overalls(num_proc, 0);
 		overalls[rank] = elapsed;
 
 		//get all other threads measurement
 		for (int i = 1; i < num_proc; i++) {
-			
+
 			uint64_t other = 0;
 
 			MPI_Recv(
-    			&other,
-    			1,
-    			MPI_UNSIGNED_LONG,
-    			i,
-    			0,
-   				MPI_COMM_WORLD,
+				&other,
+				1,
+				MPI_UNSIGNED_LONG,
+				i,
+				0,
+				MPI_COMM_WORLD,
 				MPI_STATUS_IGNORE
 			);
 
 			overalls[i] = other;
 
 		}
-		
+
 		std::sort(overalls.begin(), overalls.end());
 
 		uint64_t min = overalls[0];
@@ -1003,29 +1046,31 @@ void mpi_write_overall(const std::string& file_name, const std::string& benchmar
 
 		if (num_proc % 2 == 1) {
 			median = overalls[num_proc / 2];
-		} else {
+		}
+		else {
 			median = (overalls[(num_proc / 2) - 1] + overalls[num_proc / 2]) / 2;
 		}
 
 		std::cout << "min=" << min << " median=" << median << " max=" << max << std::endl;
 
 		std::string line = "";
-		line += benchmark_name + "\t" + std::to_string(num_proc) + "\t" + std::to_string(run_index) + "\t" + std::to_string(min) + "\t" + std::to_string(median) + "\t" + std::to_string(max) + "\n"; 
+		line += benchmark_name + "\t" + std::to_string(num_proc) + "\t" + std::to_string(run_index) + "\t" + std::to_string(min) + "\t" + std::to_string(median) + "\t" + std::to_string(max) + "\n";
 		std::string header = "benchmark_type\tnum_processes\trun_index\tmin\tmedian\tmax\n";
 		FILE* fp = fopen(file_name.c_str(), "w");
 		fputs(header.c_str(), fp);
 		fputs(line.c_str(), fp);
 		fclose(fp);
 
-	} else {
+	}
+	else {
 
 		MPI_Send(
-    		&elapsed,
-    		1,
-    		MPI_UNSIGNED_LONG,
-    		0,
-    		0,
-   			MPI_COMM_WORLD
+			&elapsed,
+			1,
+			MPI_UNSIGNED_LONG,
+			0,
+			0,
+			MPI_COMM_WORLD
 		);
 
 	}
@@ -1040,7 +1085,7 @@ void mpi_write_overall(const std::string& file_name, const std::string& benchmar
 
 
 uint64_t kernel_doitgen_mpi_write_1(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
-	
+
 	int num_proc, rank;
 	double* a = 0;
 	double* sum = 0;
@@ -1048,7 +1093,7 @@ uint64_t kernel_doitgen_mpi_write_1(uint64_t nr, uint64_t nq, uint64_t np, const
 	uint64_t l = 0, u = 0;
 
 	doitgen_kernel_mpi_init(nr, nq, np, &num_proc, &rank, &a, &sum, &c4, &l, &u);
-	
+
 	MPI_Offset offset;
 	MPI_File file;
 	MPI_File_open(MPI_COMM_WORLD, output_path, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
@@ -1058,17 +1103,17 @@ uint64_t kernel_doitgen_mpi_write_1(uint64_t nr, uint64_t nq, uint64_t np, const
 
 
 	MPI_Barrier(MPI_COMM_WORLD);
-	
+
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
-	
+
 	for (uint64_t i = l; i < u; i++) {
 		LSB_Res();
 		offset = nq * np * sizeof(double) * i;
 		MPI_File_write_at(file, offset, a, nq * np, MPI_DOUBLE, MPI_STATUS_IGNORE);
 		LSB_Rec(0);
 	}
-	
+
 
 	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
 	uint64_t elapsed = get_elapsed_us(start, end);
@@ -1078,7 +1123,7 @@ uint64_t kernel_doitgen_mpi_write_1(uint64_t nr, uint64_t nq, uint64_t np, const
 }
 
 uint64_t kernel_doitgen_mpi_write_2(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
-	
+
 	int num_proc, rank;
 	double* a = 0;
 	double* sum = 0;
@@ -1092,17 +1137,17 @@ uint64_t kernel_doitgen_mpi_write_2(uint64_t nr, uint64_t nq, uint64_t np, const
 
 	flush_cache_epyc();
 	MPI_Barrier(MPI_COMM_WORLD);
-	
+
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
-	
+
 	for (uint64_t i = l; i < u; i++) {
 		LSB_Res();
 		offset = nq * np * sizeof(double) * i;
 		MPI_File_write_at_all(file, offset, a, nq * np, MPI_DOUBLE, MPI_STATUS_IGNORE);
 		LSB_Rec(0);
 	}
-	
+
 
 	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
 	uint64_t elapsed = get_elapsed_us(start, end);
@@ -1113,7 +1158,7 @@ uint64_t kernel_doitgen_mpi_write_2(uint64_t nr, uint64_t nq, uint64_t np, const
 
 
 uint64_t kernel_doitgen_mpi_write_3(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
-	
+
 	int num_proc, rank;
 	double* a = 0;
 	double* sum = 0;
@@ -1127,7 +1172,7 @@ uint64_t kernel_doitgen_mpi_write_3(uint64_t nr, uint64_t nq, uint64_t np, const
 
 	flush_cache_epyc();
 	MPI_Barrier(MPI_COMM_WORLD);
-	
+
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
 	for (uint64_t i = l; i < u; i++) {
@@ -1135,7 +1180,7 @@ uint64_t kernel_doitgen_mpi_write_3(uint64_t nr, uint64_t nq, uint64_t np, const
 		MPI_File_write(file, a, np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
 		LSB_Rec(0);
 	}
-	
+
 
 	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
 	uint64_t elapsed = get_elapsed_us(start, end);
@@ -1145,7 +1190,7 @@ uint64_t kernel_doitgen_mpi_write_3(uint64_t nr, uint64_t nq, uint64_t np, const
 }
 
 uint64_t kernel_doitgen_mpi_write_4(uint64_t nr, uint64_t nq, uint64_t np, const char* output_path) {
-	
+
 	int num_proc, rank;
 	double* a = 0;
 	double* sum = 0;
@@ -1159,7 +1204,7 @@ uint64_t kernel_doitgen_mpi_write_4(uint64_t nr, uint64_t nq, uint64_t np, const
 
 	flush_cache_epyc();
 	MPI_Barrier(MPI_COMM_WORLD);
-	
+
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
 	for (uint64_t i = l; i < u; i++) {
@@ -1167,7 +1212,7 @@ uint64_t kernel_doitgen_mpi_write_4(uint64_t nr, uint64_t nq, uint64_t np, const
 		MPI_File_write_all(file, a, np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
 		LSB_Rec(0);
 	}
-	
+
 
 	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
 	uint64_t elapsed = get_elapsed_us(start, end);
@@ -1213,7 +1258,7 @@ uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char
 
 	flush_cache_epyc();
 	MPI_Barrier(MPI_COMM_WORLD);
-	
+
 	std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
 	for (r = l; r < u; r += slices_per_batch) {
@@ -1225,10 +1270,10 @@ uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char
 		//std::cout << print_array3D2(a, slices_per_batch, nq, np) << std::endl;
 		LSB_Rec(0);
 
-		
+
 
 		for (uint64_t rb = 0; rb < slices_per_batch; rb++) {
-			
+
 			LSB_Res();
 			// - 2.2 batch eexecute kernel on slice
 			for (q = 0; q < nq; q++) {
@@ -1251,7 +1296,7 @@ uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char
 			LSB_Rec(1);
 
 		}
-		
+
 
 		LSB_Res();
 		// 2.3 write A to the result file
@@ -1259,15 +1304,15 @@ uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char
 		//offset = nq * np * sizeof(double) * r;
 		MPI_File_write(file, a, slices_per_batch * np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
 		//MPI_File_write_at_all(file, offset, a, nq * np, MPI_DOUBLE, MPI_STATUS_IGNORE);
-		
+
 		LSB_Rec(2);
 	}
-	
+
 	std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
 	uint64_t elapsed = get_elapsed_us(start, end);
 
 	mpi_clean_up(&file, a, sum, c4);
-	
+
 	return elapsed;
 }
 
@@ -1287,7 +1332,7 @@ uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, 
 	uint64_t r = 0, q = 0, p = 0, s = 0;
 	MPI_File file;
 	mpi_io_init_file(nq, np, output_path, &file, l, u);
-	
+
 	flush_cache_epyc();
 	MPI_Barrier(MPI_COMM_WORLD);
 
@@ -1297,37 +1342,37 @@ uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, 
 	tranpose_C4(np, c4);
 	LSB_Rec(0);
 
-/*
-	for (r = l; r < u; r++) {
+	/*
+		for (r = l; r < u; r++) {
 
-		// - 2.1 init slice of A
+			// - 2.1 init slice of A
 
-		LSB_Res();
-		init_A_slice(nq, np, a, r);
-		LSB_Rec(0);
+			LSB_Res();
+			init_A_slice(nq, np, a, r);
+			LSB_Rec(0);
 
-		LSB_Res();
-		// - 2.2 execute kernel on slice
-		for (q = 0; q < nq; q++) {
+			LSB_Res();
+			// - 2.2 execute kernel on slice
+			for (q = 0; q < nq; q++) {
 
-			for (p = 0; p < np; p++) {
-				sum[p] = 0;
-				for (s = 0; s < np; s++) {
-					sum[p] += A_SLICE(q, s) * C4(p, s); //a[q * np + p] * c4[s * np + p];
+				for (p = 0; p < np; p++) {
+					sum[p] = 0;
+					for (s = 0; s < np; s++) {
+						sum[p] += A_SLICE(q, s) * C4(p, s); //a[q * np + p] * c4[s * np + p];
+					}
+				}
+
+				for (p = 0; p < np; p++) {
+					A_SLICE(q, p) = sum[p];
 				}
 			}
 
-			for (p = 0; p < np; p++) {
-				A_SLICE(q, p) = sum[p];
-			}
-		}
+			LSB_Rec(1);
 
-		LSB_Rec(1);
-
-		LSB_Res();
-		MPI_File_write(file, a, np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
-		LSB_Rec(2);
-	}*/
+			LSB_Res();
+			MPI_File_write(file, a, np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
+			LSB_Rec(2);
+		}*/
 
 	for (r = l; r < u; r += slices_per_batch) {
 
@@ -1338,10 +1383,10 @@ uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, 
 		//std::cout << print_array3D2(a, slices_per_batch, nq, np) << std::endl;
 		LSB_Rec(0);
 
-		
+
 
 		for (uint64_t rb = 0; rb < slices_per_batch; rb++) {
-			
+
 			LSB_Res();
 			// - 2.2 batch eexecute kernel on slice
 			for (q = 0; q < nq; q++) {
@@ -1364,7 +1409,7 @@ uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, 
 			LSB_Rec(1);
 
 		}
-		
+
 
 		LSB_Res();
 		// 2.3 write A to the result file
@@ -1372,7 +1417,7 @@ uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, 
 		//offset = nq * np * sizeof(double) * r;
 		MPI_File_write(file, a, slices_per_batch * np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
 		//MPI_File_write_at_all(file, offset, a, nq * np, MPI_DOUBLE, MPI_STATUS_IGNORE);
-		
+
 		LSB_Rec(2);
 	}
 
@@ -1388,7 +1433,7 @@ uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, 
 Finds a mpi benchmark by name
 */
 bool find_benchmark_kernel_by_name(const std::string& benchmark_kernel_name, mpi_kernel_func* f) {
-	
+
 	bool found_kernel = false;
 
 	for (int i = 0; i < NUM_DOIGTEN_MPI_KERNELS; i++) {

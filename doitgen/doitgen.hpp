@@ -20,7 +20,7 @@ struct problem_instance_t {
 };
 
 const static uint64_t num_processor = 8;
-const static uint64_t PROBLEM_SIZE_N = 7;
+
 
 const static problem_size_t problem_sizes[] = {
 	{1, 10, 10},
@@ -29,13 +29,15 @@ const static problem_size_t problem_sizes[] = {
 	{64, 64, 64},
 	{10, 5, 5},
 	{64, 128, 128},
-	{256, 512, 512}
-	//{512, 512, 512}
+	{256, 512, 512},
+	{512, 512, 512}
 	//{256, 256, 256},
 	//{257, 257, 257}//,
 	//{128, 512, 512},
 	//{512, 512, 512}
 };
+
+const static uint64_t PROBLEM_SIZE_N = sizeof(problem_sizes) / sizeof(problem_sizes[0]);;
 
 const static problem_size_t benchmark_size = {128, 512, 512};
 
@@ -179,6 +181,13 @@ void kernel_doitgen_inverted_loop_avx2(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_in,
 	double* a_out,
 	double* c4
+);
+
+void kernel_doitgen_inverted_loop_avx2_blocking(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* a_out,
+	double* c4,
+	uint64_t blocking_window
 );
 
 void kernel_doitgen_inverted_loop_avx2_local_sum(uint64_t nr, uint64_t nq, uint64_t np,
