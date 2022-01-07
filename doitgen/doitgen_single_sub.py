@@ -7,10 +7,14 @@ from typing_extensions import runtime
 #'basic',
 #'transpose'
 
+#{ "transpose_1_per_node", &kernel_doitgen_mpi_io_transpose },
+#	{ "transpose_4_per_node", &kernel_doitgen_mpi_io_transpose },
+#	{ "transpose_12_per_node", &kernel_doitgen_mpi_io_transpose },
+#	{ "transpose_24_per_node", &kernel_doitgen_mpi_io_transpose },
 
 bench_types = [
-    'basic',
-    'transpose'
+    'transpose_24_per_node'#,
+    #'transpose'
 ]
 
 """
@@ -22,7 +26,7 @@ bench_types = [
 ]
 """
 
-proc_model = "EPYC_7H12" # "XeonE3_1585Lv5" #"XeonE3_1585Lv5" #XeonE3_1585Lv5 #EPYC_7H12
+proc_model = "EPYC_7H12_24_per_node" # "XeonE3_1585Lv5" #"XeonE3_1585Lv5" #XeonE3_1585Lv5 #EPYC_7H12
 
 #cluster_outputs_locations = "/cluster/scratch/qguignard/"
 
@@ -128,14 +132,14 @@ def main():
 
     args = parse_args()
 
-    cores = range(0, args.n + 1, 2)
+    cores = range(0, args.n + 1, 4)
     result = "#!/bin/bash \n" 
 
     if (args.is_home == 0):
-        result += "bsub -n 48 -W 48:00 " + get_proc_selection(proc_model) + " <<EOF " +'\n'
+        result += "bsub -n 48 -W 6:00 " + get_proc_selection(proc_model) + " <<EOF " +'\n'
     
-    for i in range(args.runs):
-        result += get_sequential_command(proc_model, i, args.nr, args.nq, args.np) + "\n"
+    #for i in range(args.runs):
+    #    result += get_sequential_command(proc_model, i, args.nr, args.nq, args.np) + "\n"
 
     output_location = args.output_location if (args.is_home == 0) else "data/"
 

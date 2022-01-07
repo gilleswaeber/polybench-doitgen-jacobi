@@ -113,12 +113,15 @@ struct mpi_benchmark {
 
 void mpi_write_overall(const std::string& file_name, const std::string& benchmark_name, uint64_t run_index, uint64_t elapsed);
 
-#define NUM_DOIGTEN_MPI_KERNELS 6
+#define NUM_DOIGTEN_MPI_KERNELS 10
 static const mpi_benchmark mpi_benchmarks_data[] = {
 
 	{ "basic", &kernel_doitgen_mpi_io },
 	{ "transpose", &kernel_doitgen_mpi_io_transpose },
-
+	{ "transpose_1_per_node", &kernel_doitgen_mpi_io_transpose },
+	{ "transpose_4_per_node", &kernel_doitgen_mpi_io_transpose },
+	{ "transpose_12_per_node", &kernel_doitgen_mpi_io_transpose },
+	{ "transpose_24_per_node", &kernel_doitgen_mpi_io_transpose },
 	{ "write_1", &kernel_doitgen_mpi_write_1 },
 	{ "write_2", &kernel_doitgen_mpi_write_2 },
 	{ "write_3", &kernel_doitgen_mpi_write_3 },
