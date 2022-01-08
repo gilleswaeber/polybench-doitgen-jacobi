@@ -3,16 +3,11 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include "error_handling.hpp"
 
 #ifdef WITH_LSB
 #include <liblsb.h>
 #endif
-
-#define ABORT_ON_ERROR(call) \
-if (int status = (call)) { \
-    std::cerr << "Error at " << __FILE__ << ":" << __LINE__ << ": status is " << status << std::endl; \
-    abort(); \
-}
 
 void jacobi_1d_imper_mpi(int timeSteps, int n, MpiParams params) {
     enum MPI_TAG : int {
@@ -93,6 +88,7 @@ void jacobi_1d_imper_mpi(int timeSteps, int n, MpiParams params) {
             current = next;
         }
 
+#ifndef JACOBI_NO_SYNC
         if (tMod == params.ghost_cells - 1 && t != timeSteps - 1) { // sync processes
 #ifdef WITH_LSB
             LSB_Rec(REC_Compute);
@@ -122,6 +118,7 @@ void jacobi_1d_imper_mpi(int timeSteps, int n, MpiParams params) {
             LSB_Rec(REC_Sync);
 #endif
         }
+#endif
     }
 #ifdef WITH_LSB
     LSB_Rec(REC_Compute);

@@ -5,6 +5,7 @@
 #include <fstream>
 #include <cassert>
 #include "jacobi_1D.hpp"
+#include "error_handling.hpp"
 
 struct Array2dR {
     // Row-first 2D matrix
@@ -13,11 +14,12 @@ struct Array2dR {
     inline double& operator()(int row, int col) { return at(row, col); }
     inline const double& operator()(int row, int col) const { return at(row, col); }
     inline double* row(int r) { return data.data() + r * cols; }
+    inline const double* row(int r) const { return data.data() + r * cols; }
 
     void readFile(const char* filePath) const {
         std::ifstream fs{filePath, std::ios::binary | std::ios::in | std::ios::ate};  // ate: seek to end
         const long fileSize = fs.tellg();
-        if (fileSize != rows * cols * sizeof(double)) {
+        if (fileSize != (rows * cols * sizeof(double))) {
             std::cout << "  [ERR] File size is " << fileSize << " while we expected " << rows * cols * sizeof(double) << std::endl;
             abort();
         }
@@ -52,26 +54,57 @@ struct Array2dR {
         if (close) std::cerr << "  " << close << " within tolerance range (" << allowed_relative_error << ")\n";
         return errors == 0;
     }
+
+    void getRectangle(int r0, int c0, int rowCount, int colCount, double *dest) const {
+        assert(r0 >= 0 && r0 + rowCount <= rows);
+        assert(c0 >= 0 && c0 + colCount <= cols);
+        for (int r = 0; r < rowCount; ++r) {
+            memcpy(dest + r * colCount, row(r0 + r) + c0, colCount * sizeof(double));
+        }
+    }
+    void setRectangle(int r0, int c0, int rowCount, int colCount, const double *src) {
+        assert(r0 >= 0 && r0 + rowCount <= rows);
+        assert(c0 >= 0 && c0 + colCount <= cols);
+        for (int r = 0; r < rowCount; ++r) {
+            memcpy(row(r0 + r) + c0, src + r * colCount, colCount * sizeof(double));
+        }
+    }
+    template<int RowDir, int ColDir>
+    void getTriangle(int r0, int c0, int n, double *dest) const {
+        static_assert(RowDir == 1 || RowDir == -1, "RowDir must be 1 or -1");
+        static_assert(ColDir == 1 || ColDir == -1, "ColDir must be 1 or -1");
+        for (int r = 0; r < n; ++r) {
+            memcpy(dest, row(r0 + r * RowDir) + (ColDir == 1 ? c0 : c0 - n + r + 1), (n - r) * sizeof(double));
+            dest += n - r;
+        }
+    }
+    template<int RowDir, int ColDir>
+    void setTriangle(int r0, int c0, int n, const double *src) {
+        static_assert(RowDir == 1 || RowDir == -1, "RowDir must be 1 or -1");
+        static_assert(ColDir == 1 || ColDir == -1, "ColDir must be 1 or -1");
+        for (int r = 0; r < n; ++r) {
+            memcpy(row(r0 + r * RowDir) + (ColDir == 1 ? c0 : c0 - n + r + 1), src, (n - r) * sizeof(double));
+            src += n - r;
+        }
+    }
 private:
     inline const double& at(int row, int col) const { return data[row * cols + col]; }
     inline double& at(int row, int col) { return data[row * cols + col]; }
     std::vector<double> data;
 };
 
-void init_2d_array(int n, Array2dR &A) {
-    for (int r = 0; r < n; r++) {
-        for (int c = 0; c < n; c++) {
-            A(r, c) = ((double) r * (c + 2) + 2) / n;
-        }
-    }
-}
 void init_2d_array(int n, int firstRow, int firstCol, int rows, int cols, Array2dR &A) {
     for (int r = 0; r < rows; ++r) {
         for (int c = 0; c < cols; ++c) {
+            // A(r, c) = ((double) r * (c + 2) + 2) / n;
             A(r, c) = ((double) (firstRow + r) * ((firstCol + c) + 2) + 2) / n;
         }
     }
 }
+void init_2d_array(int n, Array2dR &A) {
+    init_2d_array(n, 0, 0, n, n, A);
+}
+
 void jacobi_2d_reference(int timeSteps, int n, Array2dR &A) {
     Array2dR B{n, n};
     for (int t = 0; t < timeSteps; t++) {

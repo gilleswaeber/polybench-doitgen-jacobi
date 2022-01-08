@@ -21,8 +21,8 @@ LSB_OUTPUT_FORMAT=efficient
 export LSB_OUTPUT_FORMAT
 '''
 script_footer = ''
-# SCRATCH_DIR = '$SCRATCH'
-SCRATCH_DIR = r'\$TMPDIR'
+GLOBAL_SCRATCH_DIR = '$SCRATCH'
+NODE_SCRATCH_DIR = r'\$TMPDIR'
 
 
 def parse_args():
@@ -82,18 +82,30 @@ def parse_args():
                         help='add environment variables and commands for libLSB',
                         action='store_true',
                         dest='with_lsb')
-    parser.add_argument('--bsub-cpu')
+    parser.add_argument('--node-scratch',
+                        help='use node scratch',
+                        action='store_true')
+    parser.add_argument('--nodes',
+                        help='use multiple nodes',
+                        type=int, default=1)
+    parser.add_argument('--bsub-cpu',
+                        help='force the use of a specfic CPU, list them with lsinfo -m')
     args = parser.parse_args()
     return args
 
 
 def generate_jacobi_mpi_sub(*, runs: int, total_cores: int, cores_step: int, output: TextIO, n: int, time_steps: int,
                             ghost_cells: List[int], do_cleanup: bool, do_final: bool, send_email: bool, with_lsb: bool,
-                            minutes: int, cd: str = None, alternative: str = None, bsub_cpu: str = None):
+                            minutes: int, cd: str = None, alternative: str = None,
+                            node_scratch=False, nodes=1, bsub_cpu: str = None):
     assert runs >= 1
     output_dir = "output/$now"
     executable = EXECUTABLE if alternative is None else f"{EXECUTABLE}-{alternative}"
     is_2d = (alternative is not None and '2d' in alternative)
+    scratch_dir = GLOBAL_SCRATCH_DIR
+    if node_scratch:
+        assert nodes == 1
+        scratch_dir = NODE_SCRATCH_DIR
     with output as f:
         f.write(script_header)
         if with_lsb:
@@ -110,10 +122,16 @@ def generate_jacobi_mpi_sub(*, runs: int, total_cores: int, cores_step: int, out
         job_base_name = f"jacobi1d_n{n}t{time_steps}"
         bsub_flags = f"-n {total_cores} -o {output_dir}'/{job_base_name}J' -J {job_base_name} -W {minutes}"
         # reserved scratch disk space in MB, multiplied by the number of cores
-        if is_2d:
-            bsub_flags += f" -R 'rusage[scratch={8 * n * n // 1_000_000 + 10}]'"
-        else:
-            bsub_flags += f" -R 'rusage[scratch={8 * n // 1_000_000 + 10}]'"
+        if node_scratch:
+            if is_2d:
+                bsub_flags += f" -R 'rusage[scratch={8 * n * n // 1_000_000 + 10}]'"
+            else:
+                bsub_flags += f" -R 'rusage[scratch={8 * n // 1_000_000 + 10}]'"
+        if nodes != 1:
+            assert total_cores % nodes == 0
+            assert is_2d or cores_step % nodes == 0
+            ptile = total_cores // nodes
+            bsub_flags += f" -R 'span[ptile={ptile}]'"
         if bsub_cpu is not None:
             bsub_flags += f" -R 'select[model=={bsub_cpu}]'"
         if send_email:
@@ -130,9 +148,9 @@ def generate_jacobi_mpi_sub(*, runs: int, total_cores: int, cores_step: int, out
                     if alternative is not None:
                         job_name += f"v{alternative}"
                     job_log = f"{output_dir}/{job_name}"
-                    dest = f"{SCRATCH_DIR}/${{now}}_{job_name}_r{i}"
+                    dest = f"{scratch_dir}/${{now}}_{job_name}_r{i}"
                     time_cmd = f"mpi_time.sh {job_log}r{i}t"
-                    job = f"mpirun -np {cores} {time_cmd} {executable} {n} {time_steps} {g} {dest}\n"
+                    job = f"mpirun --map-by node -np {cores} {time_cmd} {executable} {n} {time_steps} {g} {dest}\n"
                     f.write(job)
                     if do_cleanup:
                         f.write(f"rm {dest}\n")
