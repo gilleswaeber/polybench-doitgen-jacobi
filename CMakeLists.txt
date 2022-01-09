@@ -18,6 +18,7 @@ message("### build mode ### : ${CMAKE_BUILD_TYPE}")
 set(
     SRC 
     "jacobi/jacobi1d.cpp"
+    "jacobi/jacobi2d.cpp"
     "doitgen/doitgen.cpp"
     "polybench.cpp"
 )

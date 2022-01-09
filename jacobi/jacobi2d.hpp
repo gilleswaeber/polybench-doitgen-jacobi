@@ -7,7 +7,6 @@
 #include <cassert>
 #include <cmath>
 #include "jacobi1d.hpp"
-#include "error_handling.hpp"
 #include "array2dr.hpp"
 
 void init_2d_array(int n, Array2dR &A);

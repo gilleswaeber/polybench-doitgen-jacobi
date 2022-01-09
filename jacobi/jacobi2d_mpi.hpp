@@ -40,6 +40,7 @@
 #include <memory>
 #include <algorithm>
 #include "array2dr.hpp"
+#include "error_handling.hpp"
 
 #ifdef WITH_LSB
 #include <liblsb.h>
