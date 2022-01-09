@@ -1,3 +1,4 @@
+// Author: Gilles Waeber
 #include <iostream>
 #include <vector>
 
@@ -8,6 +9,7 @@
 
 #include "jacobi2d.hpp"
 #include "jacobi2d_mpi.hpp"
+#include "array2dr.hpp"
 
 struct Case {
     int n;

@@ -6,7 +6,7 @@
 #include <chrono>
 #include <unistd.h>
 
-#include "jacobi_1D.hpp"
+#include "jacobi1d.hpp"
 #include "jacobi1d_mpi.hpp"
 
 struct Case {

@@ -1,11 +1,9 @@
 #pragma once
+// Row-first 2D matrix
+// Author: Gilles Waeber
 
-#include <vector>
-#include <ostream>
-#include <fstream>
-#include <cassert>
-#include "jacobi_1D.hpp"
-#include "error_handling.hpp"
+#include <iostream>
+#include <cstring>
 
 struct Array2dR {
     // Row-first 2D matrix
@@ -41,7 +39,7 @@ struct Array2dR {
             for (int c = 0; c < cols; ++c) {
                 if (at(r, c) != other.at(r, c)) {
                     double a = std::min(at(r, c), other.at(r, c)), b = std::max(at(r, c), other.at(r, c));
-                    if (!(a + std::abs(a) * allowed_relative_error > b)) { // ensure no match on NaNs
+                    if (std::isnan(a) || std::isnan(b) || a + std::abs(a) * allowed_relative_error <= b) {
                         ++errors;
                         if (errors <= showErrors)
                             std::cerr << "  A[" << r << ',' << c << "] = " << at(r, c) << " ≠ B[" << r << ',' << c << "] = " << other.at(r, c) << "! (diff"
@@ -71,6 +69,7 @@ struct Array2dR {
     }
     template<int RowDir, int ColDir>
     void getTriangle(int r0, int c0, int n, double *dest) const {
+        // Triangle with a 90° angle at the (r0,c0) corner and adjacent sides have length n
         static_assert(RowDir == 1 || RowDir == -1, "RowDir must be 1 or -1");
         static_assert(ColDir == 1 || ColDir == -1, "ColDir must be 1 or -1");
         for (int r = 0; r < n; ++r) {
@@ -92,28 +91,3 @@ private:
     inline double& at(int row, int col) { return data[row * cols + col]; }
     std::vector<double> data;
 };
-
-void init_2d_array(int n, int firstRow, int firstCol, int rows, int cols, Array2dR &A) {
-    for (int r = 0; r < rows; ++r) {
-        for (int c = 0; c < cols; ++c) {
-            // A(r, c) = ((double) r * (c + 2) + 2) / n;
-            A(r, c) = ((double) (firstRow + r) * ((firstCol + c) + 2) + 2) / n;
-        }
-    }
-}
-void init_2d_array(int n, Array2dR &A) {
-    init_2d_array(n, 0, 0, n, n, A);
-}
-
-void jacobi_2d_reference(int timeSteps, int n, Array2dR &A) {
-    Array2dR B{n, n};
-    for (int t = 0; t < timeSteps; t++) {
-        for (int i = 1; i < n - 1; i++)
-            for (int j = 1; j < n - 1; j++)
-                B(i, j) = 0.2 * (A(i, j) + A(i, j - 1) + A(i, 1 + j) + A(1 + i, j) + A(i - 1, j));
-        for (int i = 1; i < n - 1; i++)
-            for (int j = 1; j < n - 1; j++)
-                A(i, j) = B(i, j);
-    }
-}
-void jacobi_2d_mpi(int timeSteps, int n, MpiParams params);

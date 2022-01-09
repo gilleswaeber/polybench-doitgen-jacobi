@@ -12,7 +12,7 @@
 
 #include <omp.h>
 
-#include "jacobi_1D.hpp"
+#include "jacobi1d.hpp"
 
 /* Array initialization. */
 void init_1d_array(long n, double *A) {

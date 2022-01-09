@@ -14,17 +14,19 @@ find_library(SUBUNIT_LIB subunit)
 
 add_executable(jacobi1d-check "check1d.cpp")
 add_executable(jacobi1d-mpi-test "mpi.cpp")
+add_executable(jacobi2d-check "check2d.cpp")
 add_executable(jacobi2d-mpi-test "mpi2d.cpp")
 add_executable(jacobi2d-mpi-2step-test "mpi2d.cpp")
+
 target_link_libraries(jacobi1d-check PUBLIC dphpc_lib check m rt pthread)
 target_link_libraries(jacobi1d-mpi-test PUBLIC dphpc_lib dphpc_lib_utils)
+target_link_libraries(jacobi2d-check PUBLIC dphpc_lib check m rt pthread)
 target_link_libraries(jacobi2d-mpi-test PUBLIC dphpc_lib dphpc_lib_utils)
 target_link_libraries(jacobi2d-mpi-2step-test PUBLIC dphpc_lib dphpc_lib_utils)
 
-#target_compile_definitions(jacobi2d-mpi-test PUBLIC -DVERBOSE)
 target_compile_definitions(jacobi2d-mpi-2step-test PUBLIC -DJACOBI2D_TWO_STEPS_SYNC)
 
 if(SUBUNIT_LIB)
-    add_executable(dphpc-jacobi-test "main.cpp")
-    target_link_libraries(dphpc-jacobi-test PUBLIC dphpc_lib dphpc_lib_utils check m rt pthread subunit)
+    add_executable(jacobi-test "main.cpp")
+    target_link_libraries(jacobi-test PUBLIC dphpc_lib dphpc_lib_utils check m rt pthread subunit)
 endif()

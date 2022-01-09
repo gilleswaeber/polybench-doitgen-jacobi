@@ -1,3 +1,37 @@
+// MPI Implementation for the Jacobi 2D problem
+//
+// IMPLEMENTATION CONCEPT
+// ======================
+// We consider the processes as a K×K grid s.t. each process only need to sync with the ones around
+// As for Jacobi-1D, we use ghost cells, i.e. we store an additional row and column on each side of the grid in
+// order to be able to compute all the values relevant to the current grid cell, then we exchange those values
+// between neighboring cells
+//
+// For 1 single ghost cell, we only need to sync with the process up/down/left/right
+// For >1 ghost cells, there are two solutions:
+// DIAGONAL: we also sync with processes in diagonal
+// TWO_STEPS: we sync first vertically then horizontally s.t. the diagonal cell is passed in the 2nd step
+//
+// We distinguish:
+// - block size: the size of a block (the last block might be larger when the total size cannot be divided exactly)
+// - true size: the size of the block computed by this process
+// - padded size: the size including ghost cells
+//
+// What cells do we need to compute the Xs after ≥t steps?
+//    ┃3             ┃33             ┃33⋯3┃
+//   3┃23           3┃223           3┃22⋯2┃3
+//  32┃123         32┃1123         32┃11⋯1┃23
+// ━━━╋━━━━   …   ━━━╋━━━━━   …   ━━━╋━━⋯━╋━━━
+// 321┃X123       321┃XX123       321┃XX⋯X┃123
+//  32┃123        321┃XX123       321┃XX⋯X┃123
+//   3┃23          32┃1123        ::::::⋱:::::
+//    ┃3            3┃223         321┃XX⋯X┃123
+//                   ┃33          ━━━╋━━⋯━╋━━━
+//                                 32┃11⋯1┃23
+//                                  3┃22⋯2┃3
+//                                   ┃33⋯3┃
+//
+// Author: Gilles Waeber
 #include <mpi.h>
 #include <utility>
 #include <vector>
@@ -5,9 +39,12 @@
 #include <iostream>
 #include <memory>
 #include <algorithm>
+#include "array2dr.hpp"
 
 #ifdef WITH_LSB
 #include <liblsb.h>
+#else
+#include "no_lsb.hpp"
 #endif
 
 #ifndef JACOBI2D_TWO_STEPS_SYNC
@@ -15,36 +52,6 @@
 #endif
 
 void jacobi_2d_mpi(int timeSteps, int n, MpiParams params) {
-    // IMPLEMENTATION CONCEPT
-    // We consider the processes as a K×K grid s.t. each process only need to sync with the ones around
-    // As for Jacobi-1D, we use ghost cells, i.e. we store an additional row and column on each side of the grid in
-    // order to be able to compute all the values relevant to the current grid cell, then we exchange those values
-    // between neighboring cells
-    //
-    // For 1 single ghost cell, we only need to sync with the process up/down/left/right
-    // For >1 ghost cells, there are two solutions:
-    // DIAGONAL: we also sync with processes in diagonal
-    // TWO_STEPS: we sync first vertically then horizontally s.t. the diagonal cell is passed in the 2nd step
-    //
-    // We distinguish:
-    // - block size: the size of a block (the last block might be larger when the total size cannot be divided exactly)
-    // - true size: the size of the block computed by this process
-    // - padded size: the size including ghost cells
-    //
-    // What cells do we need to compute the Xs after ≥t steps?
-    //    ┃3             ┃33             ┃33⋯3┃
-    //   3┃23           3┃223           3┃22⋯2┃3
-    //  32┃123         32┃1123         32┃11⋯1┃23
-    // ━━━╋━━━━   …   ━━━╋━━━━━   …   ━━━╋━━⋯━╋━━━
-    // 321┃X123       321┃XX123       321┃XX⋯X┃123
-    //  32┃123        321┃XX123       321┃XX⋯X┃123
-    //   3┃23          32┃1123        ::::::⋱:::::
-    //    ┃3            3┃223         321┃XX⋯X┃123
-    //                   ┃33          ━━━╋━━⋯━╋━━━
-    //                                 32┃11⋯1┃23
-    //                                  3┃22⋯2┃3
-    //                                   ┃33⋯3┃
-
     enum MPI_TAG : int {
         TAG_Share = 10,
     };
@@ -130,6 +137,7 @@ void jacobi_2d_mpi(int timeSteps, int n, MpiParams params) {
     const int topCornerStart = trueRows * g;
     const int bottomCornerStart = topCornerStart + topCornerBuffer;
 #endif
+
     Peer top{cellR != 0, params.rank - gridSize, oddRow, vBufferSize};
     Peer bottom{cellR != lastCell, params.rank + gridSize, 1 - oddRow, vBufferSize};
     Peer left{cellC != 0, params.rank - 1, 2 + oddCol, hBufferSize};
@@ -150,7 +158,6 @@ void jacobi_2d_mpi(int timeSteps, int n, MpiParams params) {
     std::sort(vPeers.begin(), vPeers.end());
     std::sort(hPeers.begin(), hPeers.end());
 #endif
-
 
 #ifdef VERBOSE
     std::cerr << "gridSize: " << gridSize << " cellR: " << cellR << " cellC: " << cellC << " lastCell: " << lastCell
@@ -177,9 +184,7 @@ void jacobi_2d_mpi(int timeSteps, int n, MpiParams params) {
     std::vector<MPI_Request> vRequests(2 * vPeers.size());
     std::vector<MPI_Request> hRequests(2 * hPeers.size());
 #endif
-#ifdef WITH_LSB
     LSB_Rec(REC_Init);
-#endif
     std::vector<double> topRow(paddedCols);
     for (int t = 0; t < timeSteps; ++t) {
         const int tMod = t % g;
@@ -196,10 +201,8 @@ void jacobi_2d_mpi(int timeSteps, int n, MpiParams params) {
             }
         }
 
-        if (tMod == params.ghost_cells - 1 && t != timeSteps - 1) { // sync processes
-#ifdef WITH_LSB
+        if (tMod == g - 1 && t != timeSteps - 1) { // sync processes
             LSB_Rec(REC_Compute);
-#endif
 
 #ifdef JACOBI2D_DIAGONAL_SYNC
             MPI_Request *req = &requests[0];
@@ -270,22 +273,12 @@ void jacobi_2d_mpi(int timeSteps, int n, MpiParams params) {
             }
 #endif
 
-#ifdef WITH_LSB
             LSB_Rec(REC_Sync);
-#endif
         }
     }
-#ifdef WITH_LSB
     LSB_Rec(REC_Compute);
-#endif
     // write results to file
     // https://www.cscs.ch/fileadmin/user_upload/contents_publications/tutorials/fast_parallel_IO/MPI-IO_NS.pdf
-    // for (int r = 0; r < paddedRows; ++r) {
-    //     for (int c = 0; c < paddedCols; ++c) {
-    //         A(r, c) = 100000 * (paddedR + r) + 100 * (paddedC + c) + 1 * (params.rank + 1);
-    //     }
-    // }
-
     for (int r = 0; r < trueRows; ++r) {
         ABORT_ON_ERROR(MPI_File_write_at(fh,
                                          ((trueR + r) * n + trueC) * sizeof(double),
@@ -294,7 +287,5 @@ void jacobi_2d_mpi(int timeSteps, int n, MpiParams params) {
                                          MPI_DOUBLE, MPI_STATUS_IGNORE))
     }
     ABORT_ON_ERROR(MPI_File_close(&fh))
-#ifdef WITH_LSB
     LSB_Rec(REC_Write);
-#endif
 }
