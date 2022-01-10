@@ -1,2250 +1,250 @@
-../dphpc-doitgen-openmp-benchmark transpose 128 512 512 1 0
-../dphpc-doitgen-openmp-benchmark transpose 128 512 512 1 1
-../dphpc-doitgen-openmp-benchmark transpose 128 512 512 1 2
-../dphpc-doitgen-openmp-benchmark transpose 128 512 512 1 3
-../dphpc-doitgen-openmp-benchmark transpose 128 512 512 1 4
-../dphpc-doitgen-openmp-benchmark transpose 128 512 512 1 5
-../dphpc-doitgen-openmp-benchmark transpose 128 512 512 1 6
-../dphpc-doitgen-openmp-benchmark transpose 128 512 512 1 7
-../dphpc-doitgen-openmp-benchmark transpose 128 512 512 1 8
-../dphpc-doitgen-openmp-benchmark transpose 128 512 512 1 9
-../dphpc-doitgen-openmp-benchmark transpose 256 512 512 2 0
-../dphpc-doitgen-openmp-benchmark transpose 256 512 512 2 1
-../dphpc-doitgen-openmp-benchmark transpose 256 512 512 2 2
-../dphpc-doitgen-openmp-benchmark transpose 256 512 512 2 3
-../dphpc-doitgen-openmp-benchmark transpose 256 512 512 2 4
-../dphpc-doitgen-openmp-benchmark transpose 256 512 512 2 5
-../dphpc-doitgen-openmp-benchmark transpose 256 512 512 2 6
-../dphpc-doitgen-openmp-benchmark transpose 256 512 512 2 7
-../dphpc-doitgen-openmp-benchmark transpose 256 512 512 2 8
-../dphpc-doitgen-openmp-benchmark transpose 256 512 512 2 9
-../dphpc-doitgen-openmp-benchmark transpose 512 512 512 4 0
-../dphpc-doitgen-openmp-benchmark transpose 512 512 512 4 1
-../dphpc-doitgen-openmp-benchmark transpose 512 512 512 4 2
-../dphpc-doitgen-openmp-benchmark transpose 512 512 512 4 3
-../dphpc-doitgen-openmp-benchmark transpose 512 512 512 4 4
-../dphpc-doitgen-openmp-benchmark transpose 512 512 512 4 5
-../dphpc-doitgen-openmp-benchmark transpose 512 512 512 4 6
-../dphpc-doitgen-openmp-benchmark transpose 512 512 512 4 7
-../dphpc-doitgen-openmp-benchmark transpose 512 512 512 4 8
-../dphpc-doitgen-openmp-benchmark transpose 512 512 512 4 9
-../dphpc-doitgen-openmp-benchmark transpose 768 512 512 6 0
-../dphpc-doitgen-openmp-benchmark transpose 768 512 512 6 1
-../dphpc-doitgen-openmp-benchmark transpose 768 512 512 6 2
-../dphpc-doitgen-openmp-benchmark transpose 768 512 512 6 3
-../dphpc-doitgen-openmp-benchmark transpose 768 512 512 6 4
-../dphpc-doitgen-openmp-benchmark transpose 768 512 512 6 5
-../dphpc-doitgen-openmp-benchmark transpose 768 512 512 6 6
-../dphpc-doitgen-openmp-benchmark transpose 768 512 512 6 7
-../dphpc-doitgen-openmp-benchmark transpose 768 512 512 6 8
-../dphpc-doitgen-openmp-benchmark transpose 768 512 512 6 9
-../dphpc-doitgen-openmp-benchmark transpose 1024 512 512 8 0
-../dphpc-doitgen-openmp-benchmark transpose 1024 512 512 8 1
-../dphpc-doitgen-openmp-benchmark transpose 1024 512 512 8 2
-../dphpc-doitgen-openmp-benchmark transpose 1024 512 512 8 3
-../dphpc-doitgen-openmp-benchmark transpose 1024 512 512 8 4
-../dphpc-doitgen-openmp-benchmark transpose 1024 512 512 8 5
-../dphpc-doitgen-openmp-benchmark transpose 1024 512 512 8 6
-../dphpc-doitgen-openmp-benchmark transpose 1024 512 512 8 7
-../dphpc-doitgen-openmp-benchmark transpose 1024 512 512 8 8
-../dphpc-doitgen-openmp-benchmark transpose 1024 512 512 8 9
-../dphpc-doitgen-openmp-benchmark transpose 1280 512 512 10 0
-../dphpc-doitgen-openmp-benchmark transpose 1280 512 512 10 1
-../dphpc-doitgen-openmp-benchmark transpose 1280 512 512 10 2
-../dphpc-doitgen-openmp-benchmark transpose 1280 512 512 10 3
-../dphpc-doitgen-openmp-benchmark transpose 1280 512 512 10 4
-../dphpc-doitgen-openmp-benchmark transpose 1280 512 512 10 5
-../dphpc-doitgen-openmp-benchmark transpose 1280 512 512 10 6
-../dphpc-doitgen-openmp-benchmark transpose 1280 512 512 10 7
-../dphpc-doitgen-openmp-benchmark transpose 1280 512 512 10 8
-../dphpc-doitgen-openmp-benchmark transpose 1280 512 512 10 9
-../dphpc-doitgen-openmp-benchmark transpose 1536 512 512 12 0
-../dphpc-doitgen-openmp-benchmark transpose 1536 512 512 12 1
-../dphpc-doitgen-openmp-benchmark transpose 1536 512 512 12 2
-../dphpc-doitgen-openmp-benchmark transpose 1536 512 512 12 3
-../dphpc-doitgen-openmp-benchmark transpose 1536 512 512 12 4
-../dphpc-doitgen-openmp-benchmark transpose 1536 512 512 12 5
-../dphpc-doitgen-openmp-benchmark transpose 1536 512 512 12 6
-../dphpc-doitgen-openmp-benchmark transpose 1536 512 512 12 7
-../dphpc-doitgen-openmp-benchmark transpose 1536 512 512 12 8
-../dphpc-doitgen-openmp-benchmark transpose 1536 512 512 12 9
-../dphpc-doitgen-openmp-benchmark transpose 1792 512 512 14 0
-../dphpc-doitgen-openmp-benchmark transpose 1792 512 512 14 1
-../dphpc-doitgen-openmp-benchmark transpose 1792 512 512 14 2
-../dphpc-doitgen-openmp-benchmark transpose 1792 512 512 14 3
-../dphpc-doitgen-openmp-benchmark transpose 1792 512 512 14 4
-../dphpc-doitgen-openmp-benchmark transpose 1792 512 512 14 5
-../dphpc-doitgen-openmp-benchmark transpose 1792 512 512 14 6
-../dphpc-doitgen-openmp-benchmark transpose 1792 512 512 14 7
-../dphpc-doitgen-openmp-benchmark transpose 1792 512 512 14 8
-../dphpc-doitgen-openmp-benchmark transpose 1792 512 512 14 9
-../dphpc-doitgen-openmp-benchmark transpose 2048 512 512 16 0
-../dphpc-doitgen-openmp-benchmark transpose 2048 512 512 16 1
-../dphpc-doitgen-openmp-benchmark transpose 2048 512 512 16 2
-../dphpc-doitgen-openmp-benchmark transpose 2048 512 512 16 3
-../dphpc-doitgen-openmp-benchmark transpose 2048 512 512 16 4
-../dphpc-doitgen-openmp-benchmark transpose 2048 512 512 16 5
-../dphpc-doitgen-openmp-benchmark transpose 2048 512 512 16 6
-../dphpc-doitgen-openmp-benchmark transpose 2048 512 512 16 7
-../dphpc-doitgen-openmp-benchmark transpose 2048 512 512 16 8
-../dphpc-doitgen-openmp-benchmark transpose 2048 512 512 16 9
-../dphpc-doitgen-openmp-benchmark transpose 2304 512 512 18 0
-../dphpc-doitgen-openmp-benchmark transpose 2304 512 512 18 1
-../dphpc-doitgen-openmp-benchmark transpose 2304 512 512 18 2
-../dphpc-doitgen-openmp-benchmark transpose 2304 512 512 18 3
-../dphpc-doitgen-openmp-benchmark transpose 2304 512 512 18 4
-../dphpc-doitgen-openmp-benchmark transpose 2304 512 512 18 5
-../dphpc-doitgen-openmp-benchmark transpose 2304 512 512 18 6
-../dphpc-doitgen-openmp-benchmark transpose 2304 512 512 18 7
-../dphpc-doitgen-openmp-benchmark transpose 2304 512 512 18 8
-../dphpc-doitgen-openmp-benchmark transpose 2304 512 512 18 9
-../dphpc-doitgen-openmp-benchmark transpose 2560 512 512 20 0
-../dphpc-doitgen-openmp-benchmark transpose 2560 512 512 20 1
-../dphpc-doitgen-openmp-benchmark transpose 2560 512 512 20 2
-../dphpc-doitgen-openmp-benchmark transpose 2560 512 512 20 3
-../dphpc-doitgen-openmp-benchmark transpose 2560 512 512 20 4
-../dphpc-doitgen-openmp-benchmark transpose 2560 512 512 20 5
-../dphpc-doitgen-openmp-benchmark transpose 2560 512 512 20 6
-../dphpc-doitgen-openmp-benchmark transpose 2560 512 512 20 7
-../dphpc-doitgen-openmp-benchmark transpose 2560 512 512 20 8
-../dphpc-doitgen-openmp-benchmark transpose 2560 512 512 20 9
-../dphpc-doitgen-openmp-benchmark transpose 2816 512 512 22 0
-../dphpc-doitgen-openmp-benchmark transpose 2816 512 512 22 1
-../dphpc-doitgen-openmp-benchmark transpose 2816 512 512 22 2
-../dphpc-doitgen-openmp-benchmark transpose 2816 512 512 22 3
-../dphpc-doitgen-openmp-benchmark transpose 2816 512 512 22 4
-../dphpc-doitgen-openmp-benchmark transpose 2816 512 512 22 5
-../dphpc-doitgen-openmp-benchmark transpose 2816 512 512 22 6
-../dphpc-doitgen-openmp-benchmark transpose 2816 512 512 22 7
-../dphpc-doitgen-openmp-benchmark transpose 2816 512 512 22 8
-../dphpc-doitgen-openmp-benchmark transpose 2816 512 512 22 9
-../dphpc-doitgen-openmp-benchmark transpose 3072 512 512 24 0
-../dphpc-doitgen-openmp-benchmark transpose 3072 512 512 24 1
-../dphpc-doitgen-openmp-benchmark transpose 3072 512 512 24 2
-../dphpc-doitgen-openmp-benchmark transpose 3072 512 512 24 3
-../dphpc-doitgen-openmp-benchmark transpose 3072 512 512 24 4
-../dphpc-doitgen-openmp-benchmark transpose 3072 512 512 24 5
-../dphpc-doitgen-openmp-benchmark transpose 3072 512 512 24 6
-../dphpc-doitgen-openmp-benchmark transpose 3072 512 512 24 7
-../dphpc-doitgen-openmp-benchmark transpose 3072 512 512 24 8
-../dphpc-doitgen-openmp-benchmark transpose 3072 512 512 24 9
-../dphpc-doitgen-openmp-benchmark transpose 3328 512 512 26 0
-../dphpc-doitgen-openmp-benchmark transpose 3328 512 512 26 1
-../dphpc-doitgen-openmp-benchmark transpose 3328 512 512 26 2
-../dphpc-doitgen-openmp-benchmark transpose 3328 512 512 26 3
-../dphpc-doitgen-openmp-benchmark transpose 3328 512 512 26 4
-../dphpc-doitgen-openmp-benchmark transpose 3328 512 512 26 5
-../dphpc-doitgen-openmp-benchmark transpose 3328 512 512 26 6
-../dphpc-doitgen-openmp-benchmark transpose 3328 512 512 26 7
-../dphpc-doitgen-openmp-benchmark transpose 3328 512 512 26 8
-../dphpc-doitgen-openmp-benchmark transpose 3328 512 512 26 9
-../dphpc-doitgen-openmp-benchmark transpose 3584 512 512 28 0
-../dphpc-doitgen-openmp-benchmark transpose 3584 512 512 28 1
-../dphpc-doitgen-openmp-benchmark transpose 3584 512 512 28 2
-../dphpc-doitgen-openmp-benchmark transpose 3584 512 512 28 3
-../dphpc-doitgen-openmp-benchmark transpose 3584 512 512 28 4
-../dphpc-doitgen-openmp-benchmark transpose 3584 512 512 28 5
-../dphpc-doitgen-openmp-benchmark transpose 3584 512 512 28 6
-../dphpc-doitgen-openmp-benchmark transpose 3584 512 512 28 7
-../dphpc-doitgen-openmp-benchmark transpose 3584 512 512 28 8
-../dphpc-doitgen-openmp-benchmark transpose 3584 512 512 28 9
-../dphpc-doitgen-openmp-benchmark transpose 3840 512 512 30 0
-../dphpc-doitgen-openmp-benchmark transpose 3840 512 512 30 1
-../dphpc-doitgen-openmp-benchmark transpose 3840 512 512 30 2
-../dphpc-doitgen-openmp-benchmark transpose 3840 512 512 30 3
-../dphpc-doitgen-openmp-benchmark transpose 3840 512 512 30 4
-../dphpc-doitgen-openmp-benchmark transpose 3840 512 512 30 5
-../dphpc-doitgen-openmp-benchmark transpose 3840 512 512 30 6
-../dphpc-doitgen-openmp-benchmark transpose 3840 512 512 30 7
-../dphpc-doitgen-openmp-benchmark transpose 3840 512 512 30 8
-../dphpc-doitgen-openmp-benchmark transpose 3840 512 512 30 9
-../dphpc-doitgen-openmp-benchmark transpose 4096 512 512 32 0
-../dphpc-doitgen-openmp-benchmark transpose 4096 512 512 32 1
-../dphpc-doitgen-openmp-benchmark transpose 4096 512 512 32 2
-../dphpc-doitgen-openmp-benchmark transpose 4096 512 512 32 3
-../dphpc-doitgen-openmp-benchmark transpose 4096 512 512 32 4
-../dphpc-doitgen-openmp-benchmark transpose 4096 512 512 32 5
-../dphpc-doitgen-openmp-benchmark transpose 4096 512 512 32 6
-../dphpc-doitgen-openmp-benchmark transpose 4096 512 512 32 7
-../dphpc-doitgen-openmp-benchmark transpose 4096 512 512 32 8
-../dphpc-doitgen-openmp-benchmark transpose 4096 512 512 32 9
-../dphpc-doitgen-openmp-benchmark transpose 4352 512 512 34 0
-../dphpc-doitgen-openmp-benchmark transpose 4352 512 512 34 1
-../dphpc-doitgen-openmp-benchmark transpose 4352 512 512 34 2
-../dphpc-doitgen-openmp-benchmark transpose 4352 512 512 34 3
-../dphpc-doitgen-openmp-benchmark transpose 4352 512 512 34 4
-../dphpc-doitgen-openmp-benchmark transpose 4352 512 512 34 5
-../dphpc-doitgen-openmp-benchmark transpose 4352 512 512 34 6
-../dphpc-doitgen-openmp-benchmark transpose 4352 512 512 34 7
-../dphpc-doitgen-openmp-benchmark transpose 4352 512 512 34 8
-../dphpc-doitgen-openmp-benchmark transpose 4352 512 512 34 9
-../dphpc-doitgen-openmp-benchmark transpose 4608 512 512 36 0
-../dphpc-doitgen-openmp-benchmark transpose 4608 512 512 36 1
-../dphpc-doitgen-openmp-benchmark transpose 4608 512 512 36 2
-../dphpc-doitgen-openmp-benchmark transpose 4608 512 512 36 3
-../dphpc-doitgen-openmp-benchmark transpose 4608 512 512 36 4
-../dphpc-doitgen-openmp-benchmark transpose 4608 512 512 36 5
-../dphpc-doitgen-openmp-benchmark transpose 4608 512 512 36 6
-../dphpc-doitgen-openmp-benchmark transpose 4608 512 512 36 7
-../dphpc-doitgen-openmp-benchmark transpose 4608 512 512 36 8
-../dphpc-doitgen-openmp-benchmark transpose 4608 512 512 36 9
-../dphpc-doitgen-openmp-benchmark transpose 4864 512 512 38 0
-../dphpc-doitgen-openmp-benchmark transpose 4864 512 512 38 1
-../dphpc-doitgen-openmp-benchmark transpose 4864 512 512 38 2
-../dphpc-doitgen-openmp-benchmark transpose 4864 512 512 38 3
-../dphpc-doitgen-openmp-benchmark transpose 4864 512 512 38 4
-../dphpc-doitgen-openmp-benchmark transpose 4864 512 512 38 5
-../dphpc-doitgen-openmp-benchmark transpose 4864 512 512 38 6
-../dphpc-doitgen-openmp-benchmark transpose 4864 512 512 38 7
-../dphpc-doitgen-openmp-benchmark transpose 4864 512 512 38 8
-../dphpc-doitgen-openmp-benchmark transpose 4864 512 512 38 9
-../dphpc-doitgen-openmp-benchmark transpose 5120 512 512 40 0
-../dphpc-doitgen-openmp-benchmark transpose 5120 512 512 40 1
-../dphpc-doitgen-openmp-benchmark transpose 5120 512 512 40 2
-../dphpc-doitgen-openmp-benchmark transpose 5120 512 512 40 3
-../dphpc-doitgen-openmp-benchmark transpose 5120 512 512 40 4
-../dphpc-doitgen-openmp-benchmark transpose 5120 512 512 40 5
-../dphpc-doitgen-openmp-benchmark transpose 5120 512 512 40 6
-../dphpc-doitgen-openmp-benchmark transpose 5120 512 512 40 7
-../dphpc-doitgen-openmp-benchmark transpose 5120 512 512 40 8
-../dphpc-doitgen-openmp-benchmark transpose 5120 512 512 40 9
-../dphpc-doitgen-openmp-benchmark transpose 5376 512 512 42 0
-../dphpc-doitgen-openmp-benchmark transpose 5376 512 512 42 1
-../dphpc-doitgen-openmp-benchmark transpose 5376 512 512 42 2
-../dphpc-doitgen-openmp-benchmark transpose 5376 512 512 42 3
-../dphpc-doitgen-openmp-benchmark transpose 5376 512 512 42 4
-../dphpc-doitgen-openmp-benchmark transpose 5376 512 512 42 5
-../dphpc-doitgen-openmp-benchmark transpose 5376 512 512 42 6
-../dphpc-doitgen-openmp-benchmark transpose 5376 512 512 42 7
-../dphpc-doitgen-openmp-benchmark transpose 5376 512 512 42 8
-../dphpc-doitgen-openmp-benchmark transpose 5376 512 512 42 9
-../dphpc-doitgen-openmp-benchmark transpose 5632 512 512 44 0
-../dphpc-doitgen-openmp-benchmark transpose 5632 512 512 44 1
-../dphpc-doitgen-openmp-benchmark transpose 5632 512 512 44 2
-../dphpc-doitgen-openmp-benchmark transpose 5632 512 512 44 3
-../dphpc-doitgen-openmp-benchmark transpose 5632 512 512 44 4
-../dphpc-doitgen-openmp-benchmark transpose 5632 512 512 44 5
-../dphpc-doitgen-openmp-benchmark transpose 5632 512 512 44 6
-../dphpc-doitgen-openmp-benchmark transpose 5632 512 512 44 7
-../dphpc-doitgen-openmp-benchmark transpose 5632 512 512 44 8
-../dphpc-doitgen-openmp-benchmark transpose 5632 512 512 44 9
-../dphpc-doitgen-openmp-benchmark transpose 5888 512 512 46 0
-../dphpc-doitgen-openmp-benchmark transpose 5888 512 512 46 1
-../dphpc-doitgen-openmp-benchmark transpose 5888 512 512 46 2
-../dphpc-doitgen-openmp-benchmark transpose 5888 512 512 46 3
-../dphpc-doitgen-openmp-benchmark transpose 5888 512 512 46 4
-../dphpc-doitgen-openmp-benchmark transpose 5888 512 512 46 5
-../dphpc-doitgen-openmp-benchmark transpose 5888 512 512 46 6
-../dphpc-doitgen-openmp-benchmark transpose 5888 512 512 46 7
-../dphpc-doitgen-openmp-benchmark transpose 5888 512 512 46 8
-../dphpc-doitgen-openmp-benchmark transpose 5888 512 512 46 9
-../dphpc-doitgen-openmp-benchmark transpose 6144 512 512 48 0
-../dphpc-doitgen-openmp-benchmark transpose 6144 512 512 48 1
-../dphpc-doitgen-openmp-benchmark transpose 6144 512 512 48 2
-../dphpc-doitgen-openmp-benchmark transpose 6144 512 512 48 3
-../dphpc-doitgen-openmp-benchmark transpose 6144 512 512 48 4
-../dphpc-doitgen-openmp-benchmark transpose 6144 512 512 48 5
-../dphpc-doitgen-openmp-benchmark transpose 6144 512 512 48 6
-../dphpc-doitgen-openmp-benchmark transpose 6144 512 512 48 7
-../dphpc-doitgen-openmp-benchmark transpose 6144 512 512 48 8
-../dphpc-doitgen-openmp-benchmark transpose 6144 512 512 48 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 128 512 512 1 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 128 512 512 1 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 128 512 512 1 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 128 512 512 1 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 128 512 512 1 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 128 512 512 1 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 128 512 512 1 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 128 512 512 1 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 128 512 512 1 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 128 512 512 1 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 256 512 512 2 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 256 512 512 2 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 256 512 512 2 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 256 512 512 2 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 256 512 512 2 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 256 512 512 2 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 256 512 512 2 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 256 512 512 2 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 256 512 512 2 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 256 512 512 2 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 512 512 512 4 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 512 512 512 4 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 512 512 512 4 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 512 512 512 4 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 512 512 512 4 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 512 512 512 4 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 512 512 512 4 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 512 512 512 4 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 512 512 512 4 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 512 512 512 4 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 768 512 512 6 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 768 512 512 6 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 768 512 512 6 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 768 512 512 6 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 768 512 512 6 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 768 512 512 6 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 768 512 512 6 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 768 512 512 6 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 768 512 512 6 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 768 512 512 6 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 1024 512 512 8 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 1024 512 512 8 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 1024 512 512 8 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 1024 512 512 8 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 1024 512 512 8 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 1024 512 512 8 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 1024 512 512 8 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 1024 512 512 8 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 1024 512 512 8 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 1024 512 512 8 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 1280 512 512 10 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 1280 512 512 10 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 1280 512 512 10 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 1280 512 512 10 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 1280 512 512 10 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 1280 512 512 10 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 1280 512 512 10 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 1280 512 512 10 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 1280 512 512 10 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 1280 512 512 10 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 1536 512 512 12 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 1536 512 512 12 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 1536 512 512 12 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 1536 512 512 12 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 1536 512 512 12 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 1536 512 512 12 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 1536 512 512 12 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 1536 512 512 12 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 1536 512 512 12 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 1536 512 512 12 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 1792 512 512 14 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 1792 512 512 14 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 1792 512 512 14 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 1792 512 512 14 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 1792 512 512 14 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 1792 512 512 14 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 1792 512 512 14 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 1792 512 512 14 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 1792 512 512 14 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 1792 512 512 14 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 2048 512 512 16 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 2048 512 512 16 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 2048 512 512 16 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 2048 512 512 16 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 2048 512 512 16 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 2048 512 512 16 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 2048 512 512 16 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 2048 512 512 16 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 2048 512 512 16 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 2048 512 512 16 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 2304 512 512 18 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 2304 512 512 18 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 2304 512 512 18 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 2304 512 512 18 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 2304 512 512 18 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 2304 512 512 18 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 2304 512 512 18 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 2304 512 512 18 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 2304 512 512 18 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 2304 512 512 18 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 2560 512 512 20 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 2560 512 512 20 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 2560 512 512 20 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 2560 512 512 20 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 2560 512 512 20 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 2560 512 512 20 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 2560 512 512 20 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 2560 512 512 20 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 2560 512 512 20 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 2560 512 512 20 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 2816 512 512 22 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 2816 512 512 22 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 2816 512 512 22 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 2816 512 512 22 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 2816 512 512 22 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 2816 512 512 22 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 2816 512 512 22 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 2816 512 512 22 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 2816 512 512 22 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 2816 512 512 22 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 3072 512 512 24 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 3072 512 512 24 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 3072 512 512 24 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 3072 512 512 24 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 3072 512 512 24 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 3072 512 512 24 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 3072 512 512 24 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 3072 512 512 24 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 3072 512 512 24 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 3072 512 512 24 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 3328 512 512 26 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 3328 512 512 26 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 3328 512 512 26 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 3328 512 512 26 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 3328 512 512 26 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 3328 512 512 26 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 3328 512 512 26 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 3328 512 512 26 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 3328 512 512 26 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 3328 512 512 26 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 3584 512 512 28 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 3584 512 512 28 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 3584 512 512 28 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 3584 512 512 28 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 3584 512 512 28 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 3584 512 512 28 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 3584 512 512 28 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 3584 512 512 28 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 3584 512 512 28 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 3584 512 512 28 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 3840 512 512 30 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 3840 512 512 30 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 3840 512 512 30 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 3840 512 512 30 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 3840 512 512 30 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 3840 512 512 30 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 3840 512 512 30 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 3840 512 512 30 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 3840 512 512 30 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 3840 512 512 30 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 4096 512 512 32 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 4096 512 512 32 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 4096 512 512 32 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 4096 512 512 32 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 4096 512 512 32 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 4096 512 512 32 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 4096 512 512 32 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 4096 512 512 32 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 4096 512 512 32 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 4096 512 512 32 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 4352 512 512 34 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 4352 512 512 34 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 4352 512 512 34 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 4352 512 512 34 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 4352 512 512 34 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 4352 512 512 34 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 4352 512 512 34 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 4352 512 512 34 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 4352 512 512 34 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 4352 512 512 34 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 4608 512 512 36 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 4608 512 512 36 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 4608 512 512 36 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 4608 512 512 36 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 4608 512 512 36 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 4608 512 512 36 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 4608 512 512 36 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 4608 512 512 36 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 4608 512 512 36 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 4608 512 512 36 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 4864 512 512 38 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 4864 512 512 38 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 4864 512 512 38 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 4864 512 512 38 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 4864 512 512 38 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 4864 512 512 38 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 4864 512 512 38 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 4864 512 512 38 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 4864 512 512 38 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 4864 512 512 38 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 5120 512 512 40 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 5120 512 512 40 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 5120 512 512 40 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 5120 512 512 40 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 5120 512 512 40 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 5120 512 512 40 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 5120 512 512 40 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 5120 512 512 40 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 5120 512 512 40 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 5120 512 512 40 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 5376 512 512 42 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 5376 512 512 42 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 5376 512 512 42 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 5376 512 512 42 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 5376 512 512 42 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 5376 512 512 42 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 5376 512 512 42 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 5376 512 512 42 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 5376 512 512 42 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 5376 512 512 42 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 5632 512 512 44 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 5632 512 512 44 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 5632 512 512 44 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 5632 512 512 44 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 5632 512 512 44 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 5632 512 512 44 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 5632 512 512 44 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 5632 512 512 44 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 5632 512 512 44 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 5632 512 512 44 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 5888 512 512 46 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 5888 512 512 46 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 5888 512 512 46 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 5888 512 512 46 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 5888 512 512 46 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 5888 512 512 46 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 5888 512 512 46 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 5888 512 512 46 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 5888 512 512 46 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 5888 512 512 46 9
-../dphpc-doitgen-openmp-benchmark inverted_loop 6144 512 512 48 0
-../dphpc-doitgen-openmp-benchmark inverted_loop 6144 512 512 48 1
-../dphpc-doitgen-openmp-benchmark inverted_loop 6144 512 512 48 2
-../dphpc-doitgen-openmp-benchmark inverted_loop 6144 512 512 48 3
-../dphpc-doitgen-openmp-benchmark inverted_loop 6144 512 512 48 4
-../dphpc-doitgen-openmp-benchmark inverted_loop 6144 512 512 48 5
-../dphpc-doitgen-openmp-benchmark inverted_loop 6144 512 512 48 6
-../dphpc-doitgen-openmp-benchmark inverted_loop 6144 512 512 48 7
-../dphpc-doitgen-openmp-benchmark inverted_loop 6144 512 512 48 8
-../dphpc-doitgen-openmp-benchmark inverted_loop 6144 512 512 48 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 128 512 512 1 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 128 512 512 1 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 128 512 512 1 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 128 512 512 1 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 128 512 512 1 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 128 512 512 1 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 128 512 512 1 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 128 512 512 1 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 128 512 512 1 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 128 512 512 1 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 256 512 512 2 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 256 512 512 2 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 256 512 512 2 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 256 512 512 2 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 256 512 512 2 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 256 512 512 2 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 256 512 512 2 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 256 512 512 2 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 256 512 512 2 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 256 512 512 2 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 512 512 512 4 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 512 512 512 4 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 512 512 512 4 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 512 512 512 4 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 512 512 512 4 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 512 512 512 4 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 512 512 512 4 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 512 512 512 4 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 512 512 512 4 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 512 512 512 4 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 768 512 512 6 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 768 512 512 6 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 768 512 512 6 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 768 512 512 6 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 768 512 512 6 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 768 512 512 6 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 768 512 512 6 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 768 512 512 6 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 768 512 512 6 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 768 512 512 6 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1024 512 512 8 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1024 512 512 8 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1024 512 512 8 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1024 512 512 8 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1024 512 512 8 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1024 512 512 8 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1024 512 512 8 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1024 512 512 8 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1024 512 512 8 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1024 512 512 8 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1280 512 512 10 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1280 512 512 10 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1280 512 512 10 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1280 512 512 10 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1280 512 512 10 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1280 512 512 10 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1280 512 512 10 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1280 512 512 10 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1280 512 512 10 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1280 512 512 10 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1536 512 512 12 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1536 512 512 12 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1536 512 512 12 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1536 512 512 12 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1536 512 512 12 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1536 512 512 12 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1536 512 512 12 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1536 512 512 12 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1536 512 512 12 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1536 512 512 12 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1792 512 512 14 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1792 512 512 14 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1792 512 512 14 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1792 512 512 14 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1792 512 512 14 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1792 512 512 14 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1792 512 512 14 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1792 512 512 14 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1792 512 512 14 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 1792 512 512 14 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2048 512 512 16 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2048 512 512 16 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2048 512 512 16 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2048 512 512 16 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2048 512 512 16 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2048 512 512 16 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2048 512 512 16 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2048 512 512 16 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2048 512 512 16 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2048 512 512 16 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2304 512 512 18 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2304 512 512 18 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2304 512 512 18 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2304 512 512 18 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2304 512 512 18 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2304 512 512 18 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2304 512 512 18 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2304 512 512 18 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2304 512 512 18 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2304 512 512 18 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2560 512 512 20 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2560 512 512 20 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2560 512 512 20 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2560 512 512 20 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2560 512 512 20 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2560 512 512 20 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2560 512 512 20 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2560 512 512 20 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2560 512 512 20 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2560 512 512 20 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2816 512 512 22 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2816 512 512 22 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2816 512 512 22 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2816 512 512 22 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2816 512 512 22 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2816 512 512 22 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2816 512 512 22 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2816 512 512 22 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2816 512 512 22 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 2816 512 512 22 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3072 512 512 24 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3072 512 512 24 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3072 512 512 24 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3072 512 512 24 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3072 512 512 24 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3072 512 512 24 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3072 512 512 24 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3072 512 512 24 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3072 512 512 24 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3072 512 512 24 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3328 512 512 26 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3328 512 512 26 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3328 512 512 26 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3328 512 512 26 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3328 512 512 26 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3328 512 512 26 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3328 512 512 26 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3328 512 512 26 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3328 512 512 26 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3328 512 512 26 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3584 512 512 28 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3584 512 512 28 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3584 512 512 28 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3584 512 512 28 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3584 512 512 28 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3584 512 512 28 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3584 512 512 28 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3584 512 512 28 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3584 512 512 28 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3584 512 512 28 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3840 512 512 30 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3840 512 512 30 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3840 512 512 30 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3840 512 512 30 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3840 512 512 30 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3840 512 512 30 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3840 512 512 30 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3840 512 512 30 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3840 512 512 30 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 3840 512 512 30 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4096 512 512 32 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4096 512 512 32 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4096 512 512 32 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4096 512 512 32 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4096 512 512 32 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4096 512 512 32 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4096 512 512 32 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4096 512 512 32 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4096 512 512 32 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4096 512 512 32 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4352 512 512 34 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4352 512 512 34 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4352 512 512 34 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4352 512 512 34 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4352 512 512 34 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4352 512 512 34 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4352 512 512 34 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4352 512 512 34 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4352 512 512 34 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4352 512 512 34 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4608 512 512 36 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4608 512 512 36 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4608 512 512 36 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4608 512 512 36 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4608 512 512 36 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4608 512 512 36 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4608 512 512 36 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4608 512 512 36 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4608 512 512 36 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4608 512 512 36 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4864 512 512 38 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4864 512 512 38 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4864 512 512 38 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4864 512 512 38 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4864 512 512 38 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4864 512 512 38 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4864 512 512 38 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4864 512 512 38 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4864 512 512 38 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 4864 512 512 38 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5120 512 512 40 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5120 512 512 40 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5120 512 512 40 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5120 512 512 40 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5120 512 512 40 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5120 512 512 40 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5120 512 512 40 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5120 512 512 40 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5120 512 512 40 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5120 512 512 40 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5376 512 512 42 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5376 512 512 42 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5376 512 512 42 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5376 512 512 42 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5376 512 512 42 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5376 512 512 42 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5376 512 512 42 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5376 512 512 42 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5376 512 512 42 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5376 512 512 42 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5632 512 512 44 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5632 512 512 44 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5632 512 512 44 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5632 512 512 44 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5632 512 512 44 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5632 512 512 44 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5632 512 512 44 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5632 512 512 44 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5632 512 512 44 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5632 512 512 44 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5888 512 512 46 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5888 512 512 46 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5888 512 512 46 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5888 512 512 46 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5888 512 512 46 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5888 512 512 46 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5888 512 512 46 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5888 512 512 46 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5888 512 512 46 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 5888 512 512 46 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 6144 512 512 48 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 6144 512 512 48 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 6144 512 512 48 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 6144 512 512 48 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 6144 512 512 48 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 6144 512 512 48 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 6144 512 512 48 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 6144 512 512 48 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 6144 512 512 48 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2 6144 512 512 48 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 128 512 512 1 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 128 512 512 1 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 128 512 512 1 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 128 512 512 1 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 128 512 512 1 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 128 512 512 1 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 128 512 512 1 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 128 512 512 1 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 128 512 512 1 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 128 512 512 1 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 256 512 512 2 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 256 512 512 2 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 256 512 512 2 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 256 512 512 2 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 256 512 512 2 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 256 512 512 2 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 256 512 512 2 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 256 512 512 2 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 256 512 512 2 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 256 512 512 2 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 512 512 512 4 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 512 512 512 4 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 512 512 512 4 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 512 512 512 4 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 512 512 512 4 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 512 512 512 4 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 512 512 512 4 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 512 512 512 4 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 512 512 512 4 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 512 512 512 4 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 768 512 512 6 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 768 512 512 6 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 768 512 512 6 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 768 512 512 6 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 768 512 512 6 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 768 512 512 6 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 768 512 512 6 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 768 512 512 6 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 768 512 512 6 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 768 512 512 6 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1024 512 512 8 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1024 512 512 8 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1024 512 512 8 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1024 512 512 8 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1024 512 512 8 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1024 512 512 8 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1024 512 512 8 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1024 512 512 8 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1024 512 512 8 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1024 512 512 8 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1280 512 512 10 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1280 512 512 10 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1280 512 512 10 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1280 512 512 10 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1280 512 512 10 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1280 512 512 10 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1280 512 512 10 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1280 512 512 10 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1280 512 512 10 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1280 512 512 10 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1536 512 512 12 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1536 512 512 12 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1536 512 512 12 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1536 512 512 12 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1536 512 512 12 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1536 512 512 12 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1536 512 512 12 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1536 512 512 12 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1536 512 512 12 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1536 512 512 12 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1792 512 512 14 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1792 512 512 14 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1792 512 512 14 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1792 512 512 14 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1792 512 512 14 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1792 512 512 14 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1792 512 512 14 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1792 512 512 14 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1792 512 512 14 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 1792 512 512 14 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2048 512 512 16 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2048 512 512 16 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2048 512 512 16 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2048 512 512 16 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2048 512 512 16 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2048 512 512 16 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2048 512 512 16 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2048 512 512 16 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2048 512 512 16 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2048 512 512 16 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2304 512 512 18 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2304 512 512 18 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2304 512 512 18 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2304 512 512 18 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2304 512 512 18 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2304 512 512 18 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2304 512 512 18 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2304 512 512 18 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2304 512 512 18 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2304 512 512 18 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2560 512 512 20 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2560 512 512 20 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2560 512 512 20 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2560 512 512 20 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2560 512 512 20 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2560 512 512 20 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2560 512 512 20 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2560 512 512 20 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2560 512 512 20 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2560 512 512 20 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2816 512 512 22 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2816 512 512 22 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2816 512 512 22 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2816 512 512 22 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2816 512 512 22 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2816 512 512 22 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2816 512 512 22 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2816 512 512 22 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2816 512 512 22 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 2816 512 512 22 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3072 512 512 24 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3072 512 512 24 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3072 512 512 24 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3072 512 512 24 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3072 512 512 24 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3072 512 512 24 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3072 512 512 24 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3072 512 512 24 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3072 512 512 24 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3072 512 512 24 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3328 512 512 26 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3328 512 512 26 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3328 512 512 26 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3328 512 512 26 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3328 512 512 26 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3328 512 512 26 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3328 512 512 26 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3328 512 512 26 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3328 512 512 26 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3328 512 512 26 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3584 512 512 28 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3584 512 512 28 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3584 512 512 28 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3584 512 512 28 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3584 512 512 28 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3584 512 512 28 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3584 512 512 28 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3584 512 512 28 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3584 512 512 28 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3584 512 512 28 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3840 512 512 30 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3840 512 512 30 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3840 512 512 30 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3840 512 512 30 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3840 512 512 30 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3840 512 512 30 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3840 512 512 30 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3840 512 512 30 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3840 512 512 30 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 3840 512 512 30 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4096 512 512 32 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4096 512 512 32 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4096 512 512 32 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4096 512 512 32 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4096 512 512 32 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4096 512 512 32 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4096 512 512 32 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4096 512 512 32 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4096 512 512 32 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4096 512 512 32 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4352 512 512 34 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4352 512 512 34 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4352 512 512 34 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4352 512 512 34 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4352 512 512 34 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4352 512 512 34 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4352 512 512 34 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4352 512 512 34 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4352 512 512 34 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4352 512 512 34 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4608 512 512 36 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4608 512 512 36 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4608 512 512 36 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4608 512 512 36 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4608 512 512 36 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4608 512 512 36 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4608 512 512 36 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4608 512 512 36 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4608 512 512 36 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4608 512 512 36 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4864 512 512 38 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4864 512 512 38 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4864 512 512 38 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4864 512 512 38 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4864 512 512 38 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4864 512 512 38 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4864 512 512 38 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4864 512 512 38 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4864 512 512 38 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 4864 512 512 38 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5120 512 512 40 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5120 512 512 40 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5120 512 512 40 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5120 512 512 40 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5120 512 512 40 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5120 512 512 40 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5120 512 512 40 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5120 512 512 40 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5120 512 512 40 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5120 512 512 40 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5376 512 512 42 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5376 512 512 42 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5376 512 512 42 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5376 512 512 42 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5376 512 512 42 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5376 512 512 42 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5376 512 512 42 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5376 512 512 42 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5376 512 512 42 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5376 512 512 42 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5632 512 512 44 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5632 512 512 44 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5632 512 512 44 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5632 512 512 44 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5632 512 512 44 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5632 512 512 44 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5632 512 512 44 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5632 512 512 44 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5632 512 512 44 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5632 512 512 44 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5888 512 512 46 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5888 512 512 46 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5888 512 512 46 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5888 512 512 46 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5888 512 512 46 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5888 512 512 46 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5888 512 512 46 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5888 512 512 46 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5888 512 512 46 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 5888 512 512 46 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 6144 512 512 48 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 6144 512 512 48 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 6144 512 512 48 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 6144 512 512 48 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 6144 512 512 48 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 6144 512 512 48 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 6144 512 512 48 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 6144 512 512 48 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 6144 512 512 48 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum 6144 512 512 48 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 128 512 512 1 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 128 512 512 1 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 128 512 512 1 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 128 512 512 1 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 128 512 512 1 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 128 512 512 1 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 128 512 512 1 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 128 512 512 1 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 128 512 512 1 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 128 512 512 1 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 256 512 512 2 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 256 512 512 2 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 256 512 512 2 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 256 512 512 2 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 256 512 512 2 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 256 512 512 2 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 256 512 512 2 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 256 512 512 2 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 256 512 512 2 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 256 512 512 2 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 512 512 512 4 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 512 512 512 4 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 512 512 512 4 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 512 512 512 4 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 512 512 512 4 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 512 512 512 4 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 512 512 512 4 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 512 512 512 4 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 512 512 512 4 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 512 512 512 4 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 768 512 512 6 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 768 512 512 6 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 768 512 512 6 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 768 512 512 6 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 768 512 512 6 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 768 512 512 6 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 768 512 512 6 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 768 512 512 6 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 768 512 512 6 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 768 512 512 6 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1024 512 512 8 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1024 512 512 8 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1024 512 512 8 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1024 512 512 8 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1024 512 512 8 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1024 512 512 8 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1024 512 512 8 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1024 512 512 8 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1024 512 512 8 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1024 512 512 8 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1280 512 512 10 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1280 512 512 10 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1280 512 512 10 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1280 512 512 10 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1280 512 512 10 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1280 512 512 10 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1280 512 512 10 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1280 512 512 10 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1280 512 512 10 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1280 512 512 10 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1536 512 512 12 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1536 512 512 12 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1536 512 512 12 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1536 512 512 12 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1536 512 512 12 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1536 512 512 12 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1536 512 512 12 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1536 512 512 12 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1536 512 512 12 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1536 512 512 12 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1792 512 512 14 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1792 512 512 14 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1792 512 512 14 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1792 512 512 14 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1792 512 512 14 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1792 512 512 14 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1792 512 512 14 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1792 512 512 14 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1792 512 512 14 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 1792 512 512 14 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2048 512 512 16 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2048 512 512 16 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2048 512 512 16 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2048 512 512 16 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2048 512 512 16 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2048 512 512 16 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2048 512 512 16 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2048 512 512 16 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2048 512 512 16 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2048 512 512 16 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2304 512 512 18 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2304 512 512 18 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2304 512 512 18 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2304 512 512 18 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2304 512 512 18 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2304 512 512 18 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2304 512 512 18 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2304 512 512 18 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2304 512 512 18 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2304 512 512 18 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2560 512 512 20 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2560 512 512 20 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2560 512 512 20 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2560 512 512 20 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2560 512 512 20 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2560 512 512 20 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2560 512 512 20 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2560 512 512 20 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2560 512 512 20 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2560 512 512 20 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2816 512 512 22 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2816 512 512 22 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2816 512 512 22 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2816 512 512 22 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2816 512 512 22 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2816 512 512 22 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2816 512 512 22 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2816 512 512 22 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2816 512 512 22 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 2816 512 512 22 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3072 512 512 24 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3072 512 512 24 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3072 512 512 24 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3072 512 512 24 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3072 512 512 24 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3072 512 512 24 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3072 512 512 24 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3072 512 512 24 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3072 512 512 24 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3072 512 512 24 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3328 512 512 26 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3328 512 512 26 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3328 512 512 26 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3328 512 512 26 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3328 512 512 26 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3328 512 512 26 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3328 512 512 26 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3328 512 512 26 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3328 512 512 26 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3328 512 512 26 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3584 512 512 28 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3584 512 512 28 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3584 512 512 28 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3584 512 512 28 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3584 512 512 28 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3584 512 512 28 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3584 512 512 28 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3584 512 512 28 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3584 512 512 28 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3584 512 512 28 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3840 512 512 30 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3840 512 512 30 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3840 512 512 30 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3840 512 512 30 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3840 512 512 30 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3840 512 512 30 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3840 512 512 30 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3840 512 512 30 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3840 512 512 30 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 3840 512 512 30 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4096 512 512 32 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4096 512 512 32 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4096 512 512 32 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4096 512 512 32 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4096 512 512 32 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4096 512 512 32 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4096 512 512 32 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4096 512 512 32 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4096 512 512 32 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4096 512 512 32 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4352 512 512 34 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4352 512 512 34 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4352 512 512 34 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4352 512 512 34 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4352 512 512 34 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4352 512 512 34 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4352 512 512 34 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4352 512 512 34 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4352 512 512 34 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4352 512 512 34 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4608 512 512 36 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4608 512 512 36 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4608 512 512 36 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4608 512 512 36 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4608 512 512 36 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4608 512 512 36 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4608 512 512 36 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4608 512 512 36 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4608 512 512 36 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4608 512 512 36 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4864 512 512 38 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4864 512 512 38 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4864 512 512 38 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4864 512 512 38 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4864 512 512 38 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4864 512 512 38 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4864 512 512 38 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4864 512 512 38 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4864 512 512 38 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 4864 512 512 38 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5120 512 512 40 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5120 512 512 40 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5120 512 512 40 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5120 512 512 40 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5120 512 512 40 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5120 512 512 40 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5120 512 512 40 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5120 512 512 40 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5120 512 512 40 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5120 512 512 40 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5376 512 512 42 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5376 512 512 42 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5376 512 512 42 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5376 512 512 42 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5376 512 512 42 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5376 512 512 42 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5376 512 512 42 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5376 512 512 42 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5376 512 512 42 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5376 512 512 42 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5632 512 512 44 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5632 512 512 44 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5632 512 512 44 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5632 512 512 44 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5632 512 512 44 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5632 512 512 44 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5632 512 512 44 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5632 512 512 44 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5632 512 512 44 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5632 512 512 44 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5888 512 512 46 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5888 512 512 46 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5888 512 512 46 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5888 512 512 46 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5888 512 512 46 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5888 512 512 46 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5888 512 512 46 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5888 512 512 46 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5888 512 512 46 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 5888 512 512 46 9
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 6144 512 512 48 0
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 6144 512 512 48 1
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 6144 512 512 48 2
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 6144 512 512 48 3
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 6144 512 512 48 4
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 6144 512 512 48 5
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 6144 512 512 48 6
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 6144 512 512 48 7
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 6144 512 512 48 8
-../dphpc-doitgen-openmp-benchmark transpose_local_sum 6144 512 512 48 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 128 512 512 1 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 128 512 512 1 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 128 512 512 1 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 128 512 512 1 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 128 512 512 1 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 128 512 512 1 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 128 512 512 1 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 128 512 512 1 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 128 512 512 1 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 128 512 512 1 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 256 512 512 2 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 256 512 512 2 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 256 512 512 2 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 256 512 512 2 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 256 512 512 2 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 256 512 512 2 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 256 512 512 2 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 256 512 512 2 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 256 512 512 2 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 256 512 512 2 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 512 512 512 4 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 512 512 512 4 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 512 512 512 4 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 512 512 512 4 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 512 512 512 4 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 512 512 512 4 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 512 512 512 4 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 512 512 512 4 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 512 512 512 4 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 512 512 512 4 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 768 512 512 6 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 768 512 512 6 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 768 512 512 6 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 768 512 512 6 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 768 512 512 6 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 768 512 512 6 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 768 512 512 6 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 768 512 512 6 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 768 512 512 6 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 768 512 512 6 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1024 512 512 8 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1024 512 512 8 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1024 512 512 8 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1024 512 512 8 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1024 512 512 8 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1024 512 512 8 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1024 512 512 8 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1024 512 512 8 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1024 512 512 8 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1024 512 512 8 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1280 512 512 10 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1280 512 512 10 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1280 512 512 10 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1280 512 512 10 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1280 512 512 10 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1280 512 512 10 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1280 512 512 10 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1280 512 512 10 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1280 512 512 10 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1280 512 512 10 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1536 512 512 12 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1536 512 512 12 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1536 512 512 12 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1536 512 512 12 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1536 512 512 12 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1536 512 512 12 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1536 512 512 12 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1536 512 512 12 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1536 512 512 12 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1536 512 512 12 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1792 512 512 14 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1792 512 512 14 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1792 512 512 14 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1792 512 512 14 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1792 512 512 14 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1792 512 512 14 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1792 512 512 14 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1792 512 512 14 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1792 512 512 14 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 1792 512 512 14 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2048 512 512 16 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2048 512 512 16 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2048 512 512 16 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2048 512 512 16 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2048 512 512 16 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2048 512 512 16 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2048 512 512 16 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2048 512 512 16 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2048 512 512 16 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2048 512 512 16 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2304 512 512 18 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2304 512 512 18 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2304 512 512 18 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2304 512 512 18 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2304 512 512 18 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2304 512 512 18 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2304 512 512 18 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2304 512 512 18 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2304 512 512 18 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2304 512 512 18 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2560 512 512 20 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2560 512 512 20 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2560 512 512 20 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2560 512 512 20 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2560 512 512 20 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2560 512 512 20 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2560 512 512 20 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2560 512 512 20 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2560 512 512 20 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2560 512 512 20 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2816 512 512 22 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2816 512 512 22 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2816 512 512 22 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2816 512 512 22 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2816 512 512 22 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2816 512 512 22 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2816 512 512 22 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2816 512 512 22 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2816 512 512 22 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 2816 512 512 22 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3072 512 512 24 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3072 512 512 24 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3072 512 512 24 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3072 512 512 24 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3072 512 512 24 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3072 512 512 24 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3072 512 512 24 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3072 512 512 24 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3072 512 512 24 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3072 512 512 24 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3328 512 512 26 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3328 512 512 26 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3328 512 512 26 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3328 512 512 26 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3328 512 512 26 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3328 512 512 26 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3328 512 512 26 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3328 512 512 26 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3328 512 512 26 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3328 512 512 26 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3584 512 512 28 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3584 512 512 28 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3584 512 512 28 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3584 512 512 28 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3584 512 512 28 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3584 512 512 28 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3584 512 512 28 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3584 512 512 28 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3584 512 512 28 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3584 512 512 28 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3840 512 512 30 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3840 512 512 30 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3840 512 512 30 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3840 512 512 30 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3840 512 512 30 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3840 512 512 30 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3840 512 512 30 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3840 512 512 30 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3840 512 512 30 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 3840 512 512 30 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4096 512 512 32 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4096 512 512 32 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4096 512 512 32 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4096 512 512 32 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4096 512 512 32 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4096 512 512 32 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4096 512 512 32 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4096 512 512 32 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4096 512 512 32 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4096 512 512 32 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4352 512 512 34 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4352 512 512 34 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4352 512 512 34 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4352 512 512 34 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4352 512 512 34 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4352 512 512 34 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4352 512 512 34 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4352 512 512 34 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4352 512 512 34 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4352 512 512 34 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4608 512 512 36 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4608 512 512 36 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4608 512 512 36 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4608 512 512 36 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4608 512 512 36 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4608 512 512 36 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4608 512 512 36 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4608 512 512 36 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4608 512 512 36 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4608 512 512 36 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4864 512 512 38 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4864 512 512 38 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4864 512 512 38 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4864 512 512 38 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4864 512 512 38 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4864 512 512 38 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4864 512 512 38 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4864 512 512 38 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4864 512 512 38 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 4864 512 512 38 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5120 512 512 40 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5120 512 512 40 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5120 512 512 40 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5120 512 512 40 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5120 512 512 40 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5120 512 512 40 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5120 512 512 40 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5120 512 512 40 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5120 512 512 40 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5120 512 512 40 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5376 512 512 42 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5376 512 512 42 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5376 512 512 42 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5376 512 512 42 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5376 512 512 42 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5376 512 512 42 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5376 512 512 42 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5376 512 512 42 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5376 512 512 42 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5376 512 512 42 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5632 512 512 44 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5632 512 512 44 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5632 512 512 44 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5632 512 512 44 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5632 512 512 44 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5632 512 512 44 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5632 512 512 44 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5632 512 512 44 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5632 512 512 44 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5632 512 512 44 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5888 512 512 46 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5888 512 512 46 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5888 512 512 46 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5888 512 512 46 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5888 512 512 46 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5888 512 512 46 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5888 512 512 46 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5888 512 512 46 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5888 512 512 46 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 5888 512 512 46 9
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 6144 512 512 48 0
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 6144 512 512 48 1
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 6144 512 512 48 2
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 6144 512 512 48 3
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 6144 512 512 48 4
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 6144 512 512 48 5
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 6144 512 512 48 6
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 6144 512 512 48 7
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 6144 512 512 48 8
-../dphpc-doitgen-openmp-benchmark polybench_parallel_local_sum 6144 512 512 48 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 128 512 512 1 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 128 512 512 1 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 128 512 512 1 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 128 512 512 1 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 128 512 512 1 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 128 512 512 1 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 128 512 512 1 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 128 512 512 1 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 128 512 512 1 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 128 512 512 1 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 256 512 512 2 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 256 512 512 2 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 256 512 512 2 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 256 512 512 2 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 256 512 512 2 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 256 512 512 2 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 256 512 512 2 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 256 512 512 2 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 256 512 512 2 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 256 512 512 2 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 512 512 512 4 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 512 512 512 4 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 512 512 512 4 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 512 512 512 4 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 512 512 512 4 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 512 512 512 4 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 512 512 512 4 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 512 512 512 4 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 512 512 512 4 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 512 512 512 4 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 768 512 512 6 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 768 512 512 6 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 768 512 512 6 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 768 512 512 6 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 768 512 512 6 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 768 512 512 6 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 768 512 512 6 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 768 512 512 6 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 768 512 512 6 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 768 512 512 6 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1024 512 512 8 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1024 512 512 8 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1024 512 512 8 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1024 512 512 8 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1024 512 512 8 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1024 512 512 8 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1024 512 512 8 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1024 512 512 8 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1024 512 512 8 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1024 512 512 8 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1280 512 512 10 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1280 512 512 10 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1280 512 512 10 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1280 512 512 10 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1280 512 512 10 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1280 512 512 10 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1280 512 512 10 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1280 512 512 10 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1280 512 512 10 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1280 512 512 10 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1536 512 512 12 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1536 512 512 12 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1536 512 512 12 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1536 512 512 12 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1536 512 512 12 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1536 512 512 12 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1536 512 512 12 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1536 512 512 12 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1536 512 512 12 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1536 512 512 12 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1792 512 512 14 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1792 512 512 14 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1792 512 512 14 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1792 512 512 14 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1792 512 512 14 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1792 512 512 14 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1792 512 512 14 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1792 512 512 14 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1792 512 512 14 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 1792 512 512 14 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2048 512 512 16 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2048 512 512 16 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2048 512 512 16 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2048 512 512 16 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2048 512 512 16 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2048 512 512 16 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2048 512 512 16 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2048 512 512 16 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2048 512 512 16 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2048 512 512 16 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2304 512 512 18 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2304 512 512 18 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2304 512 512 18 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2304 512 512 18 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2304 512 512 18 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2304 512 512 18 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2304 512 512 18 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2304 512 512 18 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2304 512 512 18 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2304 512 512 18 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2560 512 512 20 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2560 512 512 20 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2560 512 512 20 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2560 512 512 20 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2560 512 512 20 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2560 512 512 20 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2560 512 512 20 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2560 512 512 20 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2560 512 512 20 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2560 512 512 20 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2816 512 512 22 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2816 512 512 22 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2816 512 512 22 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2816 512 512 22 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2816 512 512 22 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2816 512 512 22 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2816 512 512 22 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2816 512 512 22 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2816 512 512 22 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 2816 512 512 22 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3072 512 512 24 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3072 512 512 24 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3072 512 512 24 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3072 512 512 24 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3072 512 512 24 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3072 512 512 24 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3072 512 512 24 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3072 512 512 24 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3072 512 512 24 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3072 512 512 24 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3328 512 512 26 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3328 512 512 26 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3328 512 512 26 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3328 512 512 26 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3328 512 512 26 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3328 512 512 26 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3328 512 512 26 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3328 512 512 26 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3328 512 512 26 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3328 512 512 26 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3584 512 512 28 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3584 512 512 28 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3584 512 512 28 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3584 512 512 28 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3584 512 512 28 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3584 512 512 28 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3584 512 512 28 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3584 512 512 28 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3584 512 512 28 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3584 512 512 28 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3840 512 512 30 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3840 512 512 30 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3840 512 512 30 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3840 512 512 30 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3840 512 512 30 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3840 512 512 30 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3840 512 512 30 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3840 512 512 30 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3840 512 512 30 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 3840 512 512 30 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4096 512 512 32 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4096 512 512 32 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4096 512 512 32 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4096 512 512 32 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4096 512 512 32 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4096 512 512 32 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4096 512 512 32 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4096 512 512 32 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4096 512 512 32 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4096 512 512 32 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4352 512 512 34 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4352 512 512 34 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4352 512 512 34 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4352 512 512 34 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4352 512 512 34 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4352 512 512 34 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4352 512 512 34 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4352 512 512 34 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4352 512 512 34 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4352 512 512 34 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4608 512 512 36 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4608 512 512 36 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4608 512 512 36 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4608 512 512 36 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4608 512 512 36 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4608 512 512 36 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4608 512 512 36 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4608 512 512 36 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4608 512 512 36 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4608 512 512 36 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4864 512 512 38 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4864 512 512 38 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4864 512 512 38 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4864 512 512 38 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4864 512 512 38 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4864 512 512 38 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4864 512 512 38 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4864 512 512 38 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4864 512 512 38 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 4864 512 512 38 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5120 512 512 40 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5120 512 512 40 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5120 512 512 40 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5120 512 512 40 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5120 512 512 40 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5120 512 512 40 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5120 512 512 40 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5120 512 512 40 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5120 512 512 40 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5120 512 512 40 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5376 512 512 42 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5376 512 512 42 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5376 512 512 42 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5376 512 512 42 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5376 512 512 42 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5376 512 512 42 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5376 512 512 42 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5376 512 512 42 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5376 512 512 42 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5376 512 512 42 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5632 512 512 44 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5632 512 512 44 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5632 512 512 44 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5632 512 512 44 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5632 512 512 44 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5632 512 512 44 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5632 512 512 44 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5632 512 512 44 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5632 512 512 44 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5632 512 512 44 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5888 512 512 46 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5888 512 512 46 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5888 512 512 46 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5888 512 512 46 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5888 512 512 46 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5888 512 512 46 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5888 512 512 46 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5888 512 512 46 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5888 512 512 46 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 5888 512 512 46 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 6144 512 512 48 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 6144 512 512 48 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 6144 512 512 48 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 6144 512 512 48 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 6144 512 512 48 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 6144 512 512 48 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 6144 512 512 48 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 6144 512 512 48 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 6144 512 512 48 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_local_sum_1D 6144 512 512 48 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 128 512 512 1 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 128 512 512 1 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 128 512 512 1 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 128 512 512 1 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 128 512 512 1 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 128 512 512 1 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 128 512 512 1 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 128 512 512 1 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 128 512 512 1 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 128 512 512 1 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 256 512 512 2 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 256 512 512 2 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 256 512 512 2 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 256 512 512 2 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 256 512 512 2 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 256 512 512 2 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 256 512 512 2 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 256 512 512 2 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 256 512 512 2 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 256 512 512 2 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 512 512 512 4 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 512 512 512 4 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 512 512 512 4 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 512 512 512 4 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 512 512 512 4 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 512 512 512 4 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 512 512 512 4 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 512 512 512 4 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 512 512 512 4 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 512 512 512 4 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 768 512 512 6 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 768 512 512 6 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 768 512 512 6 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 768 512 512 6 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 768 512 512 6 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 768 512 512 6 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 768 512 512 6 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 768 512 512 6 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 768 512 512 6 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 768 512 512 6 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1024 512 512 8 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1024 512 512 8 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1024 512 512 8 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1024 512 512 8 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1024 512 512 8 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1024 512 512 8 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1024 512 512 8 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1024 512 512 8 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1024 512 512 8 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1024 512 512 8 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1280 512 512 10 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1280 512 512 10 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1280 512 512 10 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1280 512 512 10 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1280 512 512 10 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1280 512 512 10 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1280 512 512 10 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1280 512 512 10 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1280 512 512 10 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1280 512 512 10 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1536 512 512 12 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1536 512 512 12 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1536 512 512 12 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1536 512 512 12 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1536 512 512 12 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1536 512 512 12 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1536 512 512 12 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1536 512 512 12 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1536 512 512 12 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1536 512 512 12 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1792 512 512 14 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1792 512 512 14 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1792 512 512 14 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1792 512 512 14 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1792 512 512 14 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1792 512 512 14 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1792 512 512 14 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1792 512 512 14 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1792 512 512 14 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 1792 512 512 14 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2048 512 512 16 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2048 512 512 16 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2048 512 512 16 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2048 512 512 16 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2048 512 512 16 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2048 512 512 16 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2048 512 512 16 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2048 512 512 16 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2048 512 512 16 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2048 512 512 16 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2304 512 512 18 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2304 512 512 18 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2304 512 512 18 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2304 512 512 18 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2304 512 512 18 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2304 512 512 18 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2304 512 512 18 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2304 512 512 18 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2304 512 512 18 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2304 512 512 18 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2560 512 512 20 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2560 512 512 20 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2560 512 512 20 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2560 512 512 20 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2560 512 512 20 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2560 512 512 20 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2560 512 512 20 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2560 512 512 20 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2560 512 512 20 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2560 512 512 20 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2816 512 512 22 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2816 512 512 22 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2816 512 512 22 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2816 512 512 22 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2816 512 512 22 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2816 512 512 22 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2816 512 512 22 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2816 512 512 22 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2816 512 512 22 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 2816 512 512 22 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3072 512 512 24 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3072 512 512 24 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3072 512 512 24 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3072 512 512 24 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3072 512 512 24 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3072 512 512 24 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3072 512 512 24 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3072 512 512 24 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3072 512 512 24 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3072 512 512 24 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3328 512 512 26 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3328 512 512 26 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3328 512 512 26 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3328 512 512 26 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3328 512 512 26 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3328 512 512 26 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3328 512 512 26 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3328 512 512 26 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3328 512 512 26 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3328 512 512 26 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3584 512 512 28 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3584 512 512 28 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3584 512 512 28 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3584 512 512 28 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3584 512 512 28 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3584 512 512 28 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3584 512 512 28 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3584 512 512 28 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3584 512 512 28 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3584 512 512 28 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3840 512 512 30 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3840 512 512 30 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3840 512 512 30 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3840 512 512 30 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3840 512 512 30 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3840 512 512 30 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3840 512 512 30 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3840 512 512 30 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3840 512 512 30 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 3840 512 512 30 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4096 512 512 32 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4096 512 512 32 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4096 512 512 32 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4096 512 512 32 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4096 512 512 32 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4096 512 512 32 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4096 512 512 32 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4096 512 512 32 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4096 512 512 32 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4096 512 512 32 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4352 512 512 34 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4352 512 512 34 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4352 512 512 34 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4352 512 512 34 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4352 512 512 34 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4352 512 512 34 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4352 512 512 34 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4352 512 512 34 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4352 512 512 34 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4352 512 512 34 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4608 512 512 36 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4608 512 512 36 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4608 512 512 36 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4608 512 512 36 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4608 512 512 36 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4608 512 512 36 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4608 512 512 36 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4608 512 512 36 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4608 512 512 36 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4608 512 512 36 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4864 512 512 38 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4864 512 512 38 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4864 512 512 38 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4864 512 512 38 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4864 512 512 38 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4864 512 512 38 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4864 512 512 38 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4864 512 512 38 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4864 512 512 38 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 4864 512 512 38 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5120 512 512 40 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5120 512 512 40 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5120 512 512 40 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5120 512 512 40 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5120 512 512 40 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5120 512 512 40 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5120 512 512 40 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5120 512 512 40 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5120 512 512 40 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5120 512 512 40 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5376 512 512 42 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5376 512 512 42 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5376 512 512 42 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5376 512 512 42 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5376 512 512 42 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5376 512 512 42 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5376 512 512 42 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5376 512 512 42 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5376 512 512 42 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5376 512 512 42 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5632 512 512 44 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5632 512 512 44 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5632 512 512 44 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5632 512 512 44 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5632 512 512 44 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5632 512 512 44 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5632 512 512 44 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5632 512 512 44 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5632 512 512 44 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5632 512 512 44 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5888 512 512 46 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5888 512 512 46 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5888 512 512 46 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5888 512 512 46 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5888 512 512 46 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5888 512 512 46 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5888 512 512 46 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5888 512 512 46 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5888 512 512 46 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 5888 512 512 46 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 6144 512 512 48 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 6144 512 512 48 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 6144 512 512 48 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 6144 512 512 48 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 6144 512 512 48 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 6144 512 512 48 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 6144 512 512 48 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 6144 512 512 48 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 6144 512 512 48 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum_1D 6144 512 512 48 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 128 512 512 1 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 128 512 512 1 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 128 512 512 1 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 128 512 512 1 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 128 512 512 1 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 128 512 512 1 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 128 512 512 1 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 128 512 512 1 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 128 512 512 1 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 128 512 512 1 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 256 512 512 2 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 256 512 512 2 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 256 512 512 2 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 256 512 512 2 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 256 512 512 2 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 256 512 512 2 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 256 512 512 2 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 256 512 512 2 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 256 512 512 2 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 256 512 512 2 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 512 512 512 4 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 512 512 512 4 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 512 512 512 4 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 512 512 512 4 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 512 512 512 4 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 512 512 512 4 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 512 512 512 4 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 512 512 512 4 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 512 512 512 4 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 512 512 512 4 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 768 512 512 6 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 768 512 512 6 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 768 512 512 6 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 768 512 512 6 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 768 512 512 6 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 768 512 512 6 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 768 512 512 6 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 768 512 512 6 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 768 512 512 6 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 768 512 512 6 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1024 512 512 8 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1024 512 512 8 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1024 512 512 8 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1024 512 512 8 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1024 512 512 8 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1024 512 512 8 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1024 512 512 8 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1024 512 512 8 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1024 512 512 8 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1024 512 512 8 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1280 512 512 10 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1280 512 512 10 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1280 512 512 10 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1280 512 512 10 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1280 512 512 10 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1280 512 512 10 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1280 512 512 10 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1280 512 512 10 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1280 512 512 10 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1280 512 512 10 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1536 512 512 12 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1536 512 512 12 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1536 512 512 12 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1536 512 512 12 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1536 512 512 12 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1536 512 512 12 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1536 512 512 12 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1536 512 512 12 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1536 512 512 12 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1536 512 512 12 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1792 512 512 14 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1792 512 512 14 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1792 512 512 14 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1792 512 512 14 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1792 512 512 14 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1792 512 512 14 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1792 512 512 14 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1792 512 512 14 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1792 512 512 14 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 1792 512 512 14 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2048 512 512 16 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2048 512 512 16 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2048 512 512 16 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2048 512 512 16 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2048 512 512 16 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2048 512 512 16 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2048 512 512 16 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2048 512 512 16 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2048 512 512 16 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2048 512 512 16 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2304 512 512 18 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2304 512 512 18 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2304 512 512 18 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2304 512 512 18 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2304 512 512 18 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2304 512 512 18 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2304 512 512 18 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2304 512 512 18 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2304 512 512 18 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2304 512 512 18 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2560 512 512 20 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2560 512 512 20 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2560 512 512 20 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2560 512 512 20 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2560 512 512 20 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2560 512 512 20 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2560 512 512 20 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2560 512 512 20 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2560 512 512 20 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2560 512 512 20 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2816 512 512 22 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2816 512 512 22 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2816 512 512 22 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2816 512 512 22 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2816 512 512 22 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2816 512 512 22 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2816 512 512 22 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2816 512 512 22 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2816 512 512 22 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 2816 512 512 22 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3072 512 512 24 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3072 512 512 24 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3072 512 512 24 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3072 512 512 24 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3072 512 512 24 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3072 512 512 24 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3072 512 512 24 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3072 512 512 24 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3072 512 512 24 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3072 512 512 24 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3328 512 512 26 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3328 512 512 26 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3328 512 512 26 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3328 512 512 26 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3328 512 512 26 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3328 512 512 26 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3328 512 512 26 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3328 512 512 26 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3328 512 512 26 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3328 512 512 26 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3584 512 512 28 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3584 512 512 28 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3584 512 512 28 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3584 512 512 28 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3584 512 512 28 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3584 512 512 28 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3584 512 512 28 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3584 512 512 28 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3584 512 512 28 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3584 512 512 28 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3840 512 512 30 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3840 512 512 30 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3840 512 512 30 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3840 512 512 30 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3840 512 512 30 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3840 512 512 30 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3840 512 512 30 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3840 512 512 30 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3840 512 512 30 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 3840 512 512 30 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4096 512 512 32 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4096 512 512 32 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4096 512 512 32 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4096 512 512 32 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4096 512 512 32 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4096 512 512 32 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4096 512 512 32 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4096 512 512 32 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4096 512 512 32 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4096 512 512 32 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4352 512 512 34 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4352 512 512 34 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4352 512 512 34 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4352 512 512 34 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4352 512 512 34 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4352 512 512 34 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4352 512 512 34 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4352 512 512 34 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4352 512 512 34 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4352 512 512 34 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4608 512 512 36 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4608 512 512 36 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4608 512 512 36 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4608 512 512 36 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4608 512 512 36 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4608 512 512 36 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4608 512 512 36 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4608 512 512 36 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4608 512 512 36 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4608 512 512 36 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4864 512 512 38 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4864 512 512 38 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4864 512 512 38 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4864 512 512 38 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4864 512 512 38 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4864 512 512 38 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4864 512 512 38 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4864 512 512 38 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4864 512 512 38 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 4864 512 512 38 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5120 512 512 40 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5120 512 512 40 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5120 512 512 40 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5120 512 512 40 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5120 512 512 40 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5120 512 512 40 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5120 512 512 40 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5120 512 512 40 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5120 512 512 40 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5120 512 512 40 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5376 512 512 42 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5376 512 512 42 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5376 512 512 42 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5376 512 512 42 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5376 512 512 42 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5376 512 512 42 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5376 512 512 42 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5376 512 512 42 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5376 512 512 42 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5376 512 512 42 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5632 512 512 44 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5632 512 512 44 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5632 512 512 44 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5632 512 512 44 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5632 512 512 44 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5632 512 512 44 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5632 512 512 44 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5632 512 512 44 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5632 512 512 44 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5632 512 512 44 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5888 512 512 46 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5888 512 512 46 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5888 512 512 46 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5888 512 512 46 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5888 512 512 46 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5888 512 512 46 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5888 512 512 46 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5888 512 512 46 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5888 512 512 46 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 5888 512 512 46 9
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 6144 512 512 48 0
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 6144 512 512 48 1
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 6144 512 512 48 2
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 6144 512 512 48 3
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 6144 512 512 48 4
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 6144 512 512 48 5
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 6144 512 512 48 6
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 6144 512 512 48 7
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 6144 512 512 48 8
-../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_local_sum 6144 512 512 48 9
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 128 2048 2048 1 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 128 2048 2048 1 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 128 2048 2048 1 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 128 2048 2048 1 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 128 2048 2048 1 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 128 2048 2048 1 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 128 2048 2048 1 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 128 2048 2048 1 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 128 2048 2048 1 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 128 2048 2048 1 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 256 2048 2048 2 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 256 2048 2048 2 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 256 2048 2048 2 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 256 2048 2048 2 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 256 2048 2048 2 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 256 2048 2048 2 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 256 2048 2048 2 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 256 2048 2048 2 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 256 2048 2048 2 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 256 2048 2048 2 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 512 2048 2048 4 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 512 2048 2048 4 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 512 2048 2048 4 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 512 2048 2048 4 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 512 2048 2048 4 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 512 2048 2048 4 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 512 2048 2048 4 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 512 2048 2048 4 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 512 2048 2048 4 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 512 2048 2048 4 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 768 2048 2048 6 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 768 2048 2048 6 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 768 2048 2048 6 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 768 2048 2048 6 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 768 2048 2048 6 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 768 2048 2048 6 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 768 2048 2048 6 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 768 2048 2048 6 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 768 2048 2048 6 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 768 2048 2048 6 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1024 2048 2048 8 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1024 2048 2048 8 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1024 2048 2048 8 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1024 2048 2048 8 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1024 2048 2048 8 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1024 2048 2048 8 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1024 2048 2048 8 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1024 2048 2048 8 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1024 2048 2048 8 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1024 2048 2048 8 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1280 2048 2048 10 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1280 2048 2048 10 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1280 2048 2048 10 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1280 2048 2048 10 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1280 2048 2048 10 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1280 2048 2048 10 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1280 2048 2048 10 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1280 2048 2048 10 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1280 2048 2048 10 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1280 2048 2048 10 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1536 2048 2048 12 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1536 2048 2048 12 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1536 2048 2048 12 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1536 2048 2048 12 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1536 2048 2048 12 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1536 2048 2048 12 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1536 2048 2048 12 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1536 2048 2048 12 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1536 2048 2048 12 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1536 2048 2048 12 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1792 2048 2048 14 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1792 2048 2048 14 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1792 2048 2048 14 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1792 2048 2048 14 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1792 2048 2048 14 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1792 2048 2048 14 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1792 2048 2048 14 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1792 2048 2048 14 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1792 2048 2048 14 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 1792 2048 2048 14 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2048 2048 2048 16 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2048 2048 2048 16 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2048 2048 2048 16 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2048 2048 2048 16 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2048 2048 2048 16 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2048 2048 2048 16 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2048 2048 2048 16 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2048 2048 2048 16 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2048 2048 2048 16 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2048 2048 2048 16 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2304 2048 2048 18 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2304 2048 2048 18 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2304 2048 2048 18 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2304 2048 2048 18 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2304 2048 2048 18 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2304 2048 2048 18 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2304 2048 2048 18 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2304 2048 2048 18 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2304 2048 2048 18 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2304 2048 2048 18 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2560 2048 2048 20 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2560 2048 2048 20 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2560 2048 2048 20 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2560 2048 2048 20 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2560 2048 2048 20 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2560 2048 2048 20 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2560 2048 2048 20 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2560 2048 2048 20 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2560 2048 2048 20 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2560 2048 2048 20 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2816 2048 2048 22 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2816 2048 2048 22 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2816 2048 2048 22 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2816 2048 2048 22 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2816 2048 2048 22 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2816 2048 2048 22 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2816 2048 2048 22 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2816 2048 2048 22 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2816 2048 2048 22 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 2816 2048 2048 22 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3072 2048 2048 24 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3072 2048 2048 24 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3072 2048 2048 24 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3072 2048 2048 24 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3072 2048 2048 24 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3072 2048 2048 24 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3072 2048 2048 24 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3072 2048 2048 24 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3072 2048 2048 24 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3072 2048 2048 24 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3328 2048 2048 26 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3328 2048 2048 26 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3328 2048 2048 26 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3328 2048 2048 26 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3328 2048 2048 26 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3328 2048 2048 26 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3328 2048 2048 26 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3328 2048 2048 26 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3328 2048 2048 26 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3328 2048 2048 26 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3584 2048 2048 28 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3584 2048 2048 28 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3584 2048 2048 28 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3584 2048 2048 28 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3584 2048 2048 28 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3584 2048 2048 28 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3584 2048 2048 28 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3584 2048 2048 28 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3584 2048 2048 28 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3584 2048 2048 28 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3840 2048 2048 30 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3840 2048 2048 30 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3840 2048 2048 30 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3840 2048 2048 30 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3840 2048 2048 30 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3840 2048 2048 30 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3840 2048 2048 30 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3840 2048 2048 30 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3840 2048 2048 30 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 3840 2048 2048 30 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4096 2048 2048 32 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4096 2048 2048 32 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4096 2048 2048 32 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4096 2048 2048 32 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4096 2048 2048 32 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4096 2048 2048 32 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4096 2048 2048 32 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4096 2048 2048 32 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4096 2048 2048 32 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4096 2048 2048 32 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4352 2048 2048 34 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4352 2048 2048 34 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4352 2048 2048 34 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4352 2048 2048 34 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4352 2048 2048 34 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4352 2048 2048 34 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4352 2048 2048 34 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4352 2048 2048 34 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4352 2048 2048 34 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4352 2048 2048 34 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4608 2048 2048 36 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4608 2048 2048 36 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4608 2048 2048 36 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4608 2048 2048 36 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4608 2048 2048 36 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4608 2048 2048 36 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4608 2048 2048 36 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4608 2048 2048 36 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4608 2048 2048 36 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4608 2048 2048 36 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4864 2048 2048 38 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4864 2048 2048 38 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4864 2048 2048 38 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4864 2048 2048 38 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4864 2048 2048 38 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4864 2048 2048 38 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4864 2048 2048 38 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4864 2048 2048 38 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4864 2048 2048 38 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 4864 2048 2048 38 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5120 2048 2048 40 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5120 2048 2048 40 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5120 2048 2048 40 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5120 2048 2048 40 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5120 2048 2048 40 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5120 2048 2048 40 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5120 2048 2048 40 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5120 2048 2048 40 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5120 2048 2048 40 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5120 2048 2048 40 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5376 2048 2048 42 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5376 2048 2048 42 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5376 2048 2048 42 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5376 2048 2048 42 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5376 2048 2048 42 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5376 2048 2048 42 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5376 2048 2048 42 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5376 2048 2048 42 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5376 2048 2048 42 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5376 2048 2048 42 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5632 2048 2048 44 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5632 2048 2048 44 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5632 2048 2048 44 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5632 2048 2048 44 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5632 2048 2048 44 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5632 2048 2048 44 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5632 2048 2048 44 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5632 2048 2048 44 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5632 2048 2048 44 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5632 2048 2048 44 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5888 2048 2048 46 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5888 2048 2048 46 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5888 2048 2048 46 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5888 2048 2048 46 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5888 2048 2048 46 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5888 2048 2048 46 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5888 2048 2048 46 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5888 2048 2048 46 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5888 2048 2048 46 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 5888 2048 2048 46 9 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 6144 2048 2048 48 0 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 6144 2048 2048 48 1 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 6144 2048 2048 48 2 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 6144 2048 2048 48 3 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 6144 2048 2048 48 4 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 6144 2048 2048 48 5 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 6144 2048 2048 48 6 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 6144 2048 2048 48 7 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 6144 2048 2048 48 8 32
+../dphpc-doitgen-openmp-benchmark inverted_loop_avx2_blocking 6144 2048 2048 48 9 32

@@ -58,9 +58,9 @@ void transpose(double* src, double* dst, uint64_t N, const int M) {
 
 START_TEST(test_doitgen)
 {
-	uint64_t nr = 512;
-	uint64_t nq = 512;
-	uint64_t np = 512;
+	uint64_t nr = 256;
+	uint64_t nq = 2048;
+	uint64_t np = 2048;
 
 	double* a_test = (double*) allocate_data(nr * nq * np, sizeof(double));
 
@@ -82,7 +82,7 @@ START_TEST(test_doitgen)
 	
 	flush_cache_openMP();
 	auto t1 = std::chrono::high_resolution_clock::now();
-	kernel_doitgen_inverted_loop_avx2_blocking(nr, nq, np, a_in, a_out, c4, 256);
+	kernel_doitgen_inverted_loop_avx2_blocking(nr, nq, np, a_in, a_out, c4, 32);
 	auto t2 = std::chrono::high_resolution_clock::now();
 	auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 

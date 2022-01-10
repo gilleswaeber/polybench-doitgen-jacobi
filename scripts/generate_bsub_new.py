@@ -50,15 +50,7 @@ benchmarks = [
 benchmarks_blocking = ["inverted_loop_blocking"]
 
 benchmarks_scaling = [
-    "transpose",
-    "inverted_loop",
-    "inverted_loop_avx2",
-    "inverted_loop_local_sum",
-    "transpose_local_sum",
-    "polybench_parallel_local_sum",
-    "inverted_loop_local_sum_1D",
-    "inverted_loop_avx2_local_sum_1D",
-    "inverted_loop_avx2_local_sum"
+    "inverted_loop_avx2_blocking"
 ]
 
 benchmarks_matrix_scale = ["inverted_loop_avx2",
@@ -136,13 +128,15 @@ def main():
                     + " "
                     + str(128 * threads_scaling[j])
                     + " "
-                    + str(NQ)
+                    + str(2048)
                     + " "
-                    + str(NP)
+                    + str(2048)
                     + " "
                     + str(threads_scaling[j])
                     + " "
                     + str(k)
+                    + " "
+                    + str(32)
                     + "\n"
                 )
 
