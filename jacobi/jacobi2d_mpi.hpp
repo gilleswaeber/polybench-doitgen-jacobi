@@ -32,6 +32,7 @@
 //                                   ┃33⋯3┃
 //
 // Author: Gilles Waeber
+
 #include <mpi.h>
 #include <utility>
 #include <vector>
@@ -151,13 +152,17 @@ void jacobi_2d_mpi(int timeSteps, int n, MpiParams params) {
 
     std::vector<Peer *> peers{}, allPeers{&top, &bottom, &left, &right, &topLeft, &bottomRight, &topRight, &bottomLeft};
     std::copy_if(allPeers.begin(), allPeers.end(), std::back_inserter(peers), [](Peer *p) { return p->active; });
+#ifndef JACOBI_NO_STRIPES
     std::sort(peers.begin(), peers.end());
+#endif
 #else
     std::vector<Peer *> vPeers{}, hPeers{}, allVPeers{&top, &bottom}, allHPeers{&left, &right};
     std::copy_if(allVPeers.begin(), allVPeers.end(), std::back_inserter(vPeers), [](Peer *p) { return p->active; });
     std::copy_if(allHPeers.begin(), allHPeers.end(), std::back_inserter(hPeers), [](Peer *p) { return p->active; });
+#ifndef JACOBI_NO_STRIPES
     std::sort(vPeers.begin(), vPeers.end());
     std::sort(hPeers.begin(), hPeers.end());
+#endif
 #endif
 
 #ifdef VERBOSE
@@ -202,6 +207,7 @@ void jacobi_2d_mpi(int timeSteps, int n, MpiParams params) {
             }
         }
 
+#ifndef JACOBI_NO_SYNC
         if (tMod == g - 1 && t != timeSteps - 1) { // sync processes
             LSB_Rec(REC_Compute);
 
@@ -276,6 +282,7 @@ void jacobi_2d_mpi(int timeSteps, int n, MpiParams params) {
 
             LSB_Rec(REC_Sync);
         }
+#endif
     }
     LSB_Rec(REC_Compute);
     // write results to file

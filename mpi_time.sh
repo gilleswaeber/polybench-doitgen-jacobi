@@ -16,5 +16,5 @@ export LSB_OUTFILE
 export LSB_OUTPUT_FORMAT
 FORMAT="%Uuser %Ssystem %Eelapsed %PCPU (%Xavgtext+%Davgdata %Mmaxresident)k\n%Iinputs+%Ooutputs (%Fmajor+%Rminor)pagefaults %Wswaps\n"
 shift
-echo command time -f "$FORMAT" -o "$OUTPUT_FILE" "$@"
-[[ -d "$OUTPUT_FOLDER" && -f "$LSB_TRUE_FILE" ]] && mv -t "$OUTPUT_FOLDER" "$LSB_LSB_TRUE_FILE"
+command time -f "$FORMAT" -o "$OUTPUT_FILE" "$@"
+[[ -d "$OUTPUT_FOLDER" && -f "$LSB_TRUE_FILE" ]] && mv -t "$OUTPUT_FOLDER" "$LSB_TRUE_FILE"

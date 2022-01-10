@@ -10,7 +10,7 @@ GROUP_BY_TEST = ['alternative', 'n', 'time_steps', 'ghost_cells', 'cores']
 GROUP_BY_RUN = GROUP_BY_TEST + ['run']
 
 TIME_NAME_PATTERN = re.compile(
-    r"^jacobi1d_n(?P<n>\d+)t(?P<time_steps>\d+)g(?P<ghost_cells>\d+)c(?P<cores>\d+)(v(?P<alternative>.+))?"
+    r"^(?P<alternative>jacobi.+)_n(?P<n>\d+)t(?P<time_steps>\d+)g(?P<ghost_cells>\d+)c(?P<cores>\d+)"
     r"r(?P<run>\d+)t(?P<rank>\d+)"
     r"$")
 TIME_NAME_GROUPS = ('n', 'time_steps', 'ghost_cells', 'cores', 'run', 'rank', 'alternative')
@@ -27,7 +27,7 @@ TIME_TEXT_GROUPS = (
     'user_time', 'system_time', 'elapsed_h', 'elapsed_m', 'elapsed_s', 'percent_cpu', 'text_kb', 'data_kb', 'mem_kb',
     'fs_in', 'fs_out', 'faults_maj', 'faults_min', 'swaps')
 LSB_NAME_PATTERN = re.compile(
-    r"^lsb\.jacobi1d_n(?P<n>\d+)t(?P<time_steps>\d+)g(?P<ghost_cells>\d+)c(?P<cores>\d+)(v(?P<alternative>.+))?"
+    r"^lsb\.(?P<alternative>jacobi.+)_n(?P<n>\d+)t(?P<time_steps>\d+)g(?P<ghost_cells>\d+)c(?P<cores>\d+)"
     r"r(?P<run>\d+)t\.r(?P<rank>\d+)$")
 LSB_NAME_GROUPS = ('n', 'time_steps', 'ghost_cells', 'cores', 'run', 'rank', 'alternative')
 LSB_IDS = {

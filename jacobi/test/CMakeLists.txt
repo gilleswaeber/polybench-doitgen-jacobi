@@ -25,8 +25,3 @@ target_link_libraries(jacobi2d-mpi-test PUBLIC dphpc_lib_utils dphpc_lib dphpc_l
 target_link_libraries(jacobi2d-mpi-2step-test PUBLIC dphpc_lib_utils dphpc_lib dphpc_lib_utils)
 
 target_compile_definitions(jacobi2d-mpi-2step-test PUBLIC -DJACOBI2D_TWO_STEPS_SYNC)
-
-if(SUBUNIT_LIB)
-    add_executable(jacobi-test "main.cpp")
-    target_link_libraries(jacobi-test PUBLIC dphpc_lib dphpc_lib_utils check m rt pthread subunit)
-endif()

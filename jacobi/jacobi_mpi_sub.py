@@ -16,7 +16,7 @@ Author: Gilles Waeber
 """
 
 DEFAULT_PROGRAM_PATH = './build/jacobi/benchmark'
-DEFAULT_COLLECTOR = 'python ./jacobi_1D/jacobi_mpi_collect.py'
+DEFAULT_COLLECTOR = 'python ./jacobi/jacobi_mpi_collect.py'
 SCRIPT_HEADER = '''#!/bin/bash
 # Jacobi MPI benchmark submission script
 set -euo pipefail
@@ -144,6 +144,20 @@ def generate_jacobi_mpi_sub(*, programs: List[str], program_path: str, collector
     output_dir = "output/$now"
     if not len(cores):
         cores = range(1, total_cores + 1)
+    else:
+        max_cores = max(cores)
+        if max_cores > total_cores:
+            raise ValueError("Oversubscription is not supported on the cluster")
+        elif max_cores < total_cores:
+            if max_cores % nodes == 0:
+                total_cores = max_cores
+                print(f"Requested cores reduced to {total_cores}", file=sys.stderr)
+            else:
+                needed_cores = (max_cores // nodes + 1) * nodes
+                if needed_cores != total_cores:
+                    total_cores = needed_cores
+                    print(f"Requested cores reduced to {total_cores} "
+                          f"({max_cores} needed over {nodes} nodes)", file=sys.stderr)
     scratch_dir = GLOBAL_SCRATCH_DIR
     if node_scratch is not None:
         assert nodes == 1
@@ -185,8 +199,8 @@ def generate_jacobi_mpi_sub(*, programs: List[str], program_path: str, collector
                         mpi_flags = f"-np {np}"
                         if nodes > 1:
                             mpi_flags += " --map-by node"
-                        if np > total_cores:
-                            mpi_flags += " --oversubscribe"
+                        # if np > total_cores:  # not supported by the cluster
+                        #    mpi_flags = f"-oversubscribe {mpi_flags}"
                         job = f"mpirun {mpi_flags} {time_cmd} {executable} {n} {time_steps} {g} {dest}\n"
                         f.write(job)
                         if do_cleanup:

@@ -14,7 +14,7 @@ void print_help(char *program) {
     std::cout << "Usage: " << program << " N T S FILE\n"
               << "    N: array size, multiplied by the number of cores\n"
               << "    T: time steps\n"
-              << "    S: number of ghost cells to use, 1 <= S < N/2\n"
+              << "    S: number of ghost cells to use, 1 <= S\n"
               << "    FILE: output file for computed data\n"
               << std::endl;
 }
@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
         return 1;
     }
     long ghost_cells = strtol(argv[3], nullptr, 10);
-    if (errno || ghost_cells < 1 || ghost_cells >= n / 2) {
+    if (errno || ghost_cells < 1) {
         print_help(argv[0]);
         return 1;
     }
