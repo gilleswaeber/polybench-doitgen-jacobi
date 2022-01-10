@@ -1,0 +1,28 @@
+cmake_minimum_required(VERSION 3.0.0)
+project(dphpc-jacobi-benchmarks VERSION 0.1.0)
+
+target_include_directories(dphpc_lib PUBLIC "${CMAKE_SOURCE_DIR}/thirdparty/liblsb")
+
+add_executable(jacobi1d-mpi-benchmark mpi1d_benchmark.cpp)
+add_executable(jacobi1d-mpi-benchmark-lsb mpi1d_benchmark.cpp)
+add_executable(jacobi1d-openmp-benchmark openMPBenchmark.cpp)
+
+add_executable(jacobi2d-mpi-benchmark mpi2d_benchmark.cpp)
+add_executable(jacobi2d-mpi-benchmark-lsb mpi2d_benchmark.cpp)
+add_executable(jacobi2d-2step-mpi-benchmark mpi2d_benchmark.cpp)
+add_executable(jacobi2d-2step-mpi-benchmark-lsb mpi2d_benchmark.cpp)
+add_executable(dphpc-now now.cpp)
+
+target_link_libraries(jacobi1d-mpi-benchmark PUBLIC dphpc_lib dphpc_lib_utils)
+target_link_libraries(jacobi1d-mpi-benchmark-lsb PUBLIC dphpc_lib dphpc_lib_utils ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
+target_link_libraries(jacobi1d-openmp-benchmark PUBLIC dphpc_lib dphpc_lib_utils ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
+
+target_link_libraries(jacobi2d-mpi-benchmark PUBLIC dphpc_lib dphpc_lib_utils)
+target_link_libraries(jacobi2d-2step-mpi-benchmark PUBLIC dphpc_lib dphpc_lib_utils)
+target_link_libraries(jacobi2d-mpi-benchmark-lsb PUBLIC dphpc_lib dphpc_lib_utils ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
+target_link_libraries(jacobi2d-2step-mpi-benchmark-lsb PUBLIC dphpc_lib dphpc_lib_utils ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
+
+target_compile_definitions(jacobi1d-mpi-benchmark-lsb PUBLIC -DWITH_LSB)
+target_compile_definitions(jacobi2d-mpi-benchmark-lsb PUBLIC -DWITH_LSB)
+target_compile_definitions(jacobi2d-2step-mpi-benchmark PUBLIC -DJACOBI2D_TWO_STEPS_SYNC)
+target_compile_definitions(jacobi2d-2step-mpi-benchmark-lsb PUBLIC -DJACOBI2D_TWO_STEPS_SYNC -DWITH_LSB)

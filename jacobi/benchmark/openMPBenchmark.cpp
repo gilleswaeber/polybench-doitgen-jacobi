@@ -5,7 +5,7 @@
 #include <mpi.h>
 #include <liblsb.h>
 
-#include "jacobi_1D.hpp"
+#include "jacobi1d.hpp"
 
 #define RUNS 10
 #define THREADS_SIZES 7

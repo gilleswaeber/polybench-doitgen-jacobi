@@ -1,3 +1,5 @@
+// Print the current time in nanoseconds
+// Author: Gilles Waeber
 #include <chrono>
 #include <iostream>
 

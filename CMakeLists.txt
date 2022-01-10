@@ -17,7 +17,8 @@ message("### build mode ### : ${CMAKE_BUILD_TYPE}")
 
 set(
     SRC 
-    "jacobi_1D/jacobi_1D.cpp"
+    "jacobi/jacobi1d.cpp"
+    "jacobi/jacobi2d.cpp"
     "doitgen/doitgen.cpp"
     "polybench.cpp"
 )
@@ -34,7 +35,7 @@ target_link_libraries(dphpc_lib PUBLIC MPI::MPI_CXX)
 target_link_libraries(dphpc_lib PUBLIC ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
 
 target_include_directories(dphpc_lib
-    PUBLIC "jacobi_1D"
+    PUBLIC "jacobi"
     PUBLIC "doitgen"
     PUBLIC "polybench/utilities"
 )
@@ -42,8 +43,8 @@ target_include_directories(dphpc_lib
 add_subdirectory(utils)
 add_subdirectory(doitgen/test)
 add_subdirectory(doitgen/benchmark)
-add_subdirectory(jacobi_1D/test)
-add_subdirectory(jacobi_1D/benchmark)
+add_subdirectory(jacobi/test)
+add_subdirectory(jacobi/benchmark)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

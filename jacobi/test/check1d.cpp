@@ -2,13 +2,13 @@
 #include <vector>
 #include <limits>
 
-#include "jacobi_1D.hpp"
+#include "jacobi1d.hpp"
 
 void print_help(char *program) {
     std::cout << "Usage: " << program << " N T FILE\n"
               << "    N: array size\n"
               << "    T: time steps\n"
-              << "    FILE: file to open\n"
+              << "    FILE: file to check\n"
               << std::endl;
 }
 

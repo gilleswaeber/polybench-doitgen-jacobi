@@ -1,5 +1,7 @@
 import argparse
 import re
+from typing import Tuple
+
 from pandas import DataFrame
 import pandas as pd
 from pathlib import Path
@@ -69,7 +71,7 @@ def collect_results(folder: Path, write_report=True):
             else:
                 print(f'Failed to extract time information from {f}')
         elif lsb_name:
-            lsb = read_lsb(f)
+            lsb, node = read_lsb(f)
             name_info = {g: (pd.to_numeric(lsb_name.group(g)) if g in NUMERIC_GROUPS else lsb_name.group(g))
                          for g in LSB_NAME_GROUPS}
             for g in reversed(LSB_NAME_GROUPS):
@@ -83,6 +85,7 @@ def collect_results(folder: Path, write_report=True):
                 "compute_time": grp.get_group(1)['time'].sum(),
                 "sync_time": grp.get_group(2)['time'].sum() if 2 in grp.groups else 0,
                 "write_time": grp.get_group(3)['time'].sum(),
+                "node": node
             })
     df = DataFrame.from_records(records, columns=ALL_GROUPS)
     df['elapsed_time'] = pd.to_numeric(df.elapsed_h.fillna(0)) * 3600 + pd.to_numeric(
@@ -131,11 +134,14 @@ def collect_results(folder: Path, write_report=True):
     return df, by_test
 
 
-def read_lsb(path: Path) -> DataFrame:
+def read_lsb(path: Path) -> Tuple[DataFrame, str]:
     data = pd.read_csv(path, sep=r'\s+', comment='#')
     to_remove = [c for c in data.columns if re.match(r'^P\d+$', c)]
     data.drop(columns=to_remove, inplace=True)
-    return data
+    with path.open('rt', encoding='utf-8') as f:
+        _sys_line = f.readline()
+        node = f.readline().split(': ', 1)[1]
+    return data, node
 
 
 if __name__ == '__main__':
