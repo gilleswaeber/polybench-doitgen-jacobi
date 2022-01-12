@@ -20,9 +20,11 @@ void do_polybench(uint64_t nr, uint64_t nq, uint64_t np, uint64_t blocking_windo
 	double* c4 = (double*)allocate_data(np * np, sizeof(double));
 	double* sum = (double*)allocate_data(np, sizeof(double));
 
+	memset(sum, 0, np * sizeof(double));
+
 	init_array(nr, nq, np, a, c4);
 	
-	flush_cache();
+	flush_cache_big();
 
 	LSB_Res();
 	kernel_doitgen_seq(nr, nq, np, a, c4, sum);
