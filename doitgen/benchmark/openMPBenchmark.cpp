@@ -267,7 +267,7 @@ void do_inverted_loop_avx2_blocking_local_sum_2D(uint64_t nr, uint64_t nq, uint6
 	flush_cache_big();
 
 	LSB_Res();
-	kernel_doitgen_inverted_loop_avx2_blocking(nr, nq, np, a_in, sum, c4, blocking_window);
+	kernel_doitgen_inverted_loop_avx2_blocking_local_sum_2D(nr, nq, np, a_in, sum, c4, blocking_window);
 	LSB_Rec(0);
 
 	free(a_in);

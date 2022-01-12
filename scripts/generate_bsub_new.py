@@ -62,6 +62,9 @@ benchmarks_local_sum_1D = [
     "inverted_loop_avx2_local_sum_1D",
 ]
 
+benchmarks_optimized_blocking = [
+    "inverted_loop_avx2_blocking",
+    "inverted_loop_avx2_blocking_local_sum_2D"]
 benchmarks_optimized = [
     "inverted_loop_avx2",
     "inverted_loop_avx2_local_sum_1D",
@@ -181,26 +184,26 @@ def main():
                     )
 
     result_optimized = ""
-    
-    for k in range(len(windows)):
-        for m in range(RUNS):
-            result_optimized += (
-                "../dphpc-doitgen-openmp-benchmark "
-                + "inverted_loop_avx2_blocking"
-                + " "
-                + str(NR)
-                + " "
-                + str(2048)
-                + " "
-                + str(2048)
-                + " "
-                + str(48)
-                + " "
-                + str(m)
-                + " "
-                + str(windows[k])
-                + "\n"
-            )
+    for i in range(len(benchmarks_optimized_blocking)):
+        for k in range(len(windows)):
+            for m in range(RUNS):
+                result_optimized += (
+                    "../dphpc-doitgen-openmp-benchmark "
+                    + benchmarks_optimized_blocking[i]
+                    + " "
+                    + str(NR)
+                    + " "
+                    + str(2048)
+                    + " "
+                    + str(2048)
+                    + " "
+                    + str(48)
+                    + " "
+                    + str(m)
+                    + " "
+                    + str(windows[k])
+                    + "\n"
+                )
 
     for i in range(len(benchmarks_optimized)):
         for m in range(RUNS):
@@ -221,6 +224,45 @@ def main():
                 + str(windows[k])
                 + "\n"
             )
+
+    result_sequential = ""
+    for j in range(len(threads)):
+        for k in range(RUNS):
+            result_sequential += (
+                "../dphpc-doitgen-openmp-benchmark "
+                + "polybench"
+                + " "
+                + str(NR)
+                + " "
+                + str(NQ)
+                + " "
+                + str(NP)
+                + " "
+                + str(threads[j])
+                + " "
+                + str(k)
+                + "\n"
+            )
+    for j in range(len(threads)):
+        for k in range(RUNS):
+            result_sequential += (
+                "../dphpc-doitgen-openmp-benchmark "
+                + "polybench"
+                + " "
+                + str(256)
+                + " "
+                + str(2048)
+                + " "
+                + str(2048)
+                + " "
+                + str(threads[j])
+                + " "
+                + str(k)
+                + "\n"
+            )
+    script_file = open("bsub_sequential.sh", "w")
+    script_file.write(result_sequential)
+    script_file.close()
 
     script_file = open("bsub_optimized.sh", "w")
     script_file.write(result_optimized)
