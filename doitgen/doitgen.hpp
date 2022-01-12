@@ -195,6 +195,13 @@ void kernel_doitgen_inverted_loop_avx2_blocking(uint64_t nr, uint64_t nq, uint64
 	uint64_t blocking_window
 );
 
+void kernel_doitgen_inverted_loop_avx2_blocking_local_sum_2D(uint64_t nr, uint64_t nq, uint64_t np,
+	double* a_in,
+	double* sum,
+	double* c4,
+	uint64_t blocking_size
+);
+
 void kernel_doitgen_inverted_loop_avx2_local_sum(uint64_t nr, uint64_t nq, uint64_t np,
 	double* a_in,
 	double* sum,
