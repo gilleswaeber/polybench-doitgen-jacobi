@@ -226,40 +226,38 @@ def main():
             )
 
     result_sequential = ""
-    for j in range(len(threads)):
-        for k in range(RUNS):
-            result_sequential += (
-                "../dphpc-doitgen-openmp-benchmark "
-                + "polybench"
-                + " "
-                + str(NR)
-                + " "
-                + str(NQ)
-                + " "
-                + str(NP)
-                + " "
-                + str(threads[j])
-                + " "
-                + str(k)
-                + "\n"
-            )
-    for j in range(len(threads)):
-        for k in range(RUNS):
-            result_sequential += (
-                "../dphpc-doitgen-openmp-benchmark "
-                + "polybench"
-                + " "
-                + str(256)
-                + " "
-                + str(2048)
-                + " "
-                + str(2048)
-                + " "
-                + str(threads[j])
-                + " "
-                + str(k)
-                + "\n"
-            )
+    for k in range(RUNS):
+        result_sequential += (
+            "../dphpc-doitgen-openmp-benchmark "
+            + "polybench"
+            + " "
+            + str(NR)
+            + " "
+            + str(NQ)
+            + " "
+            + str(NP)
+            + " "
+            + str(1)
+            + " "
+            + str(k)
+            + "\n"
+        )
+    for k in range(RUNS):
+        result_sequential += (
+            "../dphpc-doitgen-openmp-benchmark "
+            + "polybench"
+            + " "
+            + str(256)
+            + " "
+            + str(2048)
+            + " "
+            + str(2048)
+            + " "
+            + str(1)
+            + " "
+            + str(k)
+            + "\n"
+        )
     script_file = open("bsub_sequential.sh", "w")
     script_file.write(result_sequential)
     script_file.close()
