@@ -1,11 +1,3 @@
-import argparse
-import math
-import re
-import sys
-from itertools import chain
-from pathlib import PosixPath
-from typing import List, TextIO, Sequence
-
 """
 Generate the submission bash script to benchmark Jacobi MPI for the ETH cluster
 
@@ -14,6 +6,14 @@ location.
 
 Author: Gilles Waeber
 """
+
+import argparse
+import re
+from pathlib import PosixPath
+from typing import List, TextIO, Sequence
+
+import sys
+from itertools import chain
 
 DEFAULT_PROGRAM_PATH = './build/jacobi/benchmark'
 DEFAULT_COLLECTOR = 'python ./jacobi/jacobi_mpi_collect.py'
@@ -61,8 +61,9 @@ def read_range(spec: str) -> Sequence[int]:
             raise ValueError(f'Empty range')
         return values
 
+
 def parse_args():
-    parser = argparse.ArgumentParser(description='Generate Euler script for jacobi-1d')
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('programs',
                         help='program(s) to benchmark',
                         nargs='+')
@@ -130,6 +131,8 @@ def parse_args():
                         type=int, default=1)
     parser.add_argument('--cpu',
                         help='force the use of a specfic CPU, list them with lsinfo -m')
+    parser.add_argument('--suffix',
+                        help='append a name to the job folder name')
     args = parser.parse_args()
     args.cores = list(sorted(set(chain(*args.cores))))
     args.ghost_cells = list(sorted(set(chain(*args.ghost_cells))))
@@ -138,10 +141,13 @@ def parse_args():
 
 def generate_jacobi_mpi_sub(*, programs: List[str], program_path: str, collector: str, runs: int, total_cores: int,
                             cores: List[int], output: TextIO, n: int, time_steps: int, ghost_cells: List[int],
-                            do_cleanup: bool, do_final: bool, send_email: bool,
-                            minutes: int, cd: str = None, node_scratch: int = None, nodes=1, cpu: str = None):
+                            do_cleanup: bool, do_final: bool, send_email: bool, minutes: int, cd: str = None,
+                            node_scratch: int = None, nodes=1, cpu: str = None, suffix: str = None):
     assert runs >= 1
-    output_dir = "output/$now"
+    dest_dir = f"${{now}}"
+    if suffix is not None:
+        dest_dir += f"_{suffix}"
+    output_dir = f"output/{dest_dir}"
     if not len(cores):
         cores = range(1, total_cores + 1)
     else:
@@ -168,7 +174,7 @@ def generate_jacobi_mpi_sub(*, programs: List[str], program_path: str, collector
             f.write(f"""cd "{cd}"\n""")
         f.write(f"mkdir -p {output_dir}\n")
         f.write(f"chmod u+x mpi_time.sh\n")
-        bsub_job_name = f"{programs[0]}_n{n}t{time_steps}"
+        bsub_job_name = f"jacobi_{dest_dir}"
         bsub_flags = f"-n {total_cores} -o {output_dir}'/job' -J {bsub_job_name} -W {minutes}"
         # reserved scratch disk space in MB, multiplied by the number of cores
         if node_scratch is not None:
@@ -193,20 +199,22 @@ def generate_jacobi_mpi_sub(*, programs: List[str], program_path: str, collector
                 for np in reversed(cores):
                     for g in ghost_cells:
                         job_name = f"{program}_n{n}t{time_steps}g{g}c{np}"
+                        if nodes > 1:
+                            job_name += f"no{nodes}"
                         job_log = f"{output_dir}/{job_name}"
                         dest = f"{scratch_dir}/${{now}}_{job_name}_r{i}"
-                        time_cmd = f"mpi_time.sh {job_log}r{i}t"
+                        time_cmd = f'mpi_time.sh "{job_log}r{i}t"'
                         mpi_flags = f"-np {np}"
                         if nodes > 1:
                             mpi_flags += " --map-by node"
                         # if np > total_cores:  # not supported by the cluster
                         #    mpi_flags = f"-oversubscribe {mpi_flags}"
-                        job = f"mpirun {mpi_flags} {time_cmd} {executable} {n} {time_steps} {g} {dest}\n"
+                        job = f'mpirun {mpi_flags} {time_cmd} {executable} {n} {time_steps} {g} "{dest}"\n'
                         f.write(job)
                         if do_cleanup:
                             f.write(f"rm {dest}\n")
         if do_final:
-            final_job = f"{collector} {output_dir}\n"
+            final_job = f'{collector} "{output_dir}"\n'
             f.write(final_job)
 
         f.write("EOF\n")

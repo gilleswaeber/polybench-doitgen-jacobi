@@ -15,6 +15,7 @@ add_executable(jacobi2d-mpi-nosync-benchmark-lsb mpi2d_benchmark.cpp)
 add_executable(jacobi2d-mpi-nostripes-benchmark-lsb mpi2d_benchmark.cpp)
 add_executable(jacobi2d-2step-mpi-benchmark mpi2d_benchmark.cpp)
 add_executable(jacobi2d-2step-mpi-benchmark-lsb mpi2d_benchmark.cpp)
+add_executable(jacobi2d-vstack-mpi-benchmark-lsb mpi2d_benchmark.cpp)
 add_executable(jacobi2d-2step-mpi-nostripes-benchmark-lsb mpi2d_benchmark.cpp)
 add_executable(dphpc-now now.cpp)
 
@@ -30,6 +31,7 @@ target_link_libraries(jacobi2d-mpi-benchmark-lsb PUBLIC dphpc_lib dphpc_lib_util
 target_link_libraries(jacobi2d-mpi-nosync-benchmark-lsb PUBLIC dphpc_lib dphpc_lib_utils ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
 target_link_libraries(jacobi2d-mpi-nostripes-benchmark-lsb PUBLIC dphpc_lib dphpc_lib_utils ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
 target_link_libraries(jacobi2d-2step-mpi-benchmark-lsb PUBLIC dphpc_lib dphpc_lib_utils ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
+target_link_libraries(jacobi2d-vstack-mpi-benchmark-lsb PUBLIC dphpc_lib dphpc_lib_utils ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
 target_link_libraries(jacobi2d-2step-mpi-nostripes-benchmark-lsb PUBLIC dphpc_lib dphpc_lib_utils ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
 
 target_compile_definitions(jacobi1d-mpi-benchmark-lsb PUBLIC -DWITH_LSB)
@@ -41,4 +43,5 @@ target_compile_definitions(jacobi2d-mpi-nosync-benchmark-lsb PUBLIC -DWITH_LSB -
 target_compile_definitions(jacobi2d-mpi-nostripes-benchmark-lsb PUBLIC -DWITH_LSB -DJACOBI_NO_STRIPES)
 target_compile_definitions(jacobi2d-2step-mpi-benchmark PUBLIC -DJACOBI2D_TWO_STEPS_SYNC)
 target_compile_definitions(jacobi2d-2step-mpi-benchmark-lsb PUBLIC -DJACOBI2D_TWO_STEPS_SYNC -DWITH_LSB)
+target_compile_definitions(jacobi2d-vstack-mpi-benchmark-lsb PUBLIC -DJACOBI2D_VSTACK -DWITH_LSB)
 target_compile_definitions(jacobi2d-2step-mpi-nostripes-benchmark-lsb PUBLIC -DJACOBI2D_TWO_STEPS_SYNC -DWITH_LSB -DJACOBI_NO_STRIPES)

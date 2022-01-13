@@ -9,7 +9,6 @@
 
 #include "jacobi2d.hpp"
 #include "jacobi2d_mpi.hpp"
-#include "array2dr.hpp"
 
 struct Case {
     int n;
@@ -51,6 +50,12 @@ int main() {
             flush_cache();
             if (rank == 0) unlink(temp_file);
             MPI_Barrier(MPI_COMM_WORLD);
+#ifdef JACOBI2D_VSTACK
+            if (g < c.time_steps && g > c.n / (i*i)) {
+                if (rank == 0) std::cout << "  Not possible with " << i*i << " processes and " << g << " ghost cells\n";
+                continue;
+            }
+#endif
             auto begin = std::chrono::high_resolution_clock::now();
             //MpiParams(int rank, int num_proc, int ghost_cells, const char* output_file)
             jacobi_2d_mpi(c.time_steps, c.n, {rank, i*i, g, temp_file});

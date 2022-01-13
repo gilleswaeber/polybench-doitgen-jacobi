@@ -6,14 +6,22 @@ from pandas import DataFrame
 import pandas as pd
 from pathlib import Path
 
+"""
+Collect all results in a given folder for Jacobi MPI experiments and generate CSV reports, some containing all info,
+some containing a summary
+
+Author: Gilles Waeber
+"""
+
 GROUP_BY_TEST = ['alternative', 'n', 'time_steps', 'ghost_cells', 'cores']
 GROUP_BY_RUN = GROUP_BY_TEST + ['run']
 
 TIME_NAME_PATTERN = re.compile(
-    r"^(?P<alternative>jacobi.+)_n(?P<n>\d+)t(?P<time_steps>\d+)g(?P<ghost_cells>\d+)c(?P<cores>\d+)"
+    r"^(?P<alternative>jacobi.+)_n(?P<n>\d+)t(?P<time_steps>\d+)g(?P<ghost_cells>\d+)"
+    r"c(?P<cores>\d+)(no(?P<nodes>\d+))?"
     r"r(?P<run>\d+)t(?P<rank>\d+)"
     r"$")
-TIME_NAME_GROUPS = ('n', 'time_steps', 'ghost_cells', 'cores', 'run', 'rank', 'alternative')
+TIME_NAME_GROUPS = ('n', 'time_steps', 'ghost_cells', 'cores', 'nodes', 'run', 'rank', 'alternative')
 TIME_TEXT_PATTERN = re.compile(r"""^
     (?P<user_time>[\d.]+)user\s
     (?P<system_time>[\d.]+)system\s
@@ -27,9 +35,10 @@ TIME_TEXT_GROUPS = (
     'user_time', 'system_time', 'elapsed_h', 'elapsed_m', 'elapsed_s', 'percent_cpu', 'text_kb', 'data_kb', 'mem_kb',
     'fs_in', 'fs_out', 'faults_maj', 'faults_min', 'swaps')
 LSB_NAME_PATTERN = re.compile(
-    r"^lsb\.(?P<alternative>jacobi.+)_n(?P<n>\d+)t(?P<time_steps>\d+)g(?P<ghost_cells>\d+)c(?P<cores>\d+)"
+    r"^lsb\.(?P<alternative>jacobi.+)_n(?P<n>\d+)t(?P<time_steps>\d+)g(?P<ghost_cells>\d+)"
+    r"c(?P<cores>\d+)(no(?P<nodes>\d+))?"
     r"r(?P<run>\d+)t\.r(?P<rank>\d+)$")
-LSB_NAME_GROUPS = ('n', 'time_steps', 'ghost_cells', 'cores', 'run', 'rank', 'alternative')
+LSB_NAME_GROUPS = ('n', 'time_steps', 'ghost_cells', 'cores', 'nodes', 'run', 'rank', 'alternative')
 LSB_IDS = {
     0: 'init_time',
     1: 'compute_time',
@@ -39,7 +48,7 @@ LSB_IDS = {
 
 NUMERIC_GROUPS = ['n', 'time_steps', 'ghost_cells', 'cores', 'run', 'rank', 'user_time', 'system_time', 'percent_cpu',
                   'text_kb', 'data_kb', 'mem_kb', 'fs_in', 'fs_out', 'faults_maj', 'faults_min', 'swaps']
-SORT_GROUPS = ['alternative', 'n', 'time_steps', 'ghost_cells', 'cores', 'run', 'rank']
+SORT_GROUPS = ['alternative', 'n', 'time_steps', 'ghost_cells', 'cores', 'nodes', 'run', 'rank']
 ALL_GROUPS = TIME_NAME_GROUPS + TIME_TEXT_GROUPS
 
 
@@ -95,6 +104,7 @@ def collect_results(folder: Path, write_report=True):
     df.sort_values(SORT_GROUPS, inplace=True)
     df.reset_index(inplace=True)
     df['alternative'].fillna('base', inplace=True)
+    df['nodes'].fillna(1, inplace=True)
 
     # take the maximum time for each run
     by_run = df.groupby(GROUP_BY_RUN)['elapsed_time'] \
@@ -140,7 +150,7 @@ def read_lsb(path: Path) -> Tuple[DataFrame, str]:
     data.drop(columns=to_remove, inplace=True)
     with path.open('rt', encoding='utf-8') as f:
         _sys_line = f.readline()
-        node = f.readline().split(': ', 1)[1]
+        node = f.readline().split(': ', 1)[1].rstrip()
     return data, node
 
 

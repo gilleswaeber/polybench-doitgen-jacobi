@@ -96,17 +96,28 @@ void jacobi_2d_mpi(int timeSteps, int n, MpiParams params) {
         ABORT_ON_ERROR(MPI_File_close(&fh))
         return;
     }
-    const int cellR = params.rank / gridSize;
-    const int cellC = params.rank % gridSize;
-    const int lastCell = gridSize - 1;
     const int g = params.ghost_cells;
+    const int activeProc = gridSize * gridSize;
 
-    const int blockRows = n / gridSize;
+#ifndef JACOBI2D_VSTACK
+    const int cellsR = gridSize;
+    const int cellsC = gridSize;
+#else
+    const int cellsR = activeProc;
+    const int cellsC = 1;
+#endif
+    const int cellR = params.rank / cellsC;
+    const int cellC = params.rank % cellsC;
+    const int lastR = cellsR - 1;
+    const int lastC = cellsC - 1;
+
+    const int blockRows = n / cellsR;
+    const int blockCols = n / cellsC;
+
     const int trueR = cellR * blockRows;
-    const int trueRows = (cellR == lastCell ? n - ((gridSize - 1) * blockRows) : blockRows);
-    const int blockCols = n / gridSize;
+    const int trueRows = (cellR == lastR ? n - ((cellsR - 1) * blockRows) : blockRows);
     const int trueC = cellC * blockCols;
-    const int trueCols = (cellC == lastCell ? n - ((gridSize - 1) * blockCols) : blockCols);
+    const int trueCols = (cellC == lastC ? n - ((cellsC - 1) * blockCols) : blockCols);
 
     // syncing across more than one cell is not supported
     ABORT_ON_ERROR(g < timeSteps && (g > blockRows || g > blockCols))
@@ -134,16 +145,16 @@ void jacobi_2d_mpi(int timeSteps, int n, MpiParams params) {
 #else
     const int vBufferSize = trueCols * g;
     const int topCornerBuffer = cellR != 0 ? ghostTriangleSize : 0;
-    const int bottomCornerBuffer = cellR != lastCell ? ghostTriangleSize : 0;
+    const int bottomCornerBuffer = cellR != lastR ? ghostTriangleSize : 0;
     const int hBufferSize = trueRows * g + topCornerBuffer + bottomCornerBuffer;
     const int topCornerStart = trueRows * g;
     const int bottomCornerStart = topCornerStart + topCornerBuffer;
 #endif
 
-    Peer top{cellR != 0, params.rank - gridSize, oddRow, vBufferSize};
-    Peer bottom{cellR != lastCell, params.rank + gridSize, 1 - oddRow, vBufferSize};
+    Peer top{cellR != 0, params.rank - cellsC, oddRow, vBufferSize};
+    Peer bottom{cellR != lastR, params.rank + cellsC, 1 - oddRow, vBufferSize};
     Peer left{cellC != 0, params.rank - 1, 2 + oddCol, hBufferSize};
-    Peer right{cellC != lastCell, params.rank + 1, 3 - oddCol, hBufferSize};
+    Peer right{cellC != lastC, params.rank + 1, 3 - oddCol, hBufferSize};
 #ifdef JACOBI2D_DIAGONAL_SYNC
     Peer topLeft{g > 1 && top.active && left.active, top.rank - 1, 4 + oddRow, ghostTriangleSize};
     Peer bottomRight{g > 1 && bottom.active && right.active, bottom.rank + 1, 5 - oddRow, ghostTriangleSize};
@@ -166,7 +177,8 @@ void jacobi_2d_mpi(int timeSteps, int n, MpiParams params) {
 #endif
 
 #ifdef VERBOSE
-    std::cerr << "gridSize: " << gridSize << " cellR: " << cellR << " cellC: " << cellC << " lastCell: " << lastCell
+    std::cerr << "gridSize: " << gridSize << " cellR: " << cellR << " cellC: " << cellC
+    << " lastCell: " << lastR << ", " << lastC
     << " RANK t" << top.rank << (top.active ? "s" : "") << " b" << bottom.rank << (bottom.active ? "s" : "") << " l" << left.rank << (left.active ? "s" : "") << " r" << right.rank << (right.active ? "s" : "")
     << " PEERS " << peers.size()
     << " PAD t" << padTop << " b" << padBottom << " l" << padLeft << " r" << padRight

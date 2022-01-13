@@ -4,7 +4,7 @@ cmake-*/
 .vs/
 .idea/
 CMakePresets.json
-/1*
+/output
 
 lsb.*.r*
 
