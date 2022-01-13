@@ -63,9 +63,10 @@ base_theme <- theme(plot.title.position = "plot",
                     panel.grid.major.x = element_blank(),
                     text = element_text(size = 7),
                     legend.key.size = unit(.7, "line"),
+                    legend.spacing.y = unit(.1, "lines"),
                     legend.margin = margin(0, 0, 0, 0, "lines"),
                     panel.spacing = unit(.05, "lines"),
-                    plot.margin = unit(c(.05,.05,0,0), "lines")
+                    plot.margin = unit(c(.1,.05,0,0), "lines")
 )
 
 # Jacobi 1D: comparing halo depths
@@ -76,10 +77,12 @@ j1d_ghost_runs_plot <- ggplot(data = ghost_runs_data, aes(x = cores, y = median 
   scale_shape_manual(values = c(15, 16, 17, 21, 22, 23, 4)) +
   geom_line(aes(), size = 0.4) +
   geom_point(aes(shape = factor(ghost_cells)), size = 1.2) +
-  labs(subtitle = "time [s] | single node | N=1 000 000 S, T=1 000", color = "depth", linetype = "depth", shape = "depth") +
-  base_theme
+  labs(subtitle = "time [s] | single node | N=1 000 000 S, T=1 000", color = "halo depth", linetype = "halo depth", shape = "halo depth") +
+  base_theme +
+  theme(legend.position = c(.815, .2), legend.key.size = unit(.5, "line"), legend.margin = margin(.07, .15, .07, .1, "lines")) +
+  guides(color=guide_legend(ncol=4))
 #j1d_ghost_runs_plot
-ggsave("report/jacobi_mpi/1d_halo.pdf", plot = j1d_ghost_runs_plot, width = 3.287, height = 1.8, unit = "in")
+ggsave("report/jacobi_mpi/1d_halo.pdf", plot = j1d_ghost_runs_plot, width = 3.287, height = 1.5, unit = "in")
 
 # Jacobi 1D: spanning multiple nodes
 j1d_nodes_plot <-
@@ -91,39 +94,43 @@ ggplot(data = j1d_nodes_data, aes(x = factor(nodes), y = median / 1000000, ymin=
   geom_bar(stat="identity") +
   geom_errorbar(size=.2) +
   base_theme +
-  theme(legend.position = c(.077, .725), legend.key.size = unit(.5, "line"), legend.margin = margin(.1, .2, .4, .2, "lines")) +
+  theme(legend.position = c(.077, .665), legend.key.size = unit(.5, "line"), legend.margin = margin(.1, .2, .1, .2, "lines")) +
   labs(subtitle = "time [s] by #cores, #nodes | depth = 8 | N = 1 000 000 S, T = 1 000", fill = "#nodes") +
   guides(fill=guide_legend(ncol=2))
-ggsave("report/jacobi_mpi/1d_nodes.pdf", plot = j1d_nodes_plot, width = 3.287, height = 1.8, unit = "in")
+ggsave("report/jacobi_mpi/1d_nodes.pdf", plot = j1d_nodes_plot, width = 3.287, height = 1.4, unit = "in")
 
 # Jacobi 2D: program variants
 multi2d_plot <- ggplot(data = multi2d_data, aes(interaction(ghost_cells, alternative), y=median / 1000000, ymin=CI.NNorm.low/1000000, ymax=CI.NNorm.high/1000000, fill = alternative)) +
-  facet_wrap(~cores, labeller = labeller(cores = function (x) paste0(x, " cores")), nrow = 1) +
+  facet_wrap(~cores, labeller = labeller(
+    cores = function (x) ifelse (x == 1, "1 core", paste0(x, " cores"))
+  ), nrow = 1) +
   scale_y_continuous(NULL, limits = c(0, NA)) +
   scale_x_discrete("halo depths: 1 8 16 32 64", labels = NULL) +  # function (x) stringr::str_extract(x, "\\d+")
   geom_bar(size = .4, stat = "identity") +
   #scale_fill_discrete(name="Variant", breaks = c("jacobi2d-mpi-benchmark", "jacobi2d-2step-mpi-benchmark", "jacobi2d-vstack-mpi-benchmark"), labels = c('A', 'B', 'C')) +
   base_theme +
   geom_errorbar(size=.2) +
-  theme(legend.position = c(.082, .82), legend.title = element_blank(), legend.key.size = unit(.6, "line"), legend.margin = margin(.1, .35, .1, .35, "lines"), legend.spacing.y = unit(0, "mm")) +
+  theme(legend.position = c(.08, .74), legend.title = element_blank(), legend.key.size = unit(.5, "line"), legend.margin = margin(.1, .8, .1, .1, "lines"), legend.spacing.y = unit(0, "mm")) +
   labs(subtitle="time [s] | single node | N=1 000 sqrt(S), T=1 000", fill = "Variant")
 #multi2d_plot
-ggsave("report/jacobi_mpi/2d_multi.pdf", plot = multi2d_plot, width = 3.287, height = 1.8, unit = "in")
+ggsave("report/jacobi_mpi/2d_multi.pdf", plot = multi2d_plot, width = 3.287, height = 1.25, unit = "in")
 
 # Jacobi 2D: halo depth for vstack
 j2d_vhalo_plot <-
   ggplot(data = j2d_vhalo_data, aes(x = factor(ghost_cells), y = median / 1000000, ymin=CI.NNorm.low/1000000, ymax=CI.NNorm.high/1000000, group=ghost_cells, fill=factor(ghost_cells))) +
-    facet_wrap(~cores, nrow = 1) +
+    facet_wrap(~cores, labeller = labeller(
+      cores = function (x) ifelse (x == 1, "1 core", paste0(x, " cores"))
+    ), nrow = 1) +
     #scale_fill_brewer(direction = -1) +
     scale_y_continuous(NULL, limits = c(0, NA)) +
     scale_x_discrete(NULL, labels = NULL) +
     geom_bar(stat="identity") +
     geom_errorbar(size=.3) +
     base_theme +
-    theme(legend.position = c(.083, .8), legend.key.size = unit(.5, "line"), legend.margin = margin(.1, .25, .4, 0, "lines")) +
+    theme(legend.position = c(.083, .7), legend.key.size = unit(.5, "line"), legend.margin = margin(.1, .25, .1, 0, "lines")) +
     labs(subtitle = "time [s] by #cores, depth | single node, vstack | N = 1 000 sqrt(S), T = 1 000", fill = "halo depth") +
     guides(fill=guide_legend(ncol=2))
-ggsave("report/jacobi_mpi/2d_vhalo.pdf", plot = j2d_vhalo_plot, width = 3.287, height = 1.8, unit = "in")
+ggsave("report/jacobi_mpi/2d_vhalo.pdf", plot = j2d_vhalo_plot, width = 3.287, height = 1.2, unit = "in")
 
 ggplot(data = runs2d_data, aes(x = cores, y = median / 1000, ymin = CI.NNorm.high / 1000, ymax = CI.NNorm.low / 1000)) +
   #geom_hline(yintercept=overall_data_summary[26, "median"], linetype="dashed", color = "red") +
