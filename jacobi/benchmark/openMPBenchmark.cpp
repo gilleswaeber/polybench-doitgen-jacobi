@@ -6,72 +6,110 @@
 #include <liblsb.h>
 
 #include "jacobi1d.hpp"
+#include "utils.hpp"
 
-#define RUNS 10
-#define THREADS_SIZES 7
-const static int threads[] = { 1, 2, 4, 8, 16, 32, 48 };
 
-int main() {
-    int n = 500000;
-    int time_steps = 1000;
+void do_polybench(int n, int tsteps) {
     std::vector<double> A(n);
-    std::vector<double> A_par(n);
-    std::vector<double> A_barrier(n);
 
-    MPI_Init(nullptr, nullptr);
+    init_1d_array(n, A.data());
+    flush_cache();
 
-    /* Initialize lsblib */
-    LSB_Init("jacobi-openMP", 0);
+    LSB_Res();
+    kernel_jacobi_1d_imper(tsteps, n, A.data());
+    LSB_Rec(0);
+}
 
-    LSB_Set_Rparam_int("N", n);
-    LSB_Set_Rparam_int("TSTEPS", time_steps);
+void do_polybench_parallel(int n, int tsteps) {
+    std::vector<double> A(n);
 
-    // Sequential benchmark
-    LSB_Set_Rparam_string("benchmark", "jacobi-sequential");
-    LSB_Set_Rparam_int("threads", threads[0]);
+    init_1d_array(n, A.data());
+    flush_cache_openMP();
 
-    for (uint64_t i = 0; i < RUNS; ++i) {
-        init_1d_array(n, A.data());
+    LSB_Res();
+    kernel_jacobi_1d_imper_par(tsteps, n, A.data());
+    LSB_Rec(0);
+}
 
-        LSB_Res();
-        kernel_jacobi_1d_imper(time_steps, n, A.data());
-        LSB_Rec(i);
+void do_polybench_swap(int n, int tsteps) {
+    std::vector<double> A(n);
+
+    init_1d_array(n, A.data());
+    flush_cache_openMP();
+
+    LSB_Res();
+    kernel_jacobi_1d_imper_swap(tsteps, n, A.data());
+    LSB_Rec(0);
+}
+
+typedef void (*benchmark_func)(int, int);
+
+struct Benchmark {
+    const char* name;
+    benchmark_func func;
+};
+
+static const Benchmark benchmarks[] = {
+        {"polybench", &do_polybench},
+        {"polybench_parallel", &do_polybench_parallel},
+        //{"polybench_barrier", &do_polybench_barrier},
+        {"polybench_swap", &do_polybench_swap}
+};
+
+static const uint64_t benchmarks_size = sizeof(benchmarks) / sizeof(benchmarks[0]);
+
+void help() {
+    std::cout << "Usage : ./program benchmark_type nr nq np #threads run_id blocking_window(optional)" << '\n';
+    std::cout << "benchmark_type: type of benchmark" << '\n';
+    std::cout << "#threads: the number of threads to use" << '\n';
+    std::cout << "n tsteps : problem parameters" << '\n';
+    std::cout << "run_id : id of the current run" << '\n';
+}
+
+int main(int argc, char** argv) {
+    if (argc < 6) {
+        std::cout << "Too few arguments..." << '\n';
+        help();
+        return -1;
     }
+    if (argc > 6) {
+        std::cout << "Too many arguments..." << '\n';
+        help();
+        return -1;
+    }
+    const char* benchmark_type = argv[1];
+    int n = strtoull(argv[2], nullptr, 0);
+    int tsteps = strtoull(argv[3], nullptr, 0);
 
-    // Parallel benchmark
-    LSB_Set_Rparam_string("benchmark", "jacobi-parallel");
-    for (uint64_t i = 0; i < THREADS_SIZES; ++i) {
-        omp_set_num_threads(threads[i]);
-        LSB_Set_Rparam_int("threads", threads[i]);
+    int threads = strtoull(argv[4], nullptr, 0);
 
-        for (uint64_t j = 0; j < RUNS; ++j) {
-            init_1d_array(n, A_par.data());
+    uint64_t run_id = strtoull(argv[5], nullptr, 0);
 
-            LSB_Res();
-            kernel_jacobi_1d_imper_par(time_steps, n, A_par.data());
-            LSB_Rec(j);
+    omp_set_num_threads(threads);
+
+    MPI::Init();
+
+    const std::string benchmark_type_str = benchmark_type;
+    const std::string benchmark_name = "jacobi-1D-openMP-" + benchmark_type_str + "-" +
+                                       std::to_string(n) + "-" + std::to_string(tsteps) + "-" +
+                                       std::to_string(threads) + "-" + std::to_string(run_id);
+    LSB_Init(benchmark_name.c_str(), 0);
+
+    LSB_Set_Rparam_string("benchmark", benchmark_type);
+
+    LSB_Set_Rparam_long("N", n);
+    LSB_Set_Rparam_long("TSTEPS", tsteps);
+
+
+    LSB_Set_Rparam_long("threads", threads);
+
+    for (uint64_t i = 0; i < benchmarks_size; ++i) {
+        if (strcmp(benchmark_type, benchmarks[i].name) == 0) {
+            benchmarks[i].func(n, tsteps);
+            break;
         }
     }
-
-    // Parallel barrier benchmark
-    LSB_Set_Rparam_string("benchmark", "jacobi-parallel");
-    for (uint64_t i = 0; i < THREADS_SIZES; ++i) {
-        omp_set_num_threads(threads[i]);
-        LSB_Set_Rparam_int("threads", threads[i]);
-
-        for (uint64_t j = 0; j < RUNS; ++j) {
-            init_1d_array(n, A_barrier.data());
-
-            LSB_Res();
-            kernel_jacobi_1d_imper_barrier(time_steps, n, A_barrier.data());
-            LSB_Rec(j);
-        }
-    }
-
-    /* Finalize lsblib */
     LSB_Finalize();
-
-    MPI_Finalize();
-
+    MPI::Finalize();
     return 0;
 }
