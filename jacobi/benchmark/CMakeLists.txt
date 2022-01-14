@@ -7,8 +7,9 @@ add_executable(jacobi1d-mpi-benchmark mpi1d_benchmark.cpp)
 add_executable(jacobi1d-mpi-benchmark-lsb mpi1d_benchmark.cpp)
 add_executable(jacobi1d-mpi-nosync-benchmark-lsb mpi1d_benchmark.cpp)
 add_executable(jacobi1d-mpi-nostripes-benchmark-lsb mpi1d_benchmark.cpp)
-add_executable(jacobi1d-openmp-benchmark openMPBenchmark.cpp)
+add_executable(jacobi1d-openmp-benchmark omp1d_benchmark.cpp)
 
+add_executable(jacobi2d-openmp-benchmark omp2d_benchmark.cpp)
 add_executable(jacobi2d-mpi-benchmark mpi2d_benchmark.cpp)
 add_executable(jacobi2d-mpi-benchmark-lsb mpi2d_benchmark.cpp)
 add_executable(jacobi2d-mpi-nosync-benchmark-lsb mpi2d_benchmark.cpp)
@@ -25,6 +26,7 @@ target_link_libraries(jacobi1d-mpi-nosync-benchmark-lsb PUBLIC dphpc_lib dphpc_l
 target_link_libraries(jacobi1d-mpi-nostripes-benchmark-lsb PUBLIC dphpc_lib dphpc_lib_utils ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
 target_link_libraries(jacobi1d-openmp-benchmark PUBLIC dphpc_lib dphpc_lib_utils ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
 
+target_link_libraries(jacobi2d-openmp-benchmark PUBLIC dphpc_lib dphpc_lib_utils ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)
 target_link_libraries(jacobi2d-mpi-benchmark PUBLIC dphpc_lib dphpc_lib_utils)
 target_link_libraries(jacobi2d-2step-mpi-benchmark PUBLIC dphpc_lib dphpc_lib_utils)
 target_link_libraries(jacobi2d-mpi-benchmark-lsb PUBLIC dphpc_lib dphpc_lib_utils ${CMAKE_SOURCE_DIR}/thirdparty/liblsb/.libs/liblsb.a)

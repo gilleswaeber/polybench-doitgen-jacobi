@@ -19,6 +19,7 @@ set(
     SRC 
     "jacobi/jacobi1d.cpp"
     "jacobi/jacobi2d.cpp"
+    "jacobi/jacobi2d_omp.cpp"
     "doitgen/doitgen.cpp"
     "polybench.cpp"
 )
