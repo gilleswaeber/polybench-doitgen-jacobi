@@ -1,0 +1,79 @@
+\begin{figure}
+  \includegraphics{jacobi_mpi/1d_halo.pdf}
+  \caption{Jacobi 1D MPI: comparing halo depths}
+  \label{fig:j1d_halo}
+\end{figure}
+\begin{figure}
+  \includegraphics{jacobi_mpi/1d_nodes.pdf}
+  \caption{Jacobi 1D MPI: spanning multiple nodes}
+  \label{fig:j1d_nodes}
+\end{figure}
+\begin{figure}
+  \includegraphics{jacobi_mpi/2d_multi.pdf}
+  \caption{Jacobi 2D MPI: comparing program variants}
+  \label{fig:j2d_multi}
+\end{figure}
+\begin{figure}
+  \includegraphics{jacobi_mpi/2d_vhalo.pdf}
+  \caption{Jacobi 2D MPI: halo depth for vstack}
+  \label{fig:j2d_vhalo}
+\end{figure}
+
+\subsubsection{Proposed methods}\label{jacobi_mpi_methods}
+For Jacobi MPI implementations, we assume that each process should only store a small part of the complete array in its memory.
+Given the dependency between a cell and its neighbors, we need to share data between the different processes, a solution being to share data with the neighboring processes when necessary.
+
+\mypar{Ghost Cells} An applicable pattern here are ghost cells \cite{ghost_cells}.
+We store a padded array, slightly larger than the array to compute, and only compute the values of the cells in the central part while the cells at the borders are computed by other processes and exchanged whenever necessary.
+Concretely, for Jacobi 1D, we store an additional cell at the beginning and at the end of the array, and
+after every iteration, each process sends the first and the last values it computed to the previous resp.~next process, which uses it to update its border cells.
+
+\mypar{Deep Halo} Extending on the idea of ghost cells, we store a bigger array to reduce the number of inter-process data exchanges required.
+Thus, data packets are bigger and the relative data transfer overhead is reduced.
+As the stencil must now also be applied on some border cells too, the total computation increases.
+We define the halo depth as the number of iterations between every data exchange, equal here to the number of additional ``padding'' cells on each side of the array.
+Ghost cells correspond to a depth of $1$.
+A depth greater than the number of iteration means that no data exchange is necessary.
+Data exchange and computation overhead must be balanced.
+Greater depth could lead to data exchanges with processes further away.
+
+\mypar{Striped Synchronization} To avoid unnecessary wait times, we use striped synchronization: we number all processes sequentially, then processes with an odd number start by synchronizing with their previous neighbor and those with an even number start by synchronizing with their next neighbor.
+
+\mypar{2-Step Synchronization}
+For Jacobi 2D, we can cut the area as a grid.
+With the deep halo approach, each process would need to exchange data with up to 8 neighbors.
+Due to the grid structure, data between processes in diagonal is small and also passed to their two common neighbors.
+An alternative is a two-step synchronization: first vertically only, then horizontally also passing corners' data whenever relevant.
+This introduces an additional wait, but reduces the number of communication channels.
+
+\mypar{Stacked processes}
+Instead of disposing processes' areas in a grid, we simply divide the space over one axis, e.g.~vertically.
+This reduces the number of neighbor for each process but the total amount of data exchanged increases.
+
+
+\subsubsection{Experimental results}\label{jacobi_mpi_results}
+Problem sizes were scaled using the number of cores used (denoted $S$) as in \cite{data-centric-python}.
+Unless for varying the number of node, each experiment was run as a single batch.
+All experiments use striped async data exchange.
+Striped vs. non-striped did not make a significant difference.
+
+\mypar{Jacobi 1D}
+In Fig.~\ref{fig:j1d_halo}, we examine the effect of deep halo on the computation time.
+Looking especially at the depths of $1$ and $8$, we see that the runtime is halved when using 48 cores.
+For 8 cores or more, we see that using a depth between 4 and 32 produces particularly stable results.
+In Fig.~\ref{fig:j1d_nodes}, we compare the runtimes for different number of nodes, to check if any adversary effect occurs when spanning the cores over more nodes.
+To the contrary, spanning over more nodes seems to decrease runtimes.
+While this may be caused by under-utilization of the specific processes in the cluster, it demonstrates that the proposed implementation scales properly with nodes.
+
+\mypar{Jacobi 2D}
+Since the array has size $N^2$, we scale the problem to $N=1000\sqrt S$.
+In Fig.~\ref{fig:j2d_multi}, we compare the different implementation: diagonal sync, 2-step sync, and stacked processes for different halo depths.
+The stacked processes implementation scales better than the other two, despite exchanging more data between the processes.
+It is however greatly affected by the halo depth.
+The 2-step and base (diagonal sync) implementation seem to be roughly on par.
+The effects of varying halo depth are weaker.
+% vstack: $2\cdot T\cdot G\cdot S\cdot N$
+% diag: $2\cdot T\cdot G\cdot 2\sqrt S\cdot N + 8(\sqrt S-1)^2\frac{G\cdot (G-1)}{2}$
+% 2-step: $2\cdot T\cdot G\cdot 2\sqrt S\cdot N + 4(\sqrt S-1)^2\frac{G\cdot (G-1)}{2}$
+In Fig.~\ref{fig:j2d_vhalo}, we focus on the latter to determine the best halo depth.
+Between 4 and 8 seems optimal in our case.

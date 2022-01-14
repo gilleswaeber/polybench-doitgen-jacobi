@@ -1,0 +1,49 @@
+
+\subsubsection{Proposed methods}\label{proposed_methods_doitgenmpi}
+
+In this section we will briefly describe how Doitgen was parallelized with MPI. After that, we will describe our three experiments.
+
+We parallelized Doitgen very similarly as in the OpenMP section.
+We split the work among processes by attributing to each process a chunk of matrices along the NR axis. Each process is allocating a batch of 64 $\NQ\times\NP$ matrices.
+It is worth to note that the initial problem size is $128\times512\times512$ and that we scaled the NR axis with the number of processes. Moreover, our algorithm works in three phases, firstly it initializes A. The second phase is the kernel execution (a full batch in a row). Finally, the last phase consists of writing the batch to a remote location. Note that there is no network communication except when writing the batch. Now that we described our algorithm, let's talk about our experiments.
+
+We made a total of three experiments. The first experiment consisted of comparing four writes strategies along two axis, using or not collective writes and using or not a file window. This was done in order to choose the simplest best write strategy. Secondly, we compared the runtime of each phases of our algorithm and we proposed an improvement by transposing the slices in place before the execution of the kernel. We measured each phases as well as the overall runtime. We also reported the sequential baseline\footnote{We used the Doitgen implementation of \href{https://web.cse.ohio-state.edu/~pouchet.2/software/polybench/}{Polybench 4.1} }. Finally, we observed the effect of spanning multiple nodes and measured everything exactly as in the second experiment. Now that we have described our experiments, let's see our results.
+
+\subsubsection{Experimental results}\label{experimental_results_mpi}
+
+In this section we will report and discuss our experiments results. We will start with the write strategy.
+
+When comparing the 4 different strategies, we can ask ourselves how much the 4 write strategies affect the runtime. By looking at Figure \ref{fig:doitgen_mpi_write_strategy} we can observe that there are two trends, the collective writes are slower than the individual writes and using a window does not affect the results at all. This result follows are intuition since the write regions are disjoints per process and any collective calls imply some synchronization overhead. We therefore choose an individual call and we are now able to compare the proportion of each phase runtime in our second experiment.
+
+
+\begin{figure}
+  \includegraphics[scale=0.40]{Doitgen_MPI/write_2.pdf}\hfill
+  \caption{}
+  \label{fig:doitgen_mpi_write_strategy}
+\end{figure}
+
+
+Indeed, we need to know which phase dominates the runtime in order to make things faster.
+\begin{figure}
+  \includegraphics[scale=0.60]{Doitgen_MPI/latest_plots/grapix_kernel.pdf}\hfill
+  \caption{Runtime of a single iteration of the kernel. Median time per process per iteration for each process number}
+  \label{fig:doitgen_mpi_kernel_basic}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[scale=0.52]{Doitgen_MPI/latest_plots/write_no_title.pdf}\hfill
+  \caption{Runtimes of a batch write. All time measurements per process per iteration for each process number}
+  \label{fig:doitgen_mpi_write_basic}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[scale=0.50]{Doitgen_MPI/latest_plots/overall_no_title.pdf}\hfill
+  \caption{Overall runtimes with baseline. Median time of the median process runtime per run for each process number.}
+  \label{fig:doitgen_mpi_overall_basic}
+\end{figure}
+
+First, by looking at the \textit{basic} versions of Figure \ref{fig:doitgen_mpi_overall_basic}, we can observe that the runtime of the algorithm is about 125 seconds and match the baseline as expected. We did not included the plot for the phase 1 because it was always taking around $75 ms$ and was therefore insignificant to the rest. For the second phase on Figure \ref{fig:doitgen_mpi_kernel_basic}, we can see that the basic kernel takes about $900 ms$ per iteration. For the third phase on Figure \ref{fig:doitgen_mpi_write_basic} and by looking at the basic violin, we can observe that a single batch write can take up to 10 seconds. Therefore, since there is only two write of batch per process and 128 kernel iterations per process, the overall runtime is dominated by the kernel execution. With this information in mind, we introduce an improvement. Indeed, similarly as in the openMP version, we could ask us how much would the kernel benefits from friendlier memory accesses. In order to answer this question we transposed the batch in place before executing the kernel. We first noted that the phase 1 runtime remained unchanged even with the transposition (still not showed). Secondly, we noted a performance improvement as it can be observed by looking at both the \textit{basic} and \textit{transposed} version on Figure \ref{fig:doitgen_mpi_kernel_basic} where a single kernel iteration dropped to around $200 ms$ and the overall runtime dropped to around $20s$ of runtime. We won't cover much about the cache issues and why its faster as it is already done in the OpenMP section. However, we can note a progressive overhead in the runtime in the \textit{transpose} version still on Figure \ref{fig:doitgen_mpi_overall_basic} as the number of processes increases.Could this be the cache? Interestingly, we don't observe the same progressive overhead on each kernel iterations runtime on Figure \ref{fig:doitgen_mpi_kernel_basic} therefore the kernel phase is not at the origin of this overhead. What about the writes? Indeed, we observe a change on Figure \ref{fig:doitgen_mpi_write_basic}, the more nodes we span, the lower the clusters are located which indicates that the writes took less time (Note the logarithmic scale). This progressive overhead could be due from either network bandwidth sharing, from cache contention (not in the kernel) or from disk contention.The latter can be excluded because if this was the disk, spanning more nodes would have no effect. This let us with the network and cache contention in another phase than 2. As said previously, the phase 1 was taking around $200ms$ for a single batch and therefore cannot be guilty for the overhead. We don't see another place where cache contention could build up except in the write because we don't know the implementation of the MPI write. Perhaps MPI is sharing memory for the processes on same node which would incure an overhead when lots of processes are on the same node? Unfortunately, we don't have any experiment for that but that could be aligned with Figure \ref{fig:doitgen_mpi_write_basic} and would explain the speed up when spanning more nodes. Lastly, it could be the network bandwith sharing from the node to the remote write location. However, doing an approximate computation leads to 200ms per iteration and 64 iteration to write $1072Mbit$ (a batch) imply $89Mbit/s$ and at most $4288Mbit/s$ with 48 processes. This is far from the $100GBits$ bandwith in euler VII to scratch location and therefore could explain the overhead in Figure \ref{fig:doitgen_mpi_overall_basic}, the speed ups in writes on Figure \ref{fig:doitgen_mpi_write_basic} and the absence of overhead on Figure \ref{fig:doitgen_mpi_kernel_basic}.
+To conclude, we could optimize and provide a human optimization for Doitgen implemented with MPI but we cannot explain precisely the reason of the overhead except with the above given ideas. One sure thing is that this overhead is due to something on the node, either the network or the cache. Let's now switch to Jacobi.
+
+
+

@@ -1,0 +1,14 @@
+\mypar{Doitgen} This algorithm is performing a series of matrix matrix multiplication given $A\in\R^{{\rm NR}\times {\rm NQ} \times {\rm NP}}$ and $C4\in\R^{{\rm NP}\times {\rm NP}}$ and is defined as $A(r, q, p) = \sum_{\substack{s=0}} A(r, q, s)*C4(s, p)$.
+
+\mypar{Stencil algorithms} Those where we repeatedly update values in an array according to a pattern, i.e.~stencil.
+Parallel implementations of such algorithms are challenging due to the coupling between a cell and its neighbors.
+The dependency on the previous value of the cell itself also prevents parallelizing over the time.
+
+\mypar{Jacobi 1D} Given an array $A\in\R^n$ and a number of steps $t$, we replace $t$ times $A$ with $A'$ with $A'_1=A_1, A'_n=A_n, A'_i=\mean{A_{i-1},A_{i},A_{i+1}}$ for $i\not\in\braces{1,n}$.
+
+\mypar{Jacobi 2D} Given a 2D array $A\in\R^{n\times n}$ and a number of steps $t$, we replace $t$ times $A$ with $A'$ with $A'_{i,j}=A_{i,j}$ for $i\in\braces{1,n}\lor j\in\braces{1,n}$, i.e.~the border cells, and
+$A'_{i,j}=\mean{A_{i,j},A_{i-1,j},A_{i+1,j},A_{i,j-1},A_{i,j+1}}$ otherwise.
+
+\mypar{Verification} To ensure the correctness of the proposed implementation, we tested against the reference Polybench code.
+
+\mypar{Generating data} To generate the data, we collected 10 runs for each parameter modification. Then, the data was plotted using functions provided in the R scripts of the LibSciBench \cite{libscibench} repo.

@@ -1,0 +1,12 @@
+We managed to provide manual optimizations that improves well over the base sequential implementations. This was done using different techniques.
+
+\mypar{Doitgen}
+We observed scalable results for both Open\hyp{}MP and MPI using different techniques. We found that the combination of vector instructions, blocking and inverting the loops for matrix-matrix multiplication yielded the best results. For MPI we found that using individual write calls would yield good results over collective calls. We also verified that doitgen could easily span multiple nodes. One possible improvement would be to apply all the OpenMP techniques to the MPI version.
+
+
+\mypar{Jacobi} Despite the challenge of the algorithm, we were able to parallelize it using both OpenMP and MPI.
+For OpenMP, the most efficient was combining a pointer swap with a classic parallelization of the computation loop. Exploring overlapped tiling might provide better improvements.
+For MPI, using deep halo techniques provided to most important improvement.
+We believe that it would be possible to obtain even better results by reorganizing the memory accesses s.t.~the local part that is being worked on fits in cache.
+The 2-step synchronization performed less well in our test.
+Another way to reduce data exchange overhead would be to let synchronizations happen at the same time as we compute other parts of the matrices, which however greatly improves code complexity.

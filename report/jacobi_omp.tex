@@ -1,0 +1,21 @@
+\begin{figure}
+  \includegraphics{jacobi_omp/1d_scaling.pdf}
+  \caption{Jacobi 1D: execution time per number of threads, with $N = 10 000 *$ number of threads}
+  \label{fig:j1d_scaling}
+\end{figure}
+\begin{figure}
+  \includegraphics{jacobi_omp/2d_scaling.pdf}
+  \caption{Jacobi 2D: execution time per number of threads, with $N = 100 *$ number of threads}
+  \label{fig:j2d_scaling}
+\end{figure}
+
+\subsubsection{Proposed methods}\label{jacobi_openmp_methods}
+In this section, we will present the different parallelizations of Jacobi 1D and 2D achieved with OpenMP.
+
+\mypar{Jacobi 1D} Since Jacobi iteratively updates the cells of the given array $A$, we could not parallelize the execution of all the time steps. We thus only parallelized the computation of each cell’s new value within a single time step. The first loop, which performs the computation over the cells of array $A$ and stores them in a second array $B$, is divided between all threads and once this computation is finished, the second loop is also split between the threads to update $A$ with these new values. Another more efficient method was to replace the second loop, responsible for transferring the values from array $B$ to array $A$, with a simple swap between the two array pointers.
+
+\mypar{Jacobi 2D} With Jacobi 2D the parallelizations were done in the same fashion. The time steps are executed sequentially and for each time step, the computation of the new values is parallelized over the two dimensions. Again, another optimization was achieved by replacing the transfer of values between matrix $A$ and $B$ by a swap of pointers.
+
+\subsubsection{Experimental results}\label{experimental_results_jacobi_openmp}
+We will now discuss the benchmark results of our different implementations.
+To test the efficiency of our implementation, we performed 10 runs for each execution parameter set. We used 1000 time steps and an array size of $N = 10 000$ and $N = 100$ for Jacobi 1D and 2D respectively, multiplied by the number of processes. In Figure \ref{fig:j1d_scaling} with Jacobi 1D, we see that the two parallelizations achieved better performances, especially the implementation using the pointer swap mentioned above. For Jacobi 2D in Figure \ref{fig:j2d_scaling} the two parallelizations were just as efficient and scale well.

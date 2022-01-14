@@ -1,0 +1,5 @@
+\mypar{Motivation} The goal of this project is to optimize and parallelize benchmarks in the Polybench benchmark suite in order to give a baseline for "human" optimization. We chose the Doitgen kernel and the Jacobi stencil because they represent real world problems and common workloads. Today, parallelization is necessary to fully exploit the capabilities of the hardware. Two APIs will be used : OpenMP and MPI\footnote{Message Passing Interface}. Our main contribution is a baseline for comparison.
+
+\mypar{Related work}
+%\footnote{\href{https://web.cse.ohio-state.edu/~pouchet.2/software/polybench/}{Polybench 4.1}}
+Polybench\cite{polybench} provides simple sequential implementations for these algorithms. In \cite{data-centric-python}, some of these benchmarks are automatically parallelized.

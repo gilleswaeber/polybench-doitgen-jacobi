@@ -1,0 +1,6 @@
+All our benchmarks are run on Euler VII nodes (CPU:
+\href{https://www.amd.com/fr/products/cpu/amd-epyc-7h12}{AMD EPYC 7H12}, 64 cores).
+For this project, we were limited to 48 cores and could not obtain exclusive access to a node, which means other jobs could potentially be using the same nodes at the same time, affecting the results.
+The software stack is gcc/9.3.0+openmpi/4.0.2.
+Compilation options were -O3 -mavx2 -mfma.
+Unless otherwise specified, each experiment was run 10~times.
