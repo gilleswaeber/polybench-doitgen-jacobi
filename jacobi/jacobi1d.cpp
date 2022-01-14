@@ -59,6 +59,8 @@ void kernel_jacobi_1d_imper_par(int tsteps, int n, double *A) {
 void kernel_jacobi_1d_imper_swap(int tsteps, int n, double *A) {
     std::vector<double> B_(n);
     double *B = B_.data();
+    B[0] = A[0];
+    B[n-1] = A[n-1];
     for (int t = 0; t < tsteps; t++) {
 #pragma omp parallel for
         for (int i = 1; i < n - 1; i++)
