@@ -2,6 +2,33 @@
 import argparse
 import os
 from pathlib import Path
+from typing_extensions import runtime
+
+#'basic',
+#'transpose'
+
+#{ "transpose_1_per_node", &kernel_doitgen_mpi_io_transpose },
+#	{ "transpose_4_per_node", &kernel_doitgen_mpi_io_transpose },
+#	{ "transpose_12_per_node", &kernel_doitgen_mpi_io_transpose },
+#	{ "transpose_24_per_node", &kernel_doitgen_mpi_io_transpose },
+
+bench_types = [
+    'transpose_48_per_node'#,
+    #'transpose'
+]
+
+"""
+bench_types = [
+    'write_1',
+    'write_2',
+    'write_3',
+    'write_4'
+]
+"""
+
+proc_model = "EPYC_7H12_48_per_node" # "XeonE3_1585Lv5" #"XeonE3_1585Lv5" #XeonE3_1585Lv5 #EPYC_7H12
+
+#cluster_outputs_locations = "/cluster/scratch/qguignard/"
 
 # This scripts generates a submission script for euler in order to run all the
 # benchmarks of doitgen mpi version
@@ -12,10 +39,22 @@ copy_sh_to = "copy_benchmark_to_cluster.sh"
 copy_sh_from = "get_results.sh"
 
 copy_local_to_remote = "scp " + name + " qguignard@euler.ethz.ch:dphpc-project/build/doitgen/benchmark"
-copy_remote_to_local = "scp qguignard@euler.ethz.ch:dphpc-project/build/doitgen/benchmark/* ."
+copy_remote_to_local = """
+now=$(date +%m%d%H%M)
+mkdir results_${now}
+mkdir lsfs_${now}
+scp qguignard@euler.ethz.ch:dphpc-project/build/doitgen/benchmark/lsb* ./results_${now}
+scp qguignard@euler.ethz.ch:dphpc-project/build/doitgen/benchmark/lsf* ./lsfs_${now}
+"""
 
-def get_sub(num_cores, out_file, nr, nq, np): 
-    return "bsub -n " + str(num_cores) + " mpirun -np " + str(num_cores) + " ./dphpc-doitgen-mpi-benchmark " + out_file + " " + str(nr) + " " + str(nq) + " " + str(np)
+def get_command(num_cores, out_file, bench_type, processor_model, run_index, nr, nq, np): 
+    return "mpirun -np " + str(num_cores) + " --map-by node ./dphpc-doitgen-mpi-benchmark " + out_file + " " + bench_type + " " + processor_model + " " + str(run_index) + " " + str(nr) + " " + str(nq) + " " + str(np)
+
+def get_sequential_command(processor_model, run_index, nr, nq, np):
+    return "./dphpc-doitgen-sequential-benchmark " + processor_model + " " + str(run_index) + " " + str(nr) + " " + str(nq) + " " + str(np)
+
+def get_rm_file_command(path):
+    return f"rm {path}" + "\n"
 
 def parse_args():
 
@@ -48,9 +87,13 @@ def parse_args():
                         type=int)
     parser.add_argument('--output_location',
                         help='outputpath',
-                        default="/scratch/",
+                        default="/cluster/scratch/qguignard/",
                         type=str)
-    
+    parser.add_argument('--is_home',
+                        help='default 0 for cluster 1 for laptop',
+                        default=0,
+                        type=int)
+
     args = parser.parse_args()
 
     return args
@@ -81,19 +124,37 @@ def create_file_at(result):
     f.write(copy_remote_to_local)
     f.close()
 
+
+def get_proc_selection(model):
+    return f'-R "select[model=={model}]" -R "span[ptile=48]" '
+
 def main():
 
     args = parse_args()
 
-    cores = range(0, args.n + 1, 2)
-    result = ""
+    cores = range(0, args.n + 1, 4)
+    result = "#!/bin/bash \n" 
+
+    if (args.is_home == 0):
+        result += "bsub -n 48 -W 6:00 " + get_proc_selection(proc_model) + " <<EOF " +'\n'
+    
+    for i in range(args.runs):
+        result += get_sequential_command(proc_model, i, args.nr, args.nq, args.np) + "\n"
+
+    output_location = args.output_location if (args.is_home == 0) else "data/"
+
     index = 0
-    for c in cores:
-        for i in range(args.runs):
-            if (c == 0): # for the 0 cores
-                c = 1
-            result += get_sub(c, args.output_location + args.output + str(index), c * args.nr, args.nq, args.np) + "\n"
-            index += 1
+    for bench_type in bench_types:
+        for c in cores:
+            for i in range(args.runs):
+                if (c == 0): # for the 0 cores
+                    c = 1
+                output_path = output_location + args.output + proc_model + "_" + str(index)
+                result += get_command(c, output_path, bench_type, proc_model, i, c * args.nr, args.nq, args.np) + "\n"
+                result += get_rm_file_command(output_path)
+                index += 1
+    if (args.is_home == 0):
+        result += "EOF\n"
 
     print(result)
     try:

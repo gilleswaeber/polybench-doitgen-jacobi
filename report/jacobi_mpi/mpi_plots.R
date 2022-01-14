@@ -14,6 +14,7 @@ source("R/utils.R")
 source("R/stats.R")
 
 ghost_runs_file <- "report/data/1222155458_1dghost_lsb_runs.csv"
+ghost_runs_file <- "report/data/0113132911_1dghost_lsb_runs.csv"
 multi2d_file <- "report/data/0111231315_vstack_lsb_runs.csv"
 runs2d_file <- "report/data/1223050254_2d_lsb_runs.csv"
 j1d_nodes_file <- "report/data/jacobi1d_nodes_m_runs.csv"
@@ -71,15 +72,16 @@ base_theme <- theme(plot.title.position = "plot",
 
 # Jacobi 1D: comparing halo depths
 j1d_ghost_runs_plot <- ggplot(data = ghost_runs_data, aes(x = cores, y = median / 1000000, group = ghost_cells, color = factor(ghost_cells))) +
-  scale_color_hue() +
+  #scale_color_brewer(palette="RdYlBu") +
+  scale_color_manual(values=c('#D73027','#F46D43','#FDAE61','#EED000','#FFFF80','#A0D0D0','#ABD9E9','#74ADD1','#4575B4')) +
   scale_y_continuous(NULL, limits = c(0, NA)) +
   scale_x_continuous(name = "#cores", breaks = ghost_runs_data$cores) +
-  scale_shape_manual(values = c(15, 16, 17, 21, 22, 23, 4)) +
+  scale_shape_manual(values = c(15, 16, 17, 21, 22, 23, 3, 8, 4)) +
   geom_line(aes(), size = 0.4) +
-  geom_point(aes(shape = factor(ghost_cells)), size = 1.2) +
-  labs(subtitle = "time [s] | single node | N=1 000 000 S, T=1 000", color = "halo depth", linetype = "halo depth", shape = "halo depth") +
+  geom_point(aes(shape = factor(ghost_cells)), size = 1) +
+  labs(subtitle = "median time [s] | single node | N=1 000 000 S, T=1 000", color = "halo depth", linetype = "halo depth", shape = "halo depth") +
   base_theme +
-  theme(legend.position = c(.815, .2), legend.key.size = unit(.5, "line"), legend.margin = margin(.07, .15, .07, .1, "lines")) +
+  theme(legend.position = c(.88, .190), legend.key.size = unit(.5, "line"), legend.margin = margin(.07, .15, .07, .1, "lines")) +
   guides(color=guide_legend(ncol=4))
 #j1d_ghost_runs_plot
 ggsave("report/jacobi_mpi/1d_halo.pdf", plot = j1d_ghost_runs_plot, width = 3.287, height = 1.5, unit = "in")
