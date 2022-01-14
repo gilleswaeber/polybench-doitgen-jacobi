@@ -13,12 +13,12 @@ setwd("D:/Work/ETHZ/hpc/project/")
 source("R/utils.R")
 source("R/stats.R")
 
-ghost_runs_file <- "report/data/1222155458_1dghost_lsb_runs.csv"
-ghost_runs_file <- "report/data/0113132911_1dghost_lsb_runs.csv"
-multi2d_file <- "report/data/0111231315_vstack_lsb_runs.csv"
-runs2d_file <- "report/data/1223050254_2d_lsb_runs.csv"
-j1d_nodes_file <- "report/data/jacobi1d_nodes_m_runs.csv"
-j2d_vhalo_file <- "report/data/0113035914_vstackb_lsb_runs.csv"
+ghost_runs_file <- "report/jacobi_mpi/data/1222155458_1dghost_lsb_runs.csv"
+ghost_runs_file <- "report/jacobi_mpi/data/0113132911_1dghost_lsb_runs.csv"
+multi2d_file <- "report/jacobi_mpi/data/0111231315_vstack_lsb_runs.csv"
+runs2d_file <- "report/jacobi_mpi/data/1223050254_2d_lsb_runs.csv"
+j1d_nodes_file <- "report/jacobi_mpi/data/jacobi1d_nodes_m_runs.csv"
+j2d_vhalo_file <- "report/jacobi_mpi/data/0113035914_vstackb_lsb_runs.csv"
 
 #Load data
 ghost_runs_raw <- read.table(ghost_runs_file, header = TRUE, sep = ',')
