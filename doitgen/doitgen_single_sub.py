@@ -13,7 +13,7 @@ from typing_extensions import runtime
 #	{ "transpose_24_per_node", &kernel_doitgen_mpi_io_transpose },
 
 bench_types = [
-    'transpose_24_per_node'#,
+    'transpose_48_per_node'#,
     #'transpose'
 ]
 
@@ -26,7 +26,7 @@ bench_types = [
 ]
 """
 
-proc_model = "EPYC_7H12_24_per_node" # "XeonE3_1585Lv5" #"XeonE3_1585Lv5" #XeonE3_1585Lv5 #EPYC_7H12
+proc_model = "EPYC_7H12_48_per_node" # "XeonE3_1585Lv5" #"XeonE3_1585Lv5" #XeonE3_1585Lv5 #EPYC_7H12
 
 #cluster_outputs_locations = "/cluster/scratch/qguignard/"
 
@@ -48,7 +48,7 @@ scp qguignard@euler.ethz.ch:dphpc-project/build/doitgen/benchmark/lsf* ./lsfs_${
 """
 
 def get_command(num_cores, out_file, bench_type, processor_model, run_index, nr, nq, np): 
-    return "mpirun -np " + str(num_cores) + " ./dphpc-doitgen-mpi-benchmark " + out_file + " " + bench_type + " " + processor_model + " " + str(run_index) + " " + str(nr) + " " + str(nq) + " " + str(np)
+    return "mpirun -np " + str(num_cores) + " --map-by node ./dphpc-doitgen-mpi-benchmark " + out_file + " " + bench_type + " " + processor_model + " " + str(run_index) + " " + str(nr) + " " + str(nq) + " " + str(np)
 
 def get_sequential_command(processor_model, run_index, nr, nq, np):
     return "./dphpc-doitgen-sequential-benchmark " + processor_model + " " + str(run_index) + " " + str(nr) + " " + str(nq) + " " + str(np)
@@ -138,8 +138,8 @@ def main():
     if (args.is_home == 0):
         result += "bsub -n 48 -W 6:00 " + get_proc_selection(proc_model) + " <<EOF " +'\n'
     
-    #for i in range(args.runs):
-    #    result += get_sequential_command(proc_model, i, args.nr, args.nq, args.np) + "\n"
+    for i in range(args.runs):
+        result += get_sequential_command(proc_model, i, args.nr, args.nq, args.np) + "\n"
 
     output_location = args.output_location if (args.is_home == 0) else "data/"
 

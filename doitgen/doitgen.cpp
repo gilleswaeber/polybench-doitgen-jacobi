@@ -509,187 +509,6 @@ void kernel_doitgen_transpose_blocking(uint64_t nr, uint64_t nq, uint64_t np,
 	}
 }
 
-/**
- * @brief
- *
- * @param nr
- * @param nq
- * @param np
- * @param a_in
- * @param a_out
- * @param c4
- * @param sum
- *
- * Processes are instances of the program that openMpi runs (communicator_size).
- * Processes can be organized into logical groups. The communicators
- * are objects that handle communications between processes. There also exists
- * intra-communicator for communication inside a group of process and inter-communicator
- * for communication of processes in two distinct group. We have a single group with the
- * communicator MPI_COMM_WORLD. The rank of a process is relative to the group. If we split
- * our processes in two groups, they will have a rank in the original MPI_COMM_WORLD and
- * in the new one.
- */
-void kernel_doitgen_mpi(MPI_Comm bench_comm, uint64_t nr, uint64_t nq, uint64_t np,
-	double* a,
-	double* c4,
-	double* sum
-) {
-
-	int num_proc = 0;
-	int rank = 0;
-
-	//Get the total number of processes available for the work
-	MPI_Comm_size(bench_comm, &num_proc);
-	MPI_Comm_rank(bench_comm, &rank);
-
-	uint64_t chunk_size = nr / num_proc;
-	uint64_t leftover = nr % num_proc; // we compute the imbalance in jobs
-	uint64_t normal = num_proc - leftover; // the amount of processes that will not have an additional job
-	uint64_t imbalanced_start = normal * chunk_size; //start index of the increased jobs
-
-	uint64_t l = 0;
-	uint64_t u = 0;
-
-	// TODO check 
-	if ((uint64_t)rank < normal) {
-		l = rank * chunk_size;
-		u = (rank + 1) * chunk_size;
-	}
-	else { // imbalanced workload process
-		l = (rank - normal) * (chunk_size + 1) + imbalanced_start;
-		u = (rank - normal + 1) * (chunk_size + 1) + imbalanced_start;
-	}
-
-	uint64_t r = 0, q = 0, p = 0, s = 0;
-
-	// instead of r in [0, nr], each process do its part of the job
-	for (r = l; r < u; r++) {
-
-		for (q = 0; q < nq; q++) {
-			for (p = 0; p < np; p++) {
-				sum[p] = 0;
-				for (s = 0; s < np; s++) {
-					sum[p] += A(r, q, s) * C4(s, p);
-				}
-			}
-
-			for (p = 0; p < np; p++) {
-				A(r, q, p) = sum[p];
-			}
-		}
-
-	}
-
-
-
-}
-
-void kernel_doitgen_mpi(uint64_t nr, uint64_t nq, uint64_t np,
-	double* a,
-	double* c4,
-	double* sum
-) {
-	kernel_doitgen_mpi(MPI_COMM_WORLD, nr, nq, np, a, c4, sum);
-}
-
-
-#define CRASH_REPORT(FUN) \
-	{ \
-	int ERROR_VAR = FUN; \
-	if (ERROR_VAR) { \
-		char* ERROR_STR = (char*) malloc(MPI_MAX_ERROR_STRING * sizeof(char)); \
-		int ERROR_LENGTH = 0; \
-		MPI_Error_string(ERROR_VAR, ERROR_STR, &ERROR_LENGTH); \
-		std::cout << std::string("ERROR at line ") << __LINE__ << std::string(" in file ") << std::string(__FILE__) << std::endl; \ 
-std::cout << std::string(ERROR_STR) << std::endl; \
-	} \
-}\
-
-void kernel_doitgen_mpi_init(MPI_Win* shared_window, uint64_t nr, uint64_t nq, uint64_t np, double** a, double** c4, double** sum) {
-
-	int num_processors = 0;
-	int rank = 0;
-
-	//Get the total number of processes available for the work (in the world)
-	CRASH_REPORT(MPI_Comm_size(MPI_COMM_WORLD, &num_processors));
-	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-	//PROCESS_MESSAGE(rank, "starting :)");
-
-	MPI_Aint a_size = nr * nq * np * sizeof(double);
-	MPI_Aint c4_size = np * np * sizeof(double);
-	int displacement_unit = sizeof(double); //placeholder
-
-	if (rank == 0) {
-
-		MPI_Win_allocate_shared(
-			a_size,
-			sizeof(double),
-			MPI_INFO_NULL,
-			MPI_COMM_WORLD,
-			a,
-			shared_window
-		);
-
-		MPI_Win_allocate_shared(
-			c4_size,
-			sizeof(double),
-			MPI_INFO_NULL,
-			MPI_COMM_WORLD,
-			c4,
-			shared_window
-		);
-
-
-	}
-	else {
-
-		MPI_Win_allocate_shared(
-			0,
-			sizeof(double),
-			MPI_INFO_NULL,
-			MPI_COMM_WORLD,
-			a,
-			shared_window
-		);
-
-		MPI_Win_shared_query(*shared_window, 0, &a_size, &displacement_unit, a);
-
-		displacement_unit = 0;
-		MPI_Win_allocate_shared(
-			0,
-			sizeof(double),
-			MPI_INFO_NULL,
-			MPI_COMM_WORLD,
-			c4,
-			shared_window
-		);
-
-		MPI_Win_shared_query(*shared_window, 0, &c4_size, &displacement_unit, c4);
-
-	}
-
-	MPI_Barrier(MPI_COMM_WORLD); // wait that all processes have requested thier memory
-
-	//https://github.com/open-mpi/ompi/issues/3937
-	// sum is private too (everyone allocates its own)
-	CRASH_REPORT(MPI_Alloc_mem(np * sizeof(double), MPI_INFO_NULL, (double*)*sum));
-	//*sum = (double*) MPI::Alloc_mem(np * sizeof(double), MPI_INFO_NULL);
-	memset(*sum, 0.0, np);
-
-	if (rank == 0) {
-		init_array(nr, nq, np, *a, *c4);
-	}
-
-	MPI_Barrier(MPI_COMM_WORLD); // wait that all threads have seen initialization of a and C4
-}
-
-void kernel_doitgen_mpi_clean(MPI_Win* shared_window, double** sum) {
-	MPI_Free_mem(*sum);
-	*sum = 0;
-	MPI_Win_free(shared_window);
-	*shared_window = 0;
-}
 
 
 ///////////////////////////////////////////////// UTILS MPI ///////////////////////////////////
@@ -1202,10 +1021,7 @@ uint64_t kernel_doitgen_mpi_io(uint64_t nr, uint64_t nq, uint64_t np, const char
 		LSB_Res();
 		// 2.3 write A to the result file
 
-		//offset = nq * np * sizeof(double) * r;
 		MPI_File_write(file, a, slices_per_batch * np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
-		//MPI_File_write_at_all(file, offset, a, nq * np, MPI_DOUBLE, MPI_STATUS_IGNORE);
-
 		LSB_Rec(2);
 	}
 
@@ -1243,48 +1059,13 @@ uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, 
 	tranpose_C4(np, c4);
 	LSB_Rec(0);
 
-	/*
-		for (r = l; r < u; r++) {
-
-			// - 2.1 init slice of A
-
-			LSB_Res();
-			init_A_slice(nq, np, a, r);
-			LSB_Rec(0);
-
-			LSB_Res();
-			// - 2.2 execute kernel on slice
-			for (q = 0; q < nq; q++) {
-
-				for (p = 0; p < np; p++) {
-					sum[p] = 0;
-					for (s = 0; s < np; s++) {
-						sum[p] += A_SLICE(q, s) * C4(p, s); //a[q * np + p] * c4[s * np + p];
-					}
-				}
-
-				for (p = 0; p < np; p++) {
-					A_SLICE(q, p) = sum[p];
-				}
-			}
-
-			LSB_Rec(1);
-
-			LSB_Res();
-			MPI_File_write(file, a, np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
-			LSB_Rec(2);
-		}*/
-
 	for (r = l; r < u; r += slices_per_batch) {
 
 		// - 2.1 init slice of A
 
 		LSB_Res();
 		init_A_slice_batch(nq, np, a, r, r + slices_per_batch);
-		//std::cout << print_array3D2(a, slices_per_batch, nq, np) << std::endl;
 		LSB_Rec(0);
-
-
 
 		for (uint64_t rb = 0; rb < slices_per_batch; rb++) {
 
@@ -1296,14 +1077,11 @@ uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, 
 					sum[p] = 0;
 					for (s = 0; s < np; s++) {
 						sum[p] += ARR_3D(a, slices_per_batch, nq, np, rb, q, s) * C4(p, s);
-						//ARR_3D(a, i_upper - i_lower, nq, np, i - i_lower, j, k)
-						//sum[p] += A_SLICE(q, s) * C4(s, p); //a[q * np + p] * c4[s * np + p];
 					}
 				}
 
 				for (p = 0; p < np; p++) {
 					ARR_3D(a, slices_per_batch, nq, np, rb, q, p) = sum[p];
-					//A_SLICE(q, p) = sum[p];
 				}
 			}
 
@@ -1315,9 +1093,7 @@ uint64_t kernel_doitgen_mpi_io_transpose(uint64_t nr, uint64_t nq, uint64_t np, 
 		LSB_Res();
 		// 2.3 write A to the result file
 
-		//offset = nq * np * sizeof(double) * r;
 		MPI_File_write(file, a, slices_per_batch * np * nq, MPI_DOUBLE, MPI_STATUS_IGNORE);
-		//MPI_File_write_at_all(file, offset, a, nq * np, MPI_DOUBLE, MPI_STATUS_IGNORE);
 
 		LSB_Rec(2);
 	}
