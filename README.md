@@ -38,3 +38,9 @@ Jacobi MPI: use the `jacobi_mpi_sub.py` script to generate submissions.
 python jacobi/jacobi_mpi_sub.py --help
 python jacobi/jacobi_mpi_sub.py jacobi1d-mpi-benchmark-lsb --np 1 12-48:12 --ghost-cells 8 --n 10000 | bash
 ```
+
+Doitgen MPI: generate the submission with `doitgen_generate_sub.py`.
+The scripts are located under doitgen/benchmark for benchmarks and doitgen/test for test and generation of test dataset.
+
+to run with MPI:
+`mpirun -n 4 ./<exec> <outpath> <benchmark_name> <processor_model> <run_index> <nr> <nq> <np>`
